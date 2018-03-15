@@ -1,0 +1,3 @@
+{
+  "exclude": ["vendor", "db/schema/bindata.go"]
+}
