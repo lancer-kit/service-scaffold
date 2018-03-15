@@ -22,8 +22,8 @@ type SQLConn struct {
 // source is currently within.
 func (conn *SQLConn) Clone() *SQLConn {
 	return &SQLConn{
-		db: conn.db,
-		//Ctx: conn.Ctx,
+		db:     conn.db,
+		logger: conn.logger,
 	}
 }
 

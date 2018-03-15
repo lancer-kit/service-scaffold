@@ -20,8 +20,8 @@ type Keeper struct {
 	ctx context.Context
 }
 
-// New inits worker instance.
-func (s *Keeper) New(parentCtx context.Context) routines.Workman {
+// Init inits worker instance.
+func (s *Keeper) Init(parentCtx context.Context) routines.Worker {
 	if s.Conn == nil {
 		s.Conn = conn
 	}

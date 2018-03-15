@@ -29,12 +29,6 @@
   version = "v3.3.2"
 
 [[projects]]
-  name = "github.com/go-chi/cors"
-  packages = ["."]
-  revision = "dba6525398619dead495962a916728e7ee2ca322"
-  version = "v1.0.0"
-
-[[projects]]
   branch = "dev"
   name = "github.com/inn4sc/vcg-go-common"
   packages = [
@@ -42,7 +36,7 @@
     "log",
     "routines"
   ]
-  revision = "a58492798e87514f65eac64c61edf94282cac997"
+  revision = "25238d2cf9eff2bfc1265bee4bf8a39e791946eb"
 
 [[projects]]
   branch = "master"
@@ -134,6 +128,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "34c751e1c955d6842da2f626fd4d3f73d22697e5e47988a0677e27abe256e0dc"
+  inputs-digest = "71c5107416158a8670aba61b06dae842d5d171a4acb9ee579f7615ad9320a8d9"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -3,11 +3,13 @@ package log
 import (
 	"os"
 
-	"github.com/onrik/logrus/filename"
-	"github.com/onrik/logrus/sentry"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
+
+// Entry is a type alias for `*logrus.Entry`,
+// can be used to avoid direct import of the `logrus` package.
+type Entry = *logrus.Entry
 
 // Default is a log.Entry singleton.
 var Default *logrus.Entry
@@ -43,17 +45,7 @@ func Init(config Config) (*logrus.Entry, error) {
 	return Default, nil
 }
 
-// AddSentryHook adds hook that sends errors to sentry service.
-func AddSentryHook(dsn string) {
-	sentryHook := sentry.NewHook(dsn,
-		logrus.PanicLevel, logrus.FatalLevel, logrus.ErrorLevel)
-	Default.Logger.AddHook(sentryHook)
-}
-
-// AddFilenameHook adds hook that includes
-// filename and line number into the log.
-func AddFilenameHook() {
-	filenameHook := filename.NewHook()
-	filenameHook.Field = "file"
-	Default.Logger.AddHook(filenameHook)
+// Get is a getter for the `logrus.Entry` singleton.
+func Get() *logrus.Entry {
+	return Default
 }

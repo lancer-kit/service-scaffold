@@ -23,10 +23,11 @@ var conn *SQLConn
 // Init initializes new connector with database.
 func Init(dbConnStr string, logger *logrus.Entry) error {
 	if conn == nil {
-		conn = &SQLConn{logger: logger}
+		conn = &SQLConn{}
 	}
 
 	var err error
+	conn.logger = logger
 	conn.db, err = sqlx.Connect("postgres", dbConnStr)
 	if err != nil {
 		return errors.Wrap(err, "failed to init db connection")
