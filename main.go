@@ -12,6 +12,7 @@ import (
 	"github.com/inn4sc/go-skeleton/services/api"
 	"github.com/inn4sc/go-skeleton/services/foobar"
 	"github.com/urfave/cli"
+	"github.com/inn4sc/go-skeleton/config"
 )
 
 var WorkerChief routines.Chief
@@ -20,11 +21,6 @@ func init() {
 	WorkerChief = routines.Chief{}
 	WorkerChief.AddWorker("api-server", &api.Server{})
 	WorkerChief.AddWorker("foobar", &foobar.Service{})
-}
-
-var EnabledServices = []string{
-	"alpha-worker",
-	"beta-worker",
 }
 
 func main() {
@@ -45,13 +41,16 @@ func main() {
 			Action: runAction,
 		},
 	}
+	cmd.Run(os.Args)
 }
 
 func runAction(c *cli.Context) error {
+	initModules(c.String("config"))
 	done := make(chan struct{})
 	ctx, cancel := context.WithCancel(context.Background())
 
-	for _, serviceName := range EnabledServices {
+	cfg := config.Config()
+	for _, serviceName := range cfg.Services {
 		WorkerChief.EnableWorker(serviceName)
 	}
 
@@ -79,4 +78,8 @@ func runAction(c *cli.Context) error {
 		log.Default.Warn("Graceful exit timeout exceeded. Force exit.")
 		return cli.NewExitError("Graceful exit timeout exceeded", 1)
 	}
+}
+
+func initModules(cfgPath string) {
+	config.Init(cfgPath)
 }
