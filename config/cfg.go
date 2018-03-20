@@ -74,6 +74,8 @@ func (r *ServiceExistRule) Validate(value interface{}) error {
 				return errors.New("invalid service name " + v)
 			}
 		}
+	} else {
+		return errors.New("can't convert list of services to []string")
 	}
 	return nil
 }
