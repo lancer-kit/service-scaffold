@@ -7,9 +7,9 @@ import (
 	"gopkg.in/yaml.v2"
 	"github.com/sirupsen/logrus"
 
-	"github.com/inn4sc/vcg-go-common"
-	"github.com/inn4sc/vcg-go-common/db"
-	"github.com/inn4sc/vcg-go-common/log"
+	"gitlab.inn4science.com/vcg/go-common"
+	"gitlab.inn4science.com/vcg/go-common/db"
+	"gitlab.inn4science.com/vcg/go-common/log"
 )
 
 const ServiceName = "courier"

@@ -1,7 +1,7 @@
 package workers
 
 import (
-	"github.com/inn4sc/vcg-go-common/routines"
+	"gitlab.inn4science.com/vcg/go-common/routines"
 	"github.com/inn4sc/go-skeleton/config"
 	"github.com/inn4sc/go-skeleton/workers/api"
 	"github.com/inn4sc/go-skeleton/workers/foobar"

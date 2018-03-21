@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/inn4sc/vcg-go-common/log"
+	"gitlab.inn4science.com/vcg/go-common/log"
 	"os"
 	"os/signal"
 	"syscall"

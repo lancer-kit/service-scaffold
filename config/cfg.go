@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/go-ozzo/ozzo-validation"
-	"github.com/inn4sc/vcg-go-common/log"
+	"gitlab.inn4science.com/vcg/go-common/log"
 	"errors"
 )
 

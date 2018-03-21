@@ -5,7 +5,7 @@ import (
 
 	"github.com/inn4sc/go-skeleton/config"
 	"github.com/inn4sc/go-skeleton/dbschema"
-	"github.com/inn4sc/vcg-go-common/log"
+	"gitlab.inn4science.com/vcg/go-common/log"
 
 	"github.com/urfave/cli"
 )

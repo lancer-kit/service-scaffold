@@ -1,6 +1,6 @@
 package models
 
-import "github.com/inn4sc/vcg-go-common/db"
+import "gitlab.inn4science.com/vcg/go-common/db"
 
 // QI is a top level interface for interaction with database.
 type QI interface {
