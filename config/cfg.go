@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/go-ozzo/ozzo-validation"
+	"github.com/inn4sc/vcg-go-common/log"
 	"errors"
 )
 
@@ -13,20 +14,40 @@ type Cfg struct {
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`
 
+	Log log.Config `yaml:"log"`
+
 	// AutoMigrate if `true` execute db migrate up on start.
 	AutoMigrate bool `yaml:"auto_migrate"`
 	DevMode     bool `yaml:"dev_mode"`
+	WaitForDB   bool `yaml:"wait_for_db"`
+	EnableCORS  bool `yaml:"enable_cors"`
 
 	// Links are the addresses of other services
 	// with which the interaction takes place.
 	Links Links `yaml:"links"`
 
-	// Services is a list of workers
+	// Workers is a list of workers
 	// that must be started, start all if empty.
-	Services []string `yaml:"services"`
+	Workers []string `yaml:"workers"`
 }
 
-// Links are the addresses of other services
+func (cfg Cfg) Validate() error {
+	return validation.ValidateStruct(&cfg,
+		validation.Field(&cfg.DB, validation.Required),
+		validation.Field(&cfg.Host, validation.Required),
+		validation.Field(&cfg.Port, validation.Required),
+		validation.Field(&cfg.Links, validation.Required),
+		validation.Field(&cfg.Workers, serviceExistRule),
+	)
+}
+
+func (cfg Cfg) FillDefaultServices() {
+	for k := range AvailableWorkers {
+		cfg.Workers = append(cfg.Workers, k)
+	}
+}
+
+// Links are the addresses of other workers
 // with which the interaction takes place.
 type Links struct {
 	UserAPI      string `yaml:"user_api"`
@@ -44,38 +65,20 @@ func (links Links) Validate() error {
 	)
 }
 
-func (cfg Cfg) Validate() error {
-	return validation.ValidateStruct(&cfg,
-		validation.Field(&cfg.DB, validation.Required),
-		validation.Field(&cfg.Host, validation.Required),
-		validation.Field(&cfg.Port, validation.Required),
-		validation.Field(&cfg.Links, validation.Required),
-		validation.Field(&cfg.Services, serviceExistRule),
-	)
-}
-
-func (cfg Cfg) FillDefaultServices() {
-	for k := range AvailableServices {
-		cfg.Services = append(cfg.Services, k)
-	}
-}
-
-var serviceExistRule *ServiceExistRule = new(ServiceExistRule)
-
 type ServiceExistRule struct {
 	message string
 }
 
-// Validate checks if the given value is valid or not.
+// Validate checks that service exist on the system
 func (r *ServiceExistRule) Validate(value interface{}) error {
 	if arr, ok := value.([]string); ok {
 		for _, v := range (arr) {
-			if _, ok := AvailableServices[v]; ok == false {
+			if _, ok := AvailableWorkers[v]; ok == false {
 				return errors.New("invalid service name " + v)
 			}
 		}
 	} else {
-		return errors.New("can't convert list of services to []string")
+		return errors.New("can't convert list of workers to []string")
 	}
 	return nil
 }
@@ -86,3 +89,5 @@ func (r *ServiceExistRule) Error(message string) *ServiceExistRule {
 		message: message,
 	}
 }
+
+var serviceExistRule = new(ServiceExistRule)

@@ -1,10 +1,18 @@
 package config
 
 import (
+	"time"
 	"io/ioutil"
-	"github.com/sirupsen/logrus"
+
 	"gopkg.in/yaml.v2"
+	"github.com/sirupsen/logrus"
+
+	"github.com/inn4sc/vcg-go-common"
+	"github.com/inn4sc/vcg-go-common/db"
+	"github.com/inn4sc/vcg-go-common/log"
 )
+
+const ServiceName = "courier"
 
 // config is a `Cfg` singleton var,
 // for access use the `Config` method.
@@ -35,7 +43,7 @@ func Init(path string) {
 			Fatal("Invalid configuration")
 	}
 
-	if config.Services == nil {
+	if config.Workers == nil {
 		config.FillDefaultServices()
 	}
 
@@ -44,4 +52,35 @@ func Init(path string) {
 // Config returns the config obj.
 func Config() *Cfg {
 	return config
+}
+
+// InitLog initializes logger.
+func InitLog() {
+	_, err := log.Init(config.Log)
+	if err != nil {
+		log.Default.
+			WithError(err).
+			Fatal("Unable to init log")
+	}
+}
+
+// InitDB initializes database connector.
+func InitDB() {
+	if !config.WaitForDB {
+		err := db.Init(config.DB, log.Default)
+		if err != nil {
+			log.Default.WithError(err).Fatal("Can't to init database connection")
+		}
+		return
+	}
+
+	vcgtools.RetryIncrementally(
+		5*time.Second,
+		func() bool {
+			err := db.Init(config.DB, log.Default)
+			if err != nil {
+				log.Default.WithError(err).Warning("Can't to init database connection")
+			}
+			return err == nil
+		})
 }

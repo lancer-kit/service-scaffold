@@ -9,7 +9,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/inn4sc/go-skeleton/config"
-	"github.com/inn4sc/go-skeleton/services/api/handler"
+	"github.com/inn4sc/go-skeleton/workers/api/handler"
 	"github.com/inn4sc/vcg-go-common/log"
 	"github.com/inn4sc/vcg-go-common/routines"
 	"github.com/sirupsen/logrus"
