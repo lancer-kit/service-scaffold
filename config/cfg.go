@@ -71,14 +71,14 @@ type ServiceExistRule struct {
 
 // Validate checks that service exist on the system
 func (r *ServiceExistRule) Validate(value interface{}) error {
-	if arr, ok := value.([]string); ok {
-		for _, v := range (arr) {
-			if _, ok := AvailableWorkers[v]; ok == false {
-				return errors.New("invalid service name " + v)
-			}
-		}
-	} else {
+	arr, ok := value.([]string)
+	if !ok {
 		return errors.New("can't convert list of workers to []string")
+	}
+	for _, v := range arr {
+		if _, ok := AvailableWorkers[v]; !ok {
+			return errors.New("invalid service name " + v)
+		}
 	}
 	return nil
 }
