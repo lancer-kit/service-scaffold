@@ -34,7 +34,7 @@
 
 [[constraint]]
   branch = "dev"
-  name = "github.com/inn4sc/vcg-go-common"
+  name = "gitlab.inn4science.com/vcg/go-common"
 
 [[constraint]]
   name = "github.com/pkg/errors"

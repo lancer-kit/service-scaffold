@@ -29,9 +29,29 @@
   version = "v3.3.2"
 
 [[projects]]
+  name = "github.com/go-ozzo/ozzo-validation"
+  packages = ["."]
+  revision = "85dcd8368eba387e65a03488b003e233994e87e9"
+  version = "v3.3"
+
+[[projects]]
+  branch = "dev"
+  name = "github.com/inn4sc/go-skeleton"
+  packages = [
+    "config",
+    "dbschema",
+    "workers",
+    "workers/api",
+    "workers/api/handler",
+    "workers/foobar"
+  ]
+  revision = "0f1971a00a1890a8f5f16201e32bbf1f027dfdc9"
+
+[[projects]]
   branch = "dev"
   name = "github.com/inn4sc/vcg-go-common"
   packages = [
+    ".",
     "db",
     "log",
     "routines"
@@ -105,6 +125,17 @@
   version = "v1.20.0"
 
 [[projects]]
+  branch = "dev"
+  name = "gitlab.inn4science.com/vcg/go-common"
+  packages = [
+    ".",
+    "db",
+    "log",
+    "routines"
+  ]
+  revision = "25238d2cf9eff2bfc1265bee4bf8a39e791946eb"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
@@ -125,9 +156,15 @@
   revision = "c87af80f3cc5036b55b83d77171e156791085e2e"
   version = "v1.7.1"
 
+[[projects]]
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "7f97868eec74b32b0982dd158a51a446d1da7eb5"
+  version = "v2.1.1"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "71c5107416158a8670aba61b06dae842d5d171a4acb9ee579f7615ad9320a8d9"
+  inputs-digest = "bc38440eea763203080539d806335b0d866d2dc366853370cee0921baa03f6af"
   solver-name = "gps-cdcl"
   solver-version = 1

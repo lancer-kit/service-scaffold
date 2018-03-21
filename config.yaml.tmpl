@@ -1,0 +1,31 @@
+db: "postgres://user:password@localhost/skeleton_db?sslmode=disable"
+log_level: debug
+host: localhost
+port: 2490
+
+check_auth: false
+dev_mode: true
+auto_migrate: true
+wait_for_db: true
+enable_cors: true
+
+log:
+  app_name: tx-service
+  level: debug
+  add_trace : true
+  sentry: ""
+  json: false
+
+links:
+  user_api: http://localhost:8082/v1
+  payment_gate: http://localhost:2442
+  rate: http://localhost:8090
+  transactions: http://localhost:2448
+
+
+#workers:
+#  - api-server
+#  - balance-curator
+#  - fee-trustee
+#  - op-submitter
+#  - db-keeper
