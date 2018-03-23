@@ -8,6 +8,7 @@ dev_mode: true
 auto_migrate: true
 wait_for_db: true
 enable_cors: true
+api_request_timeout: 60
 
 log:
   app_name: tx-service
@@ -16,12 +17,17 @@ log:
   sentry: ""
   json: false
 
+nats:
+  host: 127.0.0.1
+  port: 4222
+  user: user
+  password: password
+
 links:
   user_api: http://localhost:8082/v1
   payment_gate: http://localhost:2442
   rate: http://localhost:8090
   transactions: http://localhost:2448
-
 
 #workers:
 #  - api-server

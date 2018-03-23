@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/urfave/cli"
-	"github.com/inn4sc/go-skeleton/config"
+	"gitlab.inn4science.com/vcg/go-skeleton/config"
 )
 
 func main() {
@@ -19,10 +19,8 @@ func main() {
 	cmd.Run(os.Args)
 }
 
-func initModules(cfgPath string) {
+func initConfig(cfgPath string) {
 	config.Init(cfgPath)
-	config.InitLog()
-	config.InitDB()
 }
 
 var cfgFlag = []cli.Flag{
