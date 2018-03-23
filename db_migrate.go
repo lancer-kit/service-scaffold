@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 
-	"github.com/inn4sc/go-skeleton/config"
-	"github.com/inn4sc/go-skeleton/dbschema"
+	"github.com/urfave/cli"
 	"gitlab.inn4science.com/vcg/go-common/log"
 
-	"github.com/urfave/cli"
+	"gitlab.inn4science.com/vcg/go-skeleton/config"
+	"gitlab.inn4science.com/vcg/go-skeleton/dbschema"
 )
 
 func migrateDB(cfgPath string, direction dbschema.MigrateDir) *cli.ExitError {
-	initModules(cfgPath)
+	initConfig(cfgPath)
 	count, err := dbschema.Migrate(config.Config().DB, direction)
 	if err != nil {
 		log.Default.WithError(err).Error("Migrations failed")

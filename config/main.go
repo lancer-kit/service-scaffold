@@ -3,16 +3,15 @@ package config
 import (
 	"time"
 	"io/ioutil"
-
 	"gopkg.in/yaml.v2"
 	"github.com/sirupsen/logrus"
-
 	"gitlab.inn4science.com/vcg/go-common"
 	"gitlab.inn4science.com/vcg/go-common/db"
 	"gitlab.inn4science.com/vcg/go-common/log"
+	"gitlab.inn4science.com/vcg/go-common/natswrap"
 )
 
-const ServiceName = "courier"
+const ServiceName  = "courier"
 
 // config is a `Cfg` singleton var,
 // for access use the `Config` method.
@@ -44,9 +43,12 @@ func Init(path string) {
 	}
 
 	if config.Workers == nil {
-		config.FillDefaultServices()
+		config.FillDefaultWorkers()
 	}
 
+	initLog()
+	initDB()
+	initNats()
 }
 
 // Config returns the config obj.
@@ -54,8 +56,7 @@ func Config() *Cfg {
 	return config
 }
 
-// InitLog initializes logger.
-func InitLog() {
+func initLog() {
 	_, err := log.Init(config.Log)
 	if err != nil {
 		log.Default.
@@ -64,8 +65,7 @@ func InitLog() {
 	}
 }
 
-// InitDB initializes database connector.
-func InitDB() {
+func initDB() {
 	if !config.WaitForDB {
 		err := db.Init(config.DB, log.Default)
 		if err != nil {
@@ -83,4 +83,8 @@ func InitDB() {
 			}
 			return err == nil
 		})
+}
+
+func initNats() {
+	natswrap.SetConfig(&config.NATS)
 }

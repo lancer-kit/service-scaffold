@@ -2,20 +2,22 @@ package main
 
 import (
 	"context"
-	"gitlab.inn4science.com/vcg/go-common/log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-	"github.com/urfave/cli"
-	"github.com/inn4sc/go-skeleton/config"
-	"github.com/inn4sc/go-skeleton/dbschema"
-	"github.com/inn4sc/go-skeleton/workers"
 	"fmt"
+
+	"github.com/urfave/cli"
+	"gitlab.inn4science.com/vcg/go-common/log"
+
+	"gitlab.inn4science.com/vcg/go-skeleton/config"
+	"gitlab.inn4science.com/vcg/go-skeleton/dbschema"
+	"gitlab.inn4science.com/vcg/go-skeleton/workers"
 )
 
 func serveAction(c *cli.Context) error {
-	initModules(c.String("config"))
+	initConfig(c.String("config"))
 	cfg := config.Config()
 
 	if cfg.AutoMigrate {
