@@ -3,24 +3,26 @@ package config
 import (
 	"github.com/go-ozzo/ozzo-validation"
 	"gitlab.inn4science.com/vcg/go-common/log"
-	"errors"
+	"gitlab.inn4science.com/vcg/go-common/natswrap"
 )
 
 // Cfg main structure of the app configuration.
 type Cfg struct {
 	// DB is a database connection string.
-	DB       string `yaml:"db"`
-	LogLevel string `yaml:"log_level"`
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
+	DB       string          `yaml:"db"`
+	LogLevel string          `yaml:"log_level"`
+	Host     string          `yaml:"host"`
+	Port     int             `yaml:"port"`
+	NATS     natswrap.Config `yaml:"nats"`
 
 	Log log.Config `yaml:"log"`
 
 	// AutoMigrate if `true` execute db migrate up on start.
-	AutoMigrate bool `yaml:"auto_migrate"`
-	DevMode     bool `yaml:"dev_mode"`
-	WaitForDB   bool `yaml:"wait_for_db"`
-	EnableCORS  bool `yaml:"enable_cors"`
+	AutoMigrate       bool `yaml:"auto_migrate"`
+	DevMode           bool `yaml:"dev_mode"`
+	WaitForDB         bool `yaml:"wait_for_db"`
+	EnableCORS        bool `yaml:"enable_cors"`
+	ApiRequestTimeout int  `yaml:"api_request_timeout"`
 
 	// Links are the addresses of other services
 	// with which the interaction takes place.
@@ -37,57 +39,13 @@ func (cfg Cfg) Validate() error {
 		validation.Field(&cfg.Host, validation.Required),
 		validation.Field(&cfg.Port, validation.Required),
 		validation.Field(&cfg.Links, validation.Required),
-		validation.Field(&cfg.Workers, serviceExistRule),
+		validation.Field(&cfg.NATS, validation.Required),
+		validation.Field(&cfg.Workers, new(WorkerExistRule)),
 	)
 }
 
-func (cfg Cfg) FillDefaultServices() {
+func (cfg Cfg) FillDefaultWorkers() {
 	for k := range AvailableWorkers {
 		cfg.Workers = append(cfg.Workers, k)
 	}
 }
-
-// Links are the addresses of other workers
-// with which the interaction takes place.
-type Links struct {
-	UserAPI      string `yaml:"user_api"`
-	PaymentGate  string `yaml:"payment_gate"`
-	Rate         string `yaml:"rate"`
-	Transactions string `yaml:"transactions"`
-}
-
-func (links Links) Validate() error {
-	return validation.ValidateStruct(&links,
-		validation.Field(&links.Rate, validation.Required),
-		validation.Field(&links.PaymentGate, validation.Required),
-		validation.Field(&links.UserAPI, validation.Required),
-		validation.Field(&links.Transactions, validation.Required),
-	)
-}
-
-type ServiceExistRule struct {
-	message string
-}
-
-// Validate checks that service exist on the system
-func (r *ServiceExistRule) Validate(value interface{}) error {
-	arr, ok := value.([]string)
-	if !ok {
-		return errors.New("can't convert list of workers to []string")
-	}
-	for _, v := range arr {
-		if _, ok := AvailableWorkers[v]; !ok {
-			return errors.New("invalid service name " + v)
-		}
-	}
-	return nil
-}
-
-// Error sets the error message for the rule.
-func (r *ServiceExistRule) Error(message string) *ServiceExistRule {
-	return &ServiceExistRule{
-		message: message,
-	}
-}
-
-var serviceExistRule = new(ServiceExistRule)

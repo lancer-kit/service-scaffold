@@ -17,7 +17,7 @@
   branch = "master"
   name = "github.com/getsentry/raven-go"
   packages = ["."]
-  revision = "563b81fc02b75d664e54da31f787c2cc2186780b"
+  revision = "7562301a6763c9ac631b0a2011b4aa0e064e45d4"
 
 [[projects]]
   name = "github.com/go-chi/chi"
@@ -29,34 +29,16 @@
   version = "v3.3.2"
 
 [[projects]]
+  name = "github.com/go-chi/cors"
+  packages = ["."]
+  revision = "dba6525398619dead495962a916728e7ee2ca322"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/go-ozzo/ozzo-validation"
   packages = ["."]
   revision = "85dcd8368eba387e65a03488b003e233994e87e9"
   version = "v3.3"
-
-[[projects]]
-  branch = "dev"
-  name = "github.com/inn4sc/go-skeleton"
-  packages = [
-    "config",
-    "dbschema",
-    "workers",
-    "workers/api",
-    "workers/api/handler",
-    "workers/foobar"
-  ]
-  revision = "0f1971a00a1890a8f5f16201e32bbf1f027dfdc9"
-
-[[projects]]
-  branch = "dev"
-  name = "github.com/inn4sc/vcg-go-common"
-  packages = [
-    ".",
-    "db",
-    "log",
-    "routines"
-  ]
-  revision = "25238d2cf9eff2bfc1265bee4bf8a39e791946eb"
 
 [[projects]]
   branch = "master"
@@ -86,7 +68,23 @@
     ".",
     "oid"
   ]
-  revision = "88edab0803230a3898347e77b474f8c1820a1f20"
+  revision = "b2004221932bd6b13167ef654c81cffac36f7537"
+
+[[projects]]
+  name = "github.com/nats-io/go-nats"
+  packages = [
+    ".",
+    "encoders/builtin",
+    "util"
+  ]
+  revision = "d66cb54e6b7bdd93f0b28afc8450d84c780dfb68"
+  version = "v1.4.0"
+
+[[projects]]
+  name = "github.com/nats-io/nuid"
+  packages = ["."]
+  revision = "289cccf02c178dc782430d534e3c1f5b72af807f"
+  version = "v1.0.0"
 
 [[projects]]
   branch = "master"
@@ -115,8 +113,8 @@
 [[projects]]
   name = "github.com/sirupsen/logrus"
   packages = ["."]
-  revision = "d682213848ed68c0a260ca37d6dd5ace8423f5ba"
-  version = "v1.0.4"
+  revision = "c155da19408a8799da419ed3eeb0cb5db0ad5dbc"
+  version = "v1.0.5"
 
 [[projects]]
   name = "github.com/urfave/cli"
@@ -129,17 +127,19 @@
   name = "gitlab.inn4science.com/vcg/go-common"
   packages = [
     ".",
+    "api/render",
     "db",
     "log",
+    "natswrap",
     "routines"
   ]
-  revision = "25238d2cf9eff2bfc1265bee4bf8a39e791946eb"
+  revision = "3edc151b718e61e1958a8f48e70afb74b1a5ad8c"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
-  revision = "c7dcf104e3a7a1417abc0230cb0d5240d764159d"
+  revision = "88942b9c40a4c9d203b82b3731787b672d6e809b"
 
 [[projects]]
   branch = "master"
@@ -148,7 +148,7 @@
     "unix",
     "windows"
   ]
-  revision = "7dca6fe1f43775aa6d1334576870ff63f978f539"
+  revision = "91ee8cde435411ca3f1cd365e8f20131aed4d0a1"
 
 [[projects]]
   name = "gopkg.in/gorp.v1"
@@ -165,6 +165,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "bc38440eea763203080539d806335b0d866d2dc366853370cee0921baa03f6af"
+  inputs-digest = "5a097f5b06f7eb69ce0165831fd72142b97b0836041f1ea5ad8616a9b9f12e88"
   solver-name = "gps-cdcl"
   solver-version = 1

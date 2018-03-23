@@ -8,11 +8,14 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/inn4sc/go-skeleton/config"
-	"github.com/inn4sc/go-skeleton/workers/api/handler"
+	"github.com/go-chi/cors"
+	"github.com/sirupsen/logrus"
 	"gitlab.inn4science.com/vcg/go-common/log"
 	"gitlab.inn4science.com/vcg/go-common/routines"
-	"github.com/sirupsen/logrus"
+	"gitlab.inn4science.com/vcg/go-common/api/render"
+
+	"gitlab.inn4science.com/vcg/go-skeleton/config"
+	"gitlab.inn4science.com/vcg/go-skeleton/workers/api/handler"
 )
 
 type Server struct {
@@ -29,7 +32,7 @@ func (s *Server) Init(parentCtx context.Context) routines.Worker {
 
 func (s *Server) Run() {
 	cfg := config.Cfg{}
-	router := GetRouter()
+	router := GetRouter(s.logger, cfg.EnableCORS, cfg.DevMode, cfg.ApiRequestTimeout)
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 	server := &http.Server{Addr: addr, Handler: router}
 
@@ -48,7 +51,7 @@ func (s *Server) Run() {
 	s.logger.Info("Api Server gracefully stopped")
 }
 
-func GetRouter() chi.Router {
+func GetRouter(logger *logrus.Entry, enableCORS, enablePPROF bool, requestTimeout int) chi.Router {
 	r := chi.NewRouter()
 
 	// A good base middleware stack
@@ -56,10 +59,30 @@ func GetRouter() chi.Router {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 
+	if enableCORS {
+		corsHandler := cors.New(cors.Options{
+			AllowedOrigins:   []string{"*"},
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "jwt", "X-UID"},
+			ExposedHeaders:   []string{"Link", "Content-Length"},
+			AllowCredentials: true,
+			MaxAge:           300, // Maximum value not ignored by any of major browsers
+		})
+		r.Use(corsHandler.Handler)
+	}
+
+	if enablePPROF {
+		logger.Info("API profiler unavailable. Sorry.")
+		//r.Mount("/debug", middleware.Profiler())
+	}
+
 	// Set a timeout value on the request context (ctx), that will signal
 	// through ctx.Done() that the request has timed out and further
 	// processing should be stopped.
-	r.Use(middleware.Timeout(60 * time.Second))
+	if requestTimeout > 0 {
+		t := time.Duration(requestTimeout)
+		r.Use(middleware.Timeout(t * time.Second))
+	}
 
 	r.Route("/dev", func(r chi.Router) {
 
@@ -68,6 +91,10 @@ func GetRouter() chi.Router {
 			r.Get("/buzz/{id}", handler.Post)
 			r.Post("/", handler.Post)
 		})
+	})
+
+	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		render.ResultNotFound.Render(w)
 	})
 
 	return r
