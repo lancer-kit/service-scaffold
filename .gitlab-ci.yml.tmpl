@@ -1,0 +1,71 @@
+image: shebgregor/alpine-rsync-git
+
+before_script:
+  - apk -U add  rsync openssh
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" > /tmp/key && chmod 600 /tmp/key
+  - ssh-add /tmp/key
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+variables:
+  PROJECT_PATH: gitlab.inn4science.com/vcg/go-skeleton
+  PROJECT_NAME: skeleton
+
+stages:
+  - build
+  - test
+  - deploy
+  - docs
+
+build:
+  image: shebgregor/ci-golang
+  stage: build
+  before_script:
+    - echo just replace default
+
+  script:
+    - orig=$(pwd)
+    - mkdir -p ${GOPATH}/src/${PROJECT_PATH}
+    - cp -rf ./* ${GOPATH}/src/${PROJECT_PATH}/
+    - cd ${GOPATH}/src/${PROJECT_PATH}/
+    - go build -o app
+    - cp app ${orig}/
+  only:
+    - dev
+    - master
+  artifacts:
+    paths:
+      - app
+    expire_in: 1 week
+
+tests:
+  image: shebgregor/ci-golang
+  stage: test
+  before_script:
+    - echo just replace default
+  script:
+    - orig=$(pwd)
+    - mkdir -p ${GOPATH}/src/${PROJECT_PATH}
+    - cp -rf ./* ${GOPATH}/src/${PROJECT_PATH}/
+    - cd ${GOPATH}/src/${PROJECT_PATH}/
+    - go test ./...
+  only:
+    - dev
+    - master
+
+depoy:dev:
+  stage: deploy
+  script:
+    - ls -lah
+    - rsync -rv --delete app user@${DEV_HOST}:/opt/vcg/${PROJECT_NAME}/
+    - ssh user@${DEV_HOST} "/opt/vcg/${PROJECT_NAME}/update"
+  only:
+    - dev
+
+update_docs:
+  stage: docs
+  script:
+    - rsync -rv --delete docs/api/swagger.yaml user@${DEV_HOST}:/opt/vcg/swagger/specs/share.yaml
+  only:
+    - dev
