@@ -3,7 +3,7 @@ package foobar
 import (
 	"context"
 
-	"gitlab.inn4science.com/vcg/go-common/routines"
+	"gitlab.inn4science.com/gophers/service-kit/routines"
 )
 
 type Service struct {

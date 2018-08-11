@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/urfave/cli"
-	"gitlab.inn4science.com/vcg/go-common/log"
+	"gitlab.inn4science.com/gophers/service-kit/log"
 
 	"gitlab.inn4science.com/gophers/service-scaffold/config"
 	"gitlab.inn4science.com/gophers/service-scaffold/dbschema"

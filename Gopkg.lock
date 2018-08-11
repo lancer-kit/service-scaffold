@@ -17,7 +17,7 @@
   branch = "master"
   name = "github.com/getsentry/raven-go"
   packages = ["."]
-  revision = "7562301a6763c9ac631b0a2011b4aa0e064e45d4"
+  revision = "7535a8fa2ace0ffb684b19f28d00655459ea2dae"
 
 [[projects]]
   name = "github.com/go-chi/chi"
@@ -37,8 +37,8 @@
 [[projects]]
   name = "github.com/go-ozzo/ozzo-validation"
   packages = ["."]
-  revision = "85dcd8368eba387e65a03488b003e233994e87e9"
-  version = "v3.3"
+  revision = "9d6782aa52aad2ec5f3ea5af63b7dc4bc5192c40"
+  version = "v3.4.0"
 
 [[projects]]
   branch = "master"
@@ -47,13 +47,13 @@
     ".",
     "reflectx"
   ]
-  revision = "cf35089a197953c69420c8d0cecda90809764b1d"
+  revision = "0dae4fefe7c0e190f7b5a78dac28a1c82cc8d849"
 
 [[projects]]
   branch = "master"
   name = "github.com/lann/builder"
   packages = ["."]
-  revision = "1b87b36280d04fe7882d1512bf038ea2967ad534"
+  revision = "47ae307949d02aa1f1069fdafc00ca08e1dbabac"
 
 [[projects]]
   branch = "master"
@@ -68,7 +68,18 @@
     ".",
     "oid"
   ]
-  revision = "b2004221932bd6b13167ef654c81cffac36f7537"
+  revision = "90697d60dd844d5ef6ff15135d0203f65d2f53b8"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/mailru/easyjson"
+  packages = [
+    ".",
+    "buffer",
+    "jlexer",
+    "jwriter"
+  ]
+  revision = "03f2033d19d5860aef995fe360ac7d395cd8ce65"
 
 [[projects]]
   name = "github.com/nats-io/go-nats"
@@ -77,8 +88,8 @@
     "encoders/builtin",
     "util"
   ]
-  revision = "d66cb54e6b7bdd93f0b28afc8450d84c780dfb68"
-  version = "v1.4.0"
+  revision = "062418ea1c2181f52dc0f954f6204370519a868b"
+  version = "v1.5.0"
 
 [[projects]]
   name = "github.com/nats-io/nuid"
@@ -87,13 +98,23 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/olivere/elastic"
+  packages = [
+    ".",
+    "config",
+    "uritemplates"
+  ]
+  revision = "e3492b022a109ac0e52a6d42d5bfb835050fa7f4"
+  version = "v6.1.27"
+
+[[projects]]
   branch = "master"
   name = "github.com/onrik/logrus"
   packages = [
     "filename",
     "sentry"
   ]
-  revision = "6a64e23a4923a8d0d4db2806dcf3e55af1e48f61"
+  revision = "ca0a758702be2ae04725ba88dcd27a71949faf33"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -108,13 +129,13 @@
     ".",
     "sqlparse"
   ]
-  revision = "081fe17d19ff4e2dd9f5a0c1158e6bcf74da6906"
+  revision = "3f452fc0ebebbb784fdab91f7bc79a31dcacab5c"
 
 [[projects]]
   name = "github.com/sirupsen/logrus"
   packages = ["."]
-  revision = "c155da19408a8799da419ed3eeb0cb5db0ad5dbc"
-  version = "v1.0.5"
+  revision = "3e01752db0189b9157070a0e1668a620f9a85da2"
+  version = "v1.0.6"
 
 [[projects]]
   name = "github.com/urfave/cli"
@@ -124,22 +145,21 @@
 
 [[projects]]
   branch = "dev"
-  name = "gitlab.inn4science.com/vcg/go-common"
+  name = "gitlab.inn4science.com/gophers/service-kit"
   packages = [
-    ".",
     "api/render",
     "db",
     "log",
     "natswrap",
     "routines"
   ]
-  revision = "3edc151b718e61e1958a8f48e70afb74b1a5ad8c"
+  revision = "d04a6020aa64e3d8d833d466f36406aeb79a5a0e"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
-  revision = "88942b9c40a4c9d203b82b3731787b672d6e809b"
+  revision = "de0752318171da717af4ce24d0a2e8626afaeb11"
 
 [[projects]]
   branch = "master"
@@ -148,7 +168,7 @@
     "unix",
     "windows"
   ]
-  revision = "91ee8cde435411ca3f1cd365e8f20131aed4d0a1"
+  revision = "98c5dad5d1a0e8a73845ecc8897d0bd56586511d"
 
 [[projects]]
   name = "gopkg.in/gorp.v1"
@@ -157,14 +177,20 @@
   version = "v1.7.1"
 
 [[projects]]
+  branch = "v3"
+  name = "gopkg.in/sohlich/elogrus.v3"
+  packages = ["."]
+  revision = "1fa29e2f2009c129693c7079e5f6361bfbd34080"
+
+[[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "7f97868eec74b32b0982dd158a51a446d1da7eb5"
-  version = "v2.1.1"
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5a097f5b06f7eb69ce0165831fd72142b97b0836041f1ea5ad8616a9b9f12e88"
+  inputs-digest = "2deae9849e8e4702124d8cc2002f085842fd8a9e19ea9275cebc6dc6d2818cce"
   solver-name = "gps-cdcl"
   solver-version = 1

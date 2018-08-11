@@ -1,14 +1,17 @@
 package config
 
-import "github.com/go-ozzo/ozzo-validation"
+import (
+	"github.com/go-ozzo/ozzo-validation"
+	"gitlab.inn4science.com/vcg/go-common/tools"
+)
 
 // Links are the addresses of other micro services
 // with which the interaction takes place.
 type Links struct {
-	UserAPI      string `yaml:"user_api"`
-	PaymentGate  string `yaml:"payment_gate"`
-	Rate         string `yaml:"rate"`
-	Transactions string `yaml:"transactions"`
+	UserAPI      tools.URL `yaml:"user_api"`
+	PaymentGate  tools.URL `yaml:"payment_gate"`
+	Rate         tools.URL `yaml:"rate"`
+	Transactions tools.URL `yaml:"transactions"`
 }
 
 func (links Links) Validate() error {
@@ -19,4 +22,3 @@ func (links Links) Validate() error {
 		validation.Field(&links.Transactions, validation.Required),
 	)
 }
-

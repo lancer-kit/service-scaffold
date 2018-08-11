@@ -10,9 +10,9 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 	"github.com/sirupsen/logrus"
-	"gitlab.inn4science.com/vcg/go-common/api/render"
-	"gitlab.inn4science.com/vcg/go-common/log"
-	"gitlab.inn4science.com/vcg/go-common/routines"
+	"gitlab.inn4science.com/gophers/service-kit/api/render"
+	"gitlab.inn4science.com/gophers/service-kit/log"
+	"gitlab.inn4science.com/gophers/service-kit/routines"
 
 	"gitlab.inn4science.com/gophers/service-scaffold/config"
 	"gitlab.inn4science.com/gophers/service-scaffold/workers/api/handler"
@@ -31,7 +31,7 @@ func (s *Server) Init(parentCtx context.Context) routines.Worker {
 }
 
 func (s *Server) Run() {
-	cfg := config.Cfg{}
+	cfg := config.Config()
 	router := GetRouter(s.logger, cfg.EnableCORS, cfg.DevMode, cfg.ApiRequestTimeout)
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 	server := &http.Server{Addr: addr, Handler: router}

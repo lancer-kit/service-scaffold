@@ -1,17 +1,18 @@
 package config
 
 import (
-	"time"
 	"io/ioutil"
-	"gopkg.in/yaml.v2"
+	"time"
+
 	"github.com/sirupsen/logrus"
-	"gitlab.inn4science.com/vcg/go-common"
-	"gitlab.inn4science.com/vcg/go-common/db"
-	"gitlab.inn4science.com/vcg/go-common/log"
-	"gitlab.inn4science.com/vcg/go-common/natswrap"
+	"gitlab.inn4science.com/gophers/service-kit/db"
+	"gitlab.inn4science.com/gophers/service-kit/log"
+	"gitlab.inn4science.com/gophers/service-kit/natswrap"
+	"gitlab.inn4science.com/gophers/service-kit/tools"
+	"gopkg.in/yaml.v2"
 )
 
-const ServiceName  = "courier"
+const ServiceName = "courier"
 
 // config is a `Cfg` singleton var,
 // for access use the `Config` method.
@@ -74,7 +75,7 @@ func initDB() {
 		return
 	}
 
-	vcgtools.RetryIncrementally(
+	tools.RetryIncrementally(
 		5*time.Second,
 		func() bool {
 			err := db.Init(config.DB, log.Default)

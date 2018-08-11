@@ -2,8 +2,8 @@ package config
 
 import (
 	"github.com/go-ozzo/ozzo-validation"
-	"gitlab.inn4science.com/vcg/go-common/log"
-	"gitlab.inn4science.com/vcg/go-common/natswrap"
+	"gitlab.inn4science.com/gophers/service-kit/log"
+	"gitlab.inn4science.com/gophers/service-kit/natswrap"
 )
 
 // Cfg main structure of the app configuration.
