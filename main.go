@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/urfave/cli"
-	"gitlab.inn4science.com/internal/service-scaffold/config"
+	"gitlab.inn4science.com/gophers/service-scaffold/config"
 )
 
 func main() {

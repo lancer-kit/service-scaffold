@@ -14,8 +14,8 @@ import (
 	"gitlab.inn4science.com/vcg/go-common/log"
 	"gitlab.inn4science.com/vcg/go-common/routines"
 
-	"gitlab.inn4science.com/internal/service-scaffold/config"
-	"gitlab.inn4science.com/internal/service-scaffold/workers/api/handler"
+	"gitlab.inn4science.com/gophers/service-scaffold/config"
+	"gitlab.inn4science.com/gophers/service-scaffold/workers/api/handler"
 )
 
 type Server struct {

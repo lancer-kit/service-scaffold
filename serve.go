@@ -11,9 +11,9 @@ import (
 	"github.com/urfave/cli"
 	"gitlab.inn4science.com/vcg/go-common/log"
 
-	"gitlab.inn4science.com/internal/service-scaffold/config"
-	"gitlab.inn4science.com/internal/service-scaffold/dbschema"
-	"gitlab.inn4science.com/internal/service-scaffold/workers"
+	"gitlab.inn4science.com/gophers/service-scaffold/config"
+	"gitlab.inn4science.com/gophers/service-scaffold/dbschema"
+	"gitlab.inn4science.com/gophers/service-scaffold/workers"
 )
 
 func serveAction(c *cli.Context) error {

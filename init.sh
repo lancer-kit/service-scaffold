@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-scaffold_path="gitlab.inn4science.com\/internal\/service-scaffold"
+scaffold_path="gitlab.inn4science.com\/gophers\/service-scaffold"
 VCS_DOMAIN=""
 VCS_USER=""
 PROJECT_NAME=""
