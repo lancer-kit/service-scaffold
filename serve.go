@@ -2,18 +2,18 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-	"fmt"
 
 	"github.com/urfave/cli"
 	"gitlab.inn4science.com/vcg/go-common/log"
 
-	"gitlab.inn4science.com/vcg/go-skeleton/config"
-	"gitlab.inn4science.com/vcg/go-skeleton/dbschema"
-	"gitlab.inn4science.com/vcg/go-skeleton/workers"
+	"gitlab.inn4science.com/internal/service-scaffold/config"
+	"gitlab.inn4science.com/internal/service-scaffold/dbschema"
+	"gitlab.inn4science.com/internal/service-scaffold/workers"
 )
 
 func serveAction(c *cli.Context) error {

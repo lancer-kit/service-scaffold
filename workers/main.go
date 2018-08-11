@@ -1,10 +1,10 @@
 package workers
 
 import (
+	"gitlab.inn4science.com/internal/service-scaffold/config"
+	"gitlab.inn4science.com/internal/service-scaffold/workers/api"
+	"gitlab.inn4science.com/internal/service-scaffold/workers/foobar"
 	"gitlab.inn4science.com/vcg/go-common/routines"
-	"gitlab.inn4science.com/vcg/go-skeleton/config"
-	"gitlab.inn4science.com/vcg/go-skeleton/workers/api"
-	"gitlab.inn4science.com/vcg/go-skeleton/workers/foobar"
 )
 
 var WorkerChief routines.Chief

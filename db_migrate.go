@@ -6,8 +6,8 @@ import (
 	"github.com/urfave/cli"
 	"gitlab.inn4science.com/vcg/go-common/log"
 
-	"gitlab.inn4science.com/vcg/go-skeleton/config"
-	"gitlab.inn4science.com/vcg/go-skeleton/dbschema"
+	"gitlab.inn4science.com/internal/service-scaffold/config"
+	"gitlab.inn4science.com/internal/service-scaffold/dbschema"
 )
 
 func migrateDB(cfgPath string, direction dbschema.MigrateDir) *cli.ExitError {
