@@ -1,20 +1,26 @@
 # Go Web-Service Scaffold
 
 To bootstrap new project:
+
 1. Clone or `go get` this repo
-	```sh
-	mkdir -p $GOPATH/src/gitlab.inn4science.com/gophers
-	cd $GOPATH/src/gitlab.inn4science.com/gophers
-	git clone https://gitlab.inn4science.com/gophers/service-scaffold
-	### OR
-	go get gitlab.inn4science.com/gophers/service-scaffold
-	```
+
+```sh
+mkdir -p $GOPATH/src/gitlab.inn4science.com/gophers
+cd $GOPATH/src/gitlab.inn4science.com/gophers
+git clone https://gitlab.inn4science.com/gophers/service-scaffold
+### OR
+go get gitlab.inn4science.com/gophers/service-scaffold
+```
+
 2. Go to scaffold directory and run `./init.sh`
-	```sh
-	cd $GOPATH/src/gitlab.inn4science.com/gophers/service-scaffold
-	sh ./init.sh
-	```
+	
+```sh
+cd $GOPATH/src/gitlab.inn4science.com/gophers/service-scaffold
+sh ./init.sh
+```
+
 #### Example
+
 ```sh
 $ cd $GOPATH/src/gitlab.inn4science.com/gophers/service-scaffold
 $  sh ./init.sh 
