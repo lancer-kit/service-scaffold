@@ -147,13 +147,15 @@
   branch = "dev"
   name = "gitlab.inn4science.com/gophers/service-kit"
   packages = [
+    "api",
     "api/render",
     "db",
     "log",
     "natswrap",
-    "routines"
+    "routines",
+    "tools"
   ]
-  revision = "d04a6020aa64e3d8d833d466f36406aeb79a5a0e"
+  revision = "8bf8109921559f56611e51ff42a7da2a089967f3"
 
 [[projects]]
   branch = "master"
@@ -191,6 +193,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2deae9849e8e4702124d8cc2002f085842fd8a9e19ea9275cebc6dc6d2818cce"
+  inputs-digest = "0ae501625ec8de35c1a46b95ad740561b5d471c6c024c6262fc8285eec7e6b74"
   solver-name = "gps-cdcl"
   solver-version = 1

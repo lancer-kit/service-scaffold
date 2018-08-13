@@ -19,3 +19,7 @@ func (s *Service) Init(ctx context.Context) routines.Worker {
 func (s *Service) Run() {
 
 }
+
+func (s *Service) RestartOnFail() bool {
+	return false
+}

@@ -11,6 +11,6 @@ var WorkerChief routines.Chief
 
 func init() {
 	WorkerChief = routines.Chief{}
-	WorkerChief.AddWorker(config.WorkerAPIServer, &api.Server{})
+	WorkerChief.AddWorker(config.WorkerAPIServer, api.Server())
 	WorkerChief.AddWorker(config.WorkerFooBar, &foobar.Service{})
 }

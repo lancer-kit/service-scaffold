@@ -17,7 +17,8 @@ var AvailableWorkers = map[string]struct{}{
 }
 
 type WorkerExistRule struct {
-	message string
+	message          string
+	AvailableWorkers map[string]struct{}
 }
 
 // Validate checks that service exist on the system
@@ -27,7 +28,7 @@ func (r *WorkerExistRule) Validate(value interface{}) error {
 		return errors.New("can't convert list of workers to []string")
 	}
 	for _, v := range arr {
-		if _, ok := AvailableWorkers[v]; !ok {
+		if _, ok := r.AvailableWorkers[v]; !ok {
 			return errors.New("invalid service name " + v)
 		}
 	}

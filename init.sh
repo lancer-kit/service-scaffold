@@ -66,6 +66,8 @@ copy_project() {
   rm -rf ./.git
   rm -rf ./.idea
   rm -rf ./init.sh
+  mv ./README.md.tmpl ./README.md
+  mv ./.gitlab-ci.yml.tmpl ./.gitlab-ci.yml
 }
 
 

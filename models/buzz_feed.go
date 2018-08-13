@@ -1,12 +1,11 @@
 package models
 
 import (
-	"database/sql/driver"
-	"encoding/json"
+	"database/sql"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
-
-	"github.com/pkg/errors"
+	"gitlab.inn4science.com/gophers/service-kit/db"
 )
 
 type BuzzFeed struct {
@@ -14,49 +13,72 @@ type BuzzFeed struct {
 	Name        string `db:"name" json:"name"`
 	Description string `db:"description"json:"description"`
 	Details     Feed   `db:"details"json:"details"`
+	CreatedAt   int64  `db:"created_at" json:"createdAt"`
+	UpdatedAt   int64  `db:"updated_at" json:"updatedAt"`
 }
 
 type BuzzFeedQ struct {
 	*Q
-	sqBuilder sq.SelectBuilder
+	db.Table
 }
 
-// NewPriceQ returns the new instance of the `PriceQ`.
 func NewBuzzFeedQ(q *Q) *BuzzFeedQ {
 	return &BuzzFeedQ{
-		Q:         q,
-		sqBuilder: sq.Select("*").From("buzz_feed").OrderBy("id"),
+		Q: q,
+		Table: db.Table{
+			Name:      "buzz_feed",
+			QBuilder:  sq.Select("*").From("buzz_feed"),
+			IQBuilder: sq.Insert("buzz_feed"),
+			UQBuilder: sq.Update("buzz_feed"),
+		},
 	}
 }
 
-type Feed struct {
+func (q *BuzzFeedQ) Insert(bf BuzzFeed) error {
+	_, err := q.DBConn.Insert(
+		q.IQBuilder.SetMap(map[string]interface{}{
+			"name":        bf.Name,
+			"description": bf.Description,
+			"details":     bf.Details,
+			"created_at":  time.Now().UTC().Unix(),
+			"updated_at":  time.Now().UTC().Unix(),
+		}),
+	)
+	return err
 }
 
-func (f *Feed) UnmarshalJSON(data []byte) error {
-	return nil
-}
-
-func (f Feed) MarshalJSON() ([]byte, error) {
-	return []byte("{}"), nil
-}
-
-func (f Feed) Value() (driver.Value, error) {
-	j, err := json.Marshal(f)
-	return j, err
-}
-
-func (f *Feed) Scan(src interface{}) error {
-	source, ok := src.([]byte)
-	if !ok {
-		return errors.New("Type assertion .([]byte) failed.")
+func (q *BuzzFeedQ) ByID() (*BuzzFeed, error) {
+	res := new(BuzzFeed)
+	err := q.DBConn.Get(q.QBuilder, &res)
+	if err == sql.ErrNoRows {
+		return res, nil
 	}
+	return res, err
+}
 
-	var i Feed
-	err := json.Unmarshal(source, &i)
-	if err != nil {
-		return errors.Wrap(err, "Feed: can't unmarshal column data")
+func (q *BuzzFeedQ) WithName(name string) *BuzzFeedQ {
+	q.QBuilder = q.QBuilder.Where("name = ?", name)
+	return q
+}
+
+func (q *BuzzFeedQ) SetPage(query *db.PageQuery) *BuzzFeedQ {
+	q.Table.SetPage(query)
+	return q
+}
+
+func (q *BuzzFeedQ) Select() ([]BuzzFeed, error) {
+	q.ApplyPage("id")
+	res := make([]BuzzFeed, 0)
+	err := q.DBConn.Select(q.QBuilder, &res)
+	if err == sql.ErrNoRows {
+		return res, nil
 	}
+	return res, err
+}
 
-	*f = i
-	return nil
+func (q *BuzzFeedQ) UpdateDetails(id int64, details Feed) error {
+	err := q.DBConn.Exec(
+		q.UQBuilder.Set("details", details).Where("id = ?", id),
+	)
+	return err
 }

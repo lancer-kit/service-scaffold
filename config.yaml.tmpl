@@ -1,14 +1,16 @@
 db: "postgres://user:password@localhost/skeleton_db?sslmode=disable"
-log_level: debug
-host: localhost
-port: 2490
 
-check_auth: false
+api:
+  host: localhost
+  port: 2490
+  dev_mode: true
+  enable_cors: true
+  api_request_timeout: 60
+
 dev_mode: true
+check_auth: false
 auto_migrate: true
 wait_for_db: true
-enable_cors: true
-api_request_timeout: 60
 
 log:
   app_name: tx-service
@@ -31,7 +33,4 @@ links:
 
 #workers:
 #  - api-server
-#  - balance-curator
-#  - fee-trustee
-#  - op-submitter
-#  - db-keeper
+#  - foobar

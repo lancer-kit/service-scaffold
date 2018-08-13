@@ -2,27 +2,24 @@ package config
 
 import (
 	"github.com/go-ozzo/ozzo-validation"
+	"gitlab.inn4science.com/gophers/service-kit/api"
 	"gitlab.inn4science.com/gophers/service-kit/log"
 	"gitlab.inn4science.com/gophers/service-kit/natswrap"
 )
 
 // Cfg main structure of the app configuration.
 type Cfg struct {
-	// DB is a database connection string.
-	DB       string          `yaml:"db"`
-	LogLevel string          `yaml:"log_level"`
-	Host     string          `yaml:"host"`
-	Port     int             `yaml:"port"`
-	NATS     natswrap.Config `yaml:"nats"`
+	DB string `json:"db" yaml:"db"` // DB is a database connection string.
 
-	Log log.Config `yaml:"log"`
+	Api api.Config `json:"api" yaml:"api"`
 
 	// AutoMigrate if `true` execute db migrate up on start.
-	AutoMigrate       bool `yaml:"auto_migrate"`
-	DevMode           bool `yaml:"dev_mode"`
-	WaitForDB         bool `yaml:"wait_for_db"`
-	EnableCORS        bool `yaml:"enable_cors"`
-	ApiRequestTimeout int  `yaml:"api_request_timeout"`
+	AutoMigrate bool `json:"auto_migrate" yaml:"auto_migrate"`
+	DevMode     bool `json:"dev_mode" yaml:"dev_mode"`
+	WaitForDB   bool `json:"wait_for_db" yaml:"wait_for_db"`
+
+	NATS natswrap.Config `json:"nats" yaml:"nats"`
+	Log  log.Config      `json:"log" yaml:"log"`
 
 	// Links are the addresses of other services
 	// with which the interaction takes place.
@@ -36,11 +33,12 @@ type Cfg struct {
 func (cfg Cfg) Validate() error {
 	return validation.ValidateStruct(&cfg,
 		validation.Field(&cfg.DB, validation.Required),
-		validation.Field(&cfg.Host, validation.Required),
-		validation.Field(&cfg.Port, validation.Required),
+		validation.Field(&cfg.Api, validation.Required),
 		validation.Field(&cfg.Links, validation.Required),
 		validation.Field(&cfg.NATS, validation.Required),
-		validation.Field(&cfg.Workers, new(WorkerExistRule)),
+		validation.Field(&cfg.Workers, &WorkerExistRule{
+			AvailableWorkers: AvailableWorkers,
+		}),
 	)
 }
 

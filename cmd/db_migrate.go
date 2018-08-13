@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -6,21 +6,10 @@ import (
 	"github.com/urfave/cli"
 	"gitlab.inn4science.com/gophers/service-kit/log"
 
+	"gitlab.inn4science.com/gophers/service-kit/db"
 	"gitlab.inn4science.com/gophers/service-scaffold/config"
 	"gitlab.inn4science.com/gophers/service-scaffold/dbschema"
 )
-
-func migrateDB(cfgPath string, direction dbschema.MigrateDir) *cli.ExitError {
-	initConfig(cfgPath)
-	count, err := dbschema.Migrate(config.Config().DB, direction)
-	if err != nil {
-		log.Default.WithError(err).Error("Migrations failed")
-		return cli.NewExitError(fmt.Sprintf("migration %s failed", direction), 1)
-	}
-
-	log.Default.Info(fmt.Sprintf("Applied %d %s migration", count, direction))
-	return nil
-}
 
 var migrateCommand = cli.Command{
 	Name:  "migrate",
@@ -32,7 +21,7 @@ var migrateCommand = cli.Command{
 			Usage: "apply up migration direction",
 			Flags: cfgFlag,
 			Action: func(c *cli.Context) error {
-				err := migrateDB(c.String("config"), dbschema.MigrateUp)
+				err := migrateDB(c.String("config"), db.MigrateUp)
 				if err != nil {
 					return err
 				}
@@ -44,7 +33,7 @@ var migrateCommand = cli.Command{
 			Usage: "drop and clean database schema",
 			Flags: cfgFlag,
 			Action: func(c *cli.Context) error {
-				err := migrateDB(c.String("config"), dbschema.MigrateDown)
+				err := migrateDB(c.String("config"), db.MigrateDown)
 				if err != nil {
 					return err
 				}
@@ -56,11 +45,11 @@ var migrateCommand = cli.Command{
 			Usage: "reset database schema",
 			Flags: cfgFlag,
 			Action: func(c *cli.Context) error {
-				err := migrateDB(c.String("config"), dbschema.MigrateDown)
+				err := migrateDB(c.String("config"), db.MigrateDown)
 				if err != nil {
 					return err
 				}
-				err = migrateDB(c.String("config"), dbschema.MigrateUp)
+				err = migrateDB(c.String("config"), db.MigrateUp)
 				if err != nil {
 					return err
 				}
@@ -69,4 +58,19 @@ var migrateCommand = cli.Command{
 			},
 		},
 	},
+}
+
+func migrateDB(cfgPath string, direction db.MigrateDir) *cli.ExitError {
+	config.Init(cfgPath)
+
+	dbschema.SetAssets()
+
+	count, err := db.Migrate(config.Config().DB, direction)
+	if err != nil {
+		log.Default.WithError(err).Error("Migrations failed")
+		return cli.NewExitError(fmt.Sprintf("migration %s failed", direction), 1)
+	}
+
+	log.Default.Info(fmt.Sprintf("Applied %d %s migration", count, direction))
+	return nil
 }
