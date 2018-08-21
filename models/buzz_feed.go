@@ -39,7 +39,7 @@ func (q *BuzzFeedQ) Insert(bf BuzzFeed) error {
 	_, err := q.DBConn.Insert(
 		q.IQBuilder.SetMap(map[string]interface{}{
 			"name":        bf.Name,
-			"buzz_type":   bf.BuzzType.String(),
+			"buzz_type":   bf.BuzzType,
 			"description": bf.Description,
 			"details":     bf.Details,
 			"created_at":  time.Now().UTC().Unix(),

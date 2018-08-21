@@ -9,17 +9,6 @@ import (
 	"fmt"
 )
 
-func init() {
-	// stub usage of json for situation when
-	// (Un)MarshalJSON methods will be omitted
-	_ = json.Delim('s')
-
-	// stub usage of sql/driver for situation when
-	// Scan/Value methods will be omitted
-	_ = driver.Bool
-	_ = sql.LevelDefault
-}
-
 var ErrExampleTypeInvalid = errors.New("ExampleType is invalid")
 
 func init() {
