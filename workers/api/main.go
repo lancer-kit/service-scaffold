@@ -17,10 +17,13 @@ import (
 )
 
 func Server() *api.Server {
-	serverConf := config.Config().Api
-	server := api.NewServer("api-server", serverConf, GetRouter)
-
-	return &server
+	return &api.Server{
+		Name:      "api-server",
+		GetRouter: GetRouter,
+		GetConfig: func() api.Config {
+			return config.Config().Api
+		},
+	}
 }
 
 func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
