@@ -17,7 +17,7 @@ type Q struct {
 }
 
 // NewQ returns initialized instance of the `QI`.
-func NewQ(dbConn *db.SQLConn) QI {
+func NewQ(dbConn *db.SQLConn) *Q {
 	if dbConn == nil {
 		dbConn = db.GetConnector()
 	}

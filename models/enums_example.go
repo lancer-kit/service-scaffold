@@ -3,9 +3,9 @@ package models
 type ExampleType int
 
 const (
-	ExampleTypeA ExampleType = iota
-	ExampleTypeB
-	ExampleTypeC
-	ExampleTypeD
+	testA ExampleType = iota
+	testB
+	testC
+	testD
 )
 

@@ -15,26 +15,26 @@ func init() {
 	var v ExampleType
 	if _, ok := interface{}(v).(fmt.Stringer); ok {
 		defExampleTypeNameToValue = map[string]ExampleType{
-			interface{}(ExampleTypeA).(fmt.Stringer).String(): ExampleTypeA,
-			interface{}(ExampleTypeB).(fmt.Stringer).String(): ExampleTypeB,
-			interface{}(ExampleTypeC).(fmt.Stringer).String(): ExampleTypeC,
-			interface{}(ExampleTypeD).(fmt.Stringer).String(): ExampleTypeD,
+			interface{}(testA).(fmt.Stringer).String(): testA,
+			interface{}(testB).(fmt.Stringer).String(): testB,
+			interface{}(testC).(fmt.Stringer).String(): testC,
+			interface{}(testD).(fmt.Stringer).String(): testD,
 		}
 	}
 }
 
 var defExampleTypeNameToValue = map[string]ExampleType{
-	"ExampleTypeA": ExampleTypeA,
-	"ExampleTypeB": ExampleTypeB,
-	"ExampleTypeC": ExampleTypeC,
-	"ExampleTypeD": ExampleTypeD,
+	"testA": testA,
+	"testB": testB,
+	"testC": testC,
+	"testD": testD,
 }
 
 var defExampleTypeValueToName = map[ExampleType]string{
-	ExampleTypeA: "ExampleTypeA",
-	ExampleTypeB: "ExampleTypeB",
-	ExampleTypeC: "ExampleTypeC",
-	ExampleTypeD: "ExampleTypeD",
+	testA: "testA",
+	testB: "testB",
+	testC: "testC",
+	testD: "testD",
 }
 
 // String is generated so ExampleType satisfies fmt.Stringer.
@@ -83,24 +83,26 @@ func (r *ExampleType) UnmarshalJSON(data []byte) error {
 
 // Value is generated so ExampleType satisfies db row driver.Valuer.
 func (r ExampleType) Value() (driver.Value, error) {
-	j, err := json.Marshal(r)
-	return j, err
+	j, ok := defExampleTypeValueToName[r]
+	if !ok {
+		return nil, nil
+	}
+	return j, nil
 }
 
 // Value is generated so ExampleType satisfies db row driver.Scanner.
 func (r *ExampleType) Scan(src interface{}) error {
-	switch src.(type) {
+	switch  v := src.(type) {
 	case string:
-		val, ok := defExampleTypeNameToValue[src.(string)]
+		val, ok := defExampleTypeNameToValue[v]
 		if !ok {
 			return errors.New("ExampleType: can't unmarshal column data")
 		}
 		*r = val
 		return nil
 	case []byte:
-		source := src.([]byte)
 		var i ExampleType
-		err := json.Unmarshal(source, &i)
+		err := json.Unmarshal(v, &i)
 		if err != nil {
 			return errors.New("ExampleType: can't unmarshal column data")
 		}
@@ -109,7 +111,7 @@ func (r *ExampleType) Scan(src interface{}) error {
 		return nil
 	case int, int8, int32, int64, uint, uint8, uint32, uint64:
 		ni := sql.NullInt64{}
-		err := ni.Scan(src)
+		err := ni.Scan(v)
 		if err != nil {
 			return errors.New("ExampleType: can't scan column data into int64")
 		}

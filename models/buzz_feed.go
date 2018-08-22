@@ -27,10 +27,10 @@ func NewBuzzFeedQ(q *Q) *BuzzFeedQ {
 	return &BuzzFeedQ{
 		Q: q,
 		Table: db.Table{
-			Name:      "buzz_feed",
-			QBuilder:  sq.Select("*").From("buzz_feed"),
-			IQBuilder: sq.Insert("buzz_feed"),
-			UQBuilder: sq.Update("buzz_feed"),
+			Name:      "buzz_feeds",
+			QBuilder:  sq.Select("*").From("buzz_feeds"),
+			IQBuilder: sq.Insert("buzz_feeds"),
+			UQBuilder: sq.Update("buzz_feeds"),
 		},
 	}
 }
