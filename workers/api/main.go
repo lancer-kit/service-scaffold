@@ -13,6 +13,7 @@ import (
 	"gitlab.inn4science.com/gophers/service-kit/log"
 	"gitlab.inn4science.com/gophers/service-scaffold/config"
 	"gitlab.inn4science.com/gophers/service-scaffold/workers/api/handler"
+	"gitlab.inn4science.com/gophers/service-scaffold/workers/api/middlewares"
 )
 
 func Server() *api.Server {
@@ -33,6 +34,8 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 	r.Use(log.NewRequestLogger(logger.Logger))
+	//custom middleware example
+	r.Use(middlewares.VerifySomething())
 
 	if config.EnableCORS {
 		corsHandler := cors.New(cors.Options{
@@ -61,10 +64,9 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 	r.Route("/dev", func(r chi.Router) {
 
 		r.Route("/ping", func(r chi.Router) {
-			r.Get("/", handler.Post)
-			r.Get("/buzz/{id}", handler.Post)
-			r.Post("/", handler.Post)
+			r.Get("/buzz/", handler.Post)
 		})
+		r.Get("/middleware", handler.GetValueFromMiddleware)
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {

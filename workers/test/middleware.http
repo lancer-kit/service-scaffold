@@ -1,0 +1,4 @@
+# Test middleware
+GET http://localhost:2490/dev/middleware?param=test
+
+###
