@@ -16,11 +16,6 @@ import (
 )
 
 func Server() *api.Server {
-	//serverConf := config.Config().Api
-	//server := api.NewServer("api-server", config.Config().Api, GetRouter)
-	//
-	//return &server
-
 	return &api.Server{
 		Name:      "api-server",
 		GetRouter: GetRouter,
