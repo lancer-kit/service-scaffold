@@ -102,11 +102,8 @@ func (r *ExampleType) Scan(src interface{}) error {
 		return nil
 	case []byte:
 		var i ExampleType
-		err := json.Unmarshal(v, &i)
-		if err != nil {
-			return errors.New("ExampleType: can't unmarshal column data")
-		}
-
+		is := string(v)
+		i = defExampleTypeNameToValue[is]
 		*r = i
 		return nil
 	case int, int8, int32, int64, uint, uint8, uint32, uint64:

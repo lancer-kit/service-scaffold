@@ -65,6 +65,8 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 		r.Route("/ping", func(r chi.Router) {
 			r.Post("/buzz/", handler.Post)
 		})
+
+		r.Get("/AllBuzz", handler.AllBuzz)
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
