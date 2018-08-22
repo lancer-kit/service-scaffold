@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"net/http"
+"net/http"
 
-	"gitlab.inn4science.com/gophers/service-kit/api/render"
+"gitlab.inn4science.com/gophers/service-kit/api/render"
 )
 
 func GetValueFromMiddleware(w http.ResponseWriter, r *http.Request) {

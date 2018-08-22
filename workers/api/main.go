@@ -67,9 +67,6 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 			r.Get("/", handler.Post)
 			r.Get("/buzz/{id}", handler.Post)
 			r.Post("/", handler.Post)
-		})
-
-		r.Route("/test", func(r chi.Router) {
 			r.Get("/middleware", handler.GetValueFromMiddleware)
 		})
 	})
