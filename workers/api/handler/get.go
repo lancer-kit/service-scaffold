@@ -31,3 +31,8 @@ func AllBuzz(w http.ResponseWriter, r *http.Request) {
 
 	render.WriteJSON(w, http.StatusOK, ols)
 }
+
+func GetValueFromMiddleware(w http.ResponseWriter, r *http.Request) {
+	testParam := r.Context().Value("some_param")
+	render.Success(w, testParam)
+}

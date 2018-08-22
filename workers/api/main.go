@@ -34,6 +34,7 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 	r.Use(log.NewRequestLogger(logger.Logger))
+	//custom middleware example
 	r.Use(middlewares.VerifySomething())
 
 	if config.EnableCORS {
@@ -61,12 +62,12 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 	}
 
 	r.Route("/dev", func(r chi.Router) {
-
 		r.Route("/ping", func(r chi.Router) {
 			r.Post("/buzz/", handler.Post)
 		})
 
 		r.Get("/AllBuzz", handler.AllBuzz)
+        r.Get("/middleware", handler.GetValueFromMiddleware)
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
