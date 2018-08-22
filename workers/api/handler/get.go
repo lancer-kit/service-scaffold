@@ -2,8 +2,9 @@ package handler
 
 import (
 	"net/http"
-	"gitlab.inn4science.com/gophers/service-kit/db"
+
 	"gitlab.inn4science.com/gophers/service-kit/api/render"
+	"gitlab.inn4science.com/gophers/service-kit/db"
 	"gitlab.inn4science.com/gophers/service-kit/log"
 	"gitlab.inn4science.com/gophers/service-scaffold/models"
 )
@@ -28,8 +29,7 @@ func AllBuzz(w http.ResponseWriter, r *http.Request) {
 		render.ResultNotFound.Render(w)
 		return
 	}
-
-	render.WriteJSON(w, http.StatusOK, ols)
+	render.RenderListWithPages(w, pageQuery, int64(len(ols)), ols)
 }
 
 func GetValueFromMiddleware(w http.ResponseWriter, r *http.Request) {
