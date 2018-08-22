@@ -62,11 +62,12 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 	}
 
 	r.Route("/dev", func(r chi.Router) {
-
 		r.Route("/ping", func(r chi.Router) {
-			r.Get("/buzz/", handler.Post)
+			r.Post("/buzz/", handler.Post)
 		})
-		r.Get("/middleware", handler.GetValueFromMiddleware)
+
+		r.Get("/AllBuzz", handler.AllBuzz)
+        r.Get("/middleware", handler.GetValueFromMiddleware)
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {

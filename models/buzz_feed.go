@@ -9,12 +9,13 @@ import (
 )
 
 type BuzzFeed struct {
-	ID          int64  `db:"id" json:"id"`
-	Name        string `db:"name" json:"name"`
-	Description string `db:"description"json:"description"`
-	Details     Feed   `db:"details"json:"details"`
-	CreatedAt   int64  `db:"created_at" json:"createdAt"`
-	UpdatedAt   int64  `db:"updated_at" json:"updatedAt"`
+	ID          int64       `db:"id" json:"id"`
+	Name        string      `db:"name" json:"name"`
+	BuzzType    ExampleType `db:"buzz_type" json:"buzzType"`
+	Description string      `db:"description"json:"description"`
+	Details     Feed        `db:"details"json:"details"`
+	CreatedAt   int64       `db:"created_at" json:"createdAt"`
+	UpdatedAt   int64       `db:"updated_at" json:"updatedAt"`
 }
 
 type BuzzFeedQ struct {
@@ -26,10 +27,10 @@ func NewBuzzFeedQ(q *Q) *BuzzFeedQ {
 	return &BuzzFeedQ{
 		Q: q,
 		Table: db.Table{
-			Name:      "buzz_feed",
-			QBuilder:  sq.Select("*").From("buzz_feed"),
-			IQBuilder: sq.Insert("buzz_feed"),
-			UQBuilder: sq.Update("buzz_feed"),
+			Name:      "buzz_feeds",
+			QBuilder:  sq.Select("*").From("buzz_feeds"),
+			IQBuilder: sq.Insert("buzz_feeds"),
+			UQBuilder: sq.Update("buzz_feeds"),
 		},
 	}
 }
@@ -38,6 +39,7 @@ func (q *BuzzFeedQ) Insert(bf BuzzFeed) error {
 	_, err := q.DBConn.Insert(
 		q.IQBuilder.SetMap(map[string]interface{}{
 			"name":        bf.Name,
+			"buzz_type":   bf.BuzzType,
 			"description": bf.Description,
 			"details":     bf.Details,
 			"created_at":  time.Now().UTC().Unix(),
