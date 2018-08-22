@@ -2,15 +2,22 @@ package handler
 
 import (
 	"net/http"
+
 	"encoding/json"
-	"gitlab.inn4science.com/gophers/service-scaffold/models"
+	"io/ioutil"
+
 	"gitlab.inn4science.com/gophers/service-kit/api/render"
 	"gitlab.inn4science.com/gophers/service-kit/log"
-	"io/ioutil"
+	"gitlab.inn4science.com/gophers/service-scaffold/models"
 )
 
-func Post(w http.ResponseWriter, r *http.Request) {
-	data := new(models.BuzzFeed)
+func Put(w http.ResponseWriter, r *http.Request) {
+	type inputData struct {
+		Id          int64  `json:"id"`
+		Description string `json:"description"`
+	}
+	data := new(inputData)
+
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		render.ServerError(w)
@@ -23,9 +30,8 @@ func Post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Default.Info("Trying to write data into database")
 	dataQ := models.NewBuzzFeedQ(models.NewQ(nil))
-	err = dataQ.Insert(*data)
+	err = dataQ.UpdateBuzzDescription(data.Id, data.Description)
 	if err != nil {
 		render.ServerError(w)
 		log.Default.WithError(err).Error("Can not insert data into database")
@@ -33,5 +39,5 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Default.Info("Data has been written successfully")
-	render.Success(w,data)
+	render.Success(w, data)
 }

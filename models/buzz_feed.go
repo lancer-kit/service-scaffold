@@ -84,3 +84,10 @@ func (q *BuzzFeedQ) UpdateDetails(id int64, details Feed) error {
 	)
 	return err
 }
+
+func (q *BuzzFeedQ) UpdateBuzzDescription(id int64, description string) error {
+	err := q.DBConn.Exec(
+		q.UQBuilder.Set("description", description).Where("id = ?", id),
+	)
+	return err
+}
