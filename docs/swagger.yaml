@@ -1,0 +1,239 @@
+swagger: '2.0'
+info:
+  version: '0.1'
+  title: Scaffold Servise
+  description: 'Base for other projects'
+
+host: localhost
+
+schemes:
+- http
+
+basePath: /dev
+
+security:
+- User: []
+- Jwt: []
+
+produces:
+- application/json
+
+consumes:
+- application/json
+
+paths:
+  /buzz:
+    post:
+      summary: Add new raw in db
+      tags:
+      - buzz
+      parameters:
+      - name: param
+        in: query
+        description: Query param for middleware
+        required: true
+        type: string
+      responses:
+        200:
+          description: 'Raw was successfully added'
+          schema:
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 1
+              name:
+                type: string
+                example: 'test'
+              buzzType:
+                type: string
+                example: 'testA'
+              description:
+                type: string
+                example: 'test object'
+              details:
+                type: json
+                example: {}
+              createdAt:
+                type: integer
+                format: int
+                example: 0
+              updatedAt:
+                type: integer
+                format: int
+                example: 0
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        500:
+          description: "Request Failed"
+
+  /AllBuzz:
+    get:
+      tags:
+      - allbuzz
+      summary: Returns number of rows from database
+      parameters:
+      - name: param
+        in: query
+        description: Query param for middleware
+        required: true
+        type: string
+      - name: order
+        in: query
+        description: Order of objects
+        required: false
+        type: string
+      - name: pageSize
+        in: query
+        description: Query param for setting number of elements on the page
+        required: false
+        type: integer
+      - name: page
+        in: query
+        description: Query param for setting page number
+        required: false
+        type: integer
+      responses:
+        200:
+          description: successful operation
+          schema:
+            properties:
+              page:
+                type: integer
+                format: int64
+                example: 1
+              pageSize:
+                type: integer
+                format: int64
+                example: 10
+              order:
+                type: string
+                example: "asc"
+              total:
+                type: integer
+                format: int64
+                example: 10
+              records:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      format: int64
+                      example: 1
+                    name:
+                      type: string
+                      example: 'test'
+                    buzzType:
+                      type: string
+                      example: 'testA'
+                    description:
+                      type: string
+                      example: 'test object'
+                    details:
+                      type: json
+                      example: {}
+                    createdAt:
+                      type: integer
+                      format: int
+                      example: 0
+                    updatedAt:
+                      type: integer
+                      format: int
+                      example: 0
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        500:
+          description: "Request Failed"
+  /middleware:
+    get:
+      tags:
+      - middleware
+      summary: Verify middleware
+      parameters:
+      - name: param
+        in: query
+        description: Query param for middleware
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: string
+            example: "test"
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        500:
+          description: "Request Failed"
+  /delete:
+    delete:
+      tags:
+      - delete
+      summary: Delete raw from database
+      parameters:
+      - name: param
+        in: query
+        description: Query param for middleware
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: string
+            example: "success"
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        500:
+          description: "Request Failed"
+  /put:
+    put:
+      tags:
+      - put
+      summary: Update raw in database
+      parameters:
+      - name: param
+        in: query
+        description: Query param for middleware
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            properties:
+              description:
+                type: string
+                example: "new description"
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        500:
+          description: "Request Failed"
+
+
+
+responses:
+  UnauthorizedError:
+    examples:
+      no_token:
+        "errcode": 400
+        "errmsg": "JWT Header must not bee empty"
+        "data": null
+      token_is_invalid:
+        "errcode": 400
+        "errmsg": "JWT Header is invalid json"
+        "data": null
+    description: Autorization header invalid
+
+securityDefinitions:
+  Jwt:
+    type: apiKey
+    in: header
+    name: Jwt
+    description: "{\"jti\":\"1\"} - use it without proxy"
+  User:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: "Get from POST:{USER-API}/login/ OR POST:{USER-API}/auth/ OR POST:{USER-API}/verify/password/"
