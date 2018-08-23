@@ -10,6 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"gitlab.inn4science.com/gophers/service-kit/api"
 	"gitlab.inn4science.com/gophers/service-kit/api/render"
+	"gitlab.inn4science.com/gophers/service-kit/auth"
 	"gitlab.inn4science.com/gophers/service-kit/log"
 	"gitlab.inn4science.com/gophers/service-scaffold/config"
 	"gitlab.inn4science.com/gophers/service-scaffold/workers/api/handler"
@@ -34,6 +35,7 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 	r.Use(log.NewRequestLogger(logger.Logger))
+	r.Use(auth.ExtractUserID())
 	//custom middleware example
 	r.Use(middlewares.VerifySomething())
 

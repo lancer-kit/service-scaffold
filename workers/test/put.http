@@ -3,7 +3,8 @@
 PUT http://localhost:2490/dev/put?param=test
 Accept: */*
 Content-Type: application/json
+Jwt: {"jti":"2"}
 
-{"id": 1,"description": "new description"}
+{"description": "new description"}
 
 ###
