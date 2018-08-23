@@ -1,0 +1,8 @@
+#Example of delete request
+DELETE http://localhost:2490/dev/delete?param=test
+Accept: */*
+Content-Type: application/json
+
+{"id": 1}
+
+###

@@ -31,6 +31,7 @@ func NewBuzzFeedQ(q *Q) *BuzzFeedQ {
 			QBuilder:  sq.Select("*").From("buzz_feeds"),
 			IQBuilder: sq.Insert("buzz_feeds"),
 			UQBuilder: sq.Update("buzz_feeds"),
+			DQBuilder: sq.Delete("buzz_feeds"),
 		},
 	}
 }
@@ -88,6 +89,13 @@ func (q *BuzzFeedQ) UpdateDetails(id int64, details Feed) error {
 func (q *BuzzFeedQ) UpdateBuzzDescription(id int64, description string) error {
 	err := q.DBConn.Exec(
 		q.UQBuilder.Set("description", description).Where("id = ?", id),
+	)
+	return err
+}
+
+func (q *BuzzFeedQ) DeleteBuzzByID(id int64) error {
+	err := q.DBConn.Exec(
+		q.DQBuilder.Where("id = ?", id),
 	)
 	return err
 }

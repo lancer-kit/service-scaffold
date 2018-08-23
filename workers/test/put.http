@@ -1,4 +1,4 @@
-#Verify put methods
+#Verify put method
 
 PUT http://localhost:2490/dev/put?param=test
 Accept: */*
