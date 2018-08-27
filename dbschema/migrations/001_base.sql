@@ -7,4 +7,4 @@ CREATE TABLE IF NOT EXISTS buzz_feeds (
 );
 
 -- +migrate Down
-
+DROP TABLE IF EXISTS buzz_feeds;

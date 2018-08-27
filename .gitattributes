@@ -1,2 +1,2 @@
 vendor/* binary
-dbschema/bindata.go
+dbschema/* binary

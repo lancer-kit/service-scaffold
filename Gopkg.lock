@@ -188,6 +188,8 @@
   packages = [
     "api",
     "api/render",
+    "auth",
+    "crypto",
     "db",
     "log",
     "natswrap",
@@ -201,7 +203,11 @@
   branch = "master"
   digest = "1:4cae11053a5fc8e7b08228fcc14d161d3e60b64ba508a8b216937da472690991"
   name = "golang.org/x/crypto"
-  packages = ["ssh/terminal"]
+  packages = [
+    "ed25519",
+    "ed25519/internal/edwards25519",
+    "ssh/terminal",
+  ]
   pruneopts = ""
   revision = "de0752318171da717af4ce24d0a2e8626afaeb11"
 
@@ -255,6 +261,7 @@
     "github.com/urfave/cli",
     "gitlab.inn4science.com/gophers/service-kit/api",
     "gitlab.inn4science.com/gophers/service-kit/api/render",
+    "gitlab.inn4science.com/gophers/service-kit/auth",
     "gitlab.inn4science.com/gophers/service-kit/db",
     "gitlab.inn4science.com/gophers/service-kit/log",
     "gitlab.inn4science.com/gophers/service-kit/natswrap",

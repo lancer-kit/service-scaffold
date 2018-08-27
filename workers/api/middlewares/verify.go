@@ -1,11 +1,13 @@
 package middlewares
 
 import (
-	"net/http"
 	"context"
+	"net/http"
+
 	"gitlab.inn4science.com/gophers/service-kit/api/render"
 )
 
+// VerifySomething is an example of custom middleware which checks parameter value from url
 func VerifySomething() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

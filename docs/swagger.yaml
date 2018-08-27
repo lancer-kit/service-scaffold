@@ -37,31 +37,7 @@ paths:
         200:
           description: 'Raw was successfully added'
           schema:
-            properties:
-              id:
-                type: integer
-                format: int64
-                example: 1
-              name:
-                type: string
-                example: 'test'
-              buzzType:
-                type: string
-                example: 'testA'
-              description:
-                type: string
-                example: 'test object'
-              details:
-                type: json
-                example: {}
-              createdAt:
-                type: integer
-                format: int
-                example: 0
-              updatedAt:
-                type: integer
-                format: int
-                example: 0
+            $ref: "#/definitions/ReturnedJSON"
         400:
           $ref: "#/responses/UnauthorizedError"
         500:
@@ -97,50 +73,7 @@ paths:
         200:
           description: successful operation
           schema:
-            properties:
-              page:
-                type: integer
-                format: int64
-                example: 1
-              pageSize:
-                type: integer
-                format: int64
-                example: 10
-              order:
-                type: string
-                example: "asc"
-              total:
-                type: integer
-                format: int64
-                example: 10
-              records:
-                type: array
-                items:
-                  properties:
-                    id:
-                      type: integer
-                      format: int64
-                      example: 1
-                    name:
-                      type: string
-                      example: 'test'
-                    buzzType:
-                      type: string
-                      example: 'testA'
-                    description:
-                      type: string
-                      example: 'test object'
-                    details:
-                      type: json
-                      example: {}
-                    createdAt:
-                      type: integer
-                      format: int
-                      example: 0
-                    updatedAt:
-                      type: integer
-                      format: int
-                      example: 0
+            $ref: "#/definitions/PaginationParam"
         400:
           $ref: "#/responses/UnauthorizedError"
         500:
@@ -211,6 +144,54 @@ paths:
         500:
           description: "Request Failed"
 
+definitions:
+  ReturnedJSON:
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 1
+      name:
+        type: string
+        example: 'test'
+      buzzType:
+        type: string
+        example: 'testA'
+      description:
+        type: string
+        example: 'test object'
+      details:
+        type: json
+        example: {}
+      createdAt:
+        type: integer
+        format: int
+        example: 0
+      updatedAt:
+        type: integer
+        format: int
+        example: 0
+  PaginationParam:
+    properties:
+      page:
+        type: integer
+        format: int64
+        example: 1
+      pageSize:
+        type: integer
+        format: int64
+        example: 10
+      order:
+        type: string
+        example: "asc"
+      total:
+        type: integer
+        format: int64
+        example: 10
+      records:
+        type: array
+        items:
+          $ref: "#/definitions/ReturnedJSON"
 
 
 responses:
