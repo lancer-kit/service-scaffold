@@ -50,9 +50,9 @@ func (q *BuzzFeedQ) Insert(bf BuzzFeed) error {
 	return err
 }
 
-func (q *BuzzFeedQ) ByID() (*BuzzFeed, error) {
+func (q *BuzzFeedQ) ByID(id int64) (*BuzzFeed, error) {
 	res := new(BuzzFeed)
-	err := q.DBConn.Get(q.QBuilder, &res)
+	err := q.WithID(id).DBConn.Get(q.QBuilder, &res)
 	if err == sql.ErrNoRows {
 		return res, nil
 	}
@@ -61,6 +61,11 @@ func (q *BuzzFeedQ) ByID() (*BuzzFeed, error) {
 
 func (q *BuzzFeedQ) WithName(name string) *BuzzFeedQ {
 	q.QBuilder = q.QBuilder.Where("name = ?", name)
+	return q
+}
+
+func (q *BuzzFeedQ) WithID(id int64) *BuzzFeedQ {
+	q.QBuilder = q.QBuilder.Where("id = ?", id)
 	return q
 }
 

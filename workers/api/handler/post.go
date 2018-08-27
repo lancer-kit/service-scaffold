@@ -1,24 +1,27 @@
 package handler
 
 import (
-	"net/http"
 	"encoding/json"
-	"gitlab.inn4science.com/gophers/service-scaffold/models"
+	"io/ioutil"
+	"net/http"
+
 	"gitlab.inn4science.com/gophers/service-kit/api/render"
 	"gitlab.inn4science.com/gophers/service-kit/log"
-	"io/ioutil"
+	"gitlab.inn4science.com/gophers/service-scaffold/models"
 )
 
-func Post(w http.ResponseWriter, r *http.Request) {
+func AddBuzz(w http.ResponseWriter, r *http.Request) {
 	data := new(models.BuzzFeed)
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
+		log.Default.Error(err)
 		render.ServerError(w)
 		return
 	}
 
 	err = json.Unmarshal(body, data)
 	if err != nil {
+		log.Default.Error(err)
 		render.ServerError(w)
 		return
 	}
@@ -33,5 +36,5 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Default.Info("Data has been written successfully")
-	render.Success(w,data)
+	render.Success(w, data)
 }

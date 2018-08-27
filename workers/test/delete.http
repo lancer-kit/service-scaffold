@@ -1,5 +1,5 @@
 #Example of delete request
-DELETE http://localhost:2490/dev/delete?param=test
+DELETE http://localhost:2490/dev/buzz/1?param=test
 Accept: */*
 Content-Type: application/json
 Jwt: {"jti":"1"}

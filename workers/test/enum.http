@@ -5,6 +5,6 @@ Accept: */*
 Content-Type: application/json
 Jwt: {"jti":"1"}
 
-{"id": 1,"name": "test","buzzType": "testA","description": "test object"}
+{"name": "test","buzzType": "testA","description": "test object"}
 
 ###
