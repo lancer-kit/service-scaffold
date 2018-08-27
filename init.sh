@@ -67,7 +67,8 @@ copy_project() {
   rm -rf ./.idea
   rm -rf ./init.sh
   mv ./README.md.tmpl ./README.md
-  mv ./.gitlab-ci.yml.tmpl ./.gitlab-ci.yml
+# fixme
+#  mv ./.gitlab-ci.yml.tmpl ./.gitlab-ci.yml
 }
 
 

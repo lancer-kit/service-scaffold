@@ -7,10 +7,9 @@ import (
 	"gitlab.inn4science.com/gophers/service-scaffold/workers/foobar"
 )
 
-var WorkerChief routines.Chief
-
-func init() {
-	WorkerChief = routines.Chief{}
-	WorkerChief.AddWorker(config.WorkerAPIServer, api.Server())
-	WorkerChief.AddWorker(config.WorkerFooBar, &foobar.Service{})
+func GetChief() *routines.Chief {
+	chief := &routines.Chief{}
+	chief.AddWorker(config.WorkerAPIServer, api.Server())
+	chief.AddWorker(config.WorkerFooBar, &foobar.Service{})
+	return chief
 }
