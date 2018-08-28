@@ -274,13 +274,13 @@ responses:
     examples:
       bad_param:
         "errcode": 404
-        "errmsg": "Wrong parameters"
+        "errmsg": "Wrong parameters type"
         "message": "Not Found"
       not_existing:
         "errcode": 404
         "message": "Not Found"
-        "errmsg": "Can not find records"
-    description: "Wrong parameters in url"
+        "errmsg": "Wrong parameters range"
+    description: "Wrong parameters"
   BadId:
     examples:
       incorrect_id:

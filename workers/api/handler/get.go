@@ -17,16 +17,16 @@ func AllBuzz(w http.ResponseWriter, r *http.Request) {
 	pageQuery, err := db.ParsePageQuery(r.URL.Query())
 	if err != nil {
 		log.Default.Error(err)
-		render.ResultNotFound.SetError("Wrong parameters").Render(w)
+		render.ResultNotFound.SetError("Wrong parameters type").Render(w)
 		return
 	}
 
 	dbQuery.SetPage(&pageQuery)
 
 	ols, err := dbQuery.Select()
-	if err != nil || ols == nil {
+	if err != nil || len(ols) == 0 {
 		log.Default.Error(err)
-		render.ResultNotFound.SetError("Can not find records").Render(w)
+		render.ResultNotFound.SetError("Wrong parameters range").Render(w)
 		return
 	}
 
