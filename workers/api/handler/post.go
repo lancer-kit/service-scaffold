@@ -15,14 +15,14 @@ func AddBuzz(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Default.Error(err)
-		render.ServerError(w)
+		render.ResultNotFound.SetError("Bad body structure").Render(w)
 		return
 	}
 
 	err = json.Unmarshal(body, data)
 	if err != nil {
 		log.Default.Error(err)
-		render.ServerError(w)
+		render.ResultNotFound.SetError("Bad body structure").Render(w)
 		return
 	}
 
@@ -30,11 +30,11 @@ func AddBuzz(w http.ResponseWriter, r *http.Request) {
 	dataQ := models.NewBuzzFeedQ(models.NewQ(nil))
 	err = dataQ.Insert(*data)
 	if err != nil {
-		render.ServerError(w)
 		log.Default.WithError(err).Error("Can not insert data into database")
+		render.ResultNotFound.SetError("Bad body structure").Render(w)
 		return
 	}
 
 	log.Default.Info("Data has been written successfully")
-	render.Success(w, data)
+	render.WriteJSON(w, 201, data)
 }

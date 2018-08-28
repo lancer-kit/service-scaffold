@@ -1,0 +1,8 @@
+#Verify get by id method
+
+GET http://localhost:2490/dev/buzz/20?param=test
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"1"}
+
+###

@@ -16,7 +16,7 @@ func DeleteBuzz(w http.ResponseWriter, r *http.Request) {
 	idINT, err := strconv.Atoi(uid)
 	if err != nil {
 		log.Default.Error(err)
-		render.BadRequest(w, err)
+		render.ResultNotFound.SetError(err).Render(w)
 		return
 	}
 

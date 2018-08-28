@@ -4,7 +4,7 @@ info:
   title: Scaffold Servise
   description: 'Base for other projects'
 
-host: localhost
+host: localhost:2490
 
 schemes:
 - http
@@ -24,29 +24,33 @@ consumes:
 paths:
   /buzz:
     post:
-      summary: Add new raw in db
       tags:
-      - buzz
+      - post
+      summary: Add new raw in db
       parameters:
       - name: param
         in: query
         description: Query param for middleware
         required: true
         type: string
+      - name: json
+        in: body
+        description: Buzz object that needs to be added to the database
+        required: false
+        schema:
+          $ref: "#/definitions/PostJSON"
       responses:
-        200:
+        201:
           description: 'Raw was successfully added'
           schema:
-            $ref: "#/definitions/ReturnedJSON"
+            $ref: "#/definitions/PostJSON"
         400:
           $ref: "#/responses/UnauthorizedError"
-        500:
-          description: "Request Failed"
-
-  /AllBuzz:
+        404:
+          $ref: "#/responses/NotFoundError"
     get:
       tags:
-      - allbuzz
+      - getAll
       summary: Returns number of rows from database
       parameters:
       - name: param
@@ -76,8 +80,9 @@ paths:
             $ref: "#/definitions/PaginationParam"
         400:
           $ref: "#/responses/UnauthorizedError"
-        500:
-          description: "Request Failed"
+        404:
+          $ref: "#/responses/BadParam"
+
   /middleware:
     get:
       tags:
@@ -97,9 +102,8 @@ paths:
             example: "test"
         400:
           $ref: "#/responses/UnauthorizedError"
-        500:
-          description: "Request Failed"
-  /delete:
+
+  /buzz/{buzzId}:
     delete:
       tags:
       - delete
@@ -110,6 +114,10 @@ paths:
         description: Query param for middleware
         required: true
         type: string
+      - name: buzzId
+        in: path
+        required: true
+        type: integer
       responses:
         200:
           description: successful operation
@@ -118,9 +126,9 @@ paths:
             example: "success"
         400:
           $ref: "#/responses/UnauthorizedError"
-        500:
-          description: "Request Failed"
-  /put:
+        404:
+          $ref: "#/responses/BadId"
+
     put:
       tags:
       - put
@@ -131,6 +139,16 @@ paths:
         description: Query param for middleware
         required: true
         type: string
+      - name: buzzId
+        in: path
+        required: true
+        type: integer
+      - name: json
+        in: body
+        description: Buzz object for updating existing raw in database
+        required: false
+        schema:
+          $ref: "#/definitions/PostJSON"
       responses:
         200:
           description: successful operation
@@ -141,10 +159,45 @@ paths:
                 example: "new description"
         400:
           $ref: "#/responses/UnauthorizedError"
-        500:
-          description: "Request Failed"
+        404:
+          $ref: "#/responses/BadId"
+    get:
+      tags:
+      - get
+      summary: Returns buzz_feed with buzzId
+      parameters:
+      - name: param
+        in: query
+        description: Query param for middleware
+        required: true
+        type: string
+      - name: buzzId
+        in: path
+        required: true
+        type: integer
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: "#/definitions/PaginationParam"
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        404:
+          $ref: "#/responses/BadId"
+
 
 definitions:
+  PostJSON:
+    properties:
+      name:
+        type: string
+        example: 'test'
+      buzzType:
+        type: string
+        example: 'testA'
+      description:
+        type: string
+        example: 'test object'
   ReturnedJSON:
     properties:
       id:
@@ -161,7 +214,7 @@ definitions:
         type: string
         example: 'test object'
       details:
-        type: json
+        type: object
         example: {}
       createdAt:
         type: integer
@@ -205,7 +258,43 @@ responses:
         "errcode": 400
         "errmsg": "JWT Header is invalid json"
         "data": null
-    description: Autorization header invalid
+      bad_param:
+        "errcode": 400
+        "errmsg": "Wrong param"
+        "data": null
+    description: "Autorization header invalid or bad param for middleware"
+  NotFoundError:
+    examples:
+      bad_body:
+        "errcode": 404
+        "errmsg": "Bad body structure"
+        "message": "Not Found"
+    description: "Bad body structure"
+  BadParam:
+    examples:
+      bad_param:
+        "errcode": 404
+        "errmsg": "Wrong parameters"
+        "message": "Not Found"
+      not_existing:
+        "errcode": 404
+        "message": "Not Found"
+        "errmsg": "Can not find records"
+    description: "Wrong parameters in url"
+  BadId:
+    examples:
+      incorrect_id:
+        "errcode": 404
+        "message": "Not Found"
+        "errmsg": "wrong id"
+      bad_body:
+        $ref: "#/responses/NotFoundError/examples/bad_body"
+      not_existing:
+        "errcode": 404
+        "message": "Not Found"
+        "errmsg": "Cant found buzz with such user Id"
+    description: "Wrong id"
+
 
 securityDefinitions:
   Jwt:

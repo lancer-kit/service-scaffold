@@ -13,7 +13,7 @@ func VerifySomething() func(http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			someParam := r.URL.Query().Get("param")
 			if someParam != "test" {
-				render.ResultNotFound.Render(w)
+				render.BadRequest(w, "Wrong param")
 				return
 			}
 			r = r.WithContext(context.WithValue(r.Context(), "some_param", someParam))

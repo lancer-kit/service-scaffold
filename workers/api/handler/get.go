@@ -17,7 +17,7 @@ func AllBuzz(w http.ResponseWriter, r *http.Request) {
 	pageQuery, err := db.ParsePageQuery(r.URL.Query())
 	if err != nil {
 		log.Default.Error(err)
-		render.BadRequest(w, err)
+		render.ResultNotFound.SetError("Wrong parameters").Render(w)
 		return
 	}
 
@@ -26,7 +26,7 @@ func AllBuzz(w http.ResponseWriter, r *http.Request) {
 	ols, err := dbQuery.Select()
 	if err != nil || ols == nil {
 		log.Default.Error(err)
-		render.ResultNotFound.SetError(err).Render(w)
+		render.ResultNotFound.SetError("Can not find records").Render(w)
 		return
 	}
 
@@ -39,7 +39,7 @@ func GetBuzz(w http.ResponseWriter, r *http.Request) {
 	idINT, err := strconv.Atoi(uid)
 	if err != nil {
 		log.Default.Error(err)
-		render.BadRequest(w, err)
+		render.ResultNotFound.SetError("wrong id").Render(w)
 		return
 	}
 
@@ -47,7 +47,7 @@ func GetBuzz(w http.ResponseWriter, r *http.Request) {
 	res, err := dataQ.ByID(int64(idINT))
 	if err != nil {
 		log.Default.Error(err)
-		render.ResultNotFound.SetError(err).Render(w)
+		render.ResultNotFound.SetError("Cant found buzz with such user Id").Render(w)
 		return
 	}
 
