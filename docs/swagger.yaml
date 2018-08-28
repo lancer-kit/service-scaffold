@@ -301,7 +301,7 @@ securityDefinitions:
     type: apiKey
     in: header
     name: Jwt
-    description: "{\"jti\":\"1\"} - use it without proxy"
+    description: '{\\"jti\\":\\"1\\"} - use it without proxy; When using curl escape double quotes'
   User:
     type: apiKey
     in: header

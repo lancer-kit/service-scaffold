@@ -52,7 +52,7 @@ func (q *BuzzFeedQ) Insert(bf BuzzFeed) error {
 
 func (q *BuzzFeedQ) ByID(id int64) (*BuzzFeed, error) {
 	res := new(BuzzFeed)
-	err := q.WithID(id).DBConn.Get(q.QBuilder, &res)
+	err := q.WithID(id).DBConn.Get(q.QBuilder, res)
 	if err == sql.ErrNoRows {
 		return res, nil
 	}
