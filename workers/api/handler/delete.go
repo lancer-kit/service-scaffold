@@ -16,7 +16,7 @@ func DeleteBuzz(w http.ResponseWriter, r *http.Request) {
 	idINT, err := strconv.Atoi(uid)
 	if err != nil {
 		log.Default.Error(err)
-		render.ResultNotFound.SetError(err).Render(w)
+		render.ResultNotFound.SetError("Not found").Render(w)
 		return
 	}
 
@@ -24,7 +24,7 @@ func DeleteBuzz(w http.ResponseWriter, r *http.Request) {
 	err = dataQ.DeleteBuzzByID(int64(idINT))
 	if err != nil {
 		log.Default.Error(err)
-		render.ResultNotFound.SetError(err).Render(w)
+		render.ResultNotFound.SetError("Not found").Render(w)
 		return
 	}
 

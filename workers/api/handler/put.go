@@ -23,7 +23,7 @@ func ChangeBuzz(w http.ResponseWriter, r *http.Request) {
 	idINT, err := strconv.Atoi(uid)
 	if err != nil {
 		log.Default.Error(err)
-		render.ResultNotFound.SetError("wrong id").Render(w)
+		render.ResultNotFound.SetError("Not found").Render(w)
 		return
 	}
 
@@ -32,21 +32,21 @@ func ChangeBuzz(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Default.Error(err)
-		render.ResultNotFound.SetError("Bad body structure").Render(w)
+		render.ResultNotFound.SetError("Not found").Render(w)
 		return
 	}
 
 	err = json.Unmarshal(body, data)
 	if err != nil {
 		log.Default.Error(err)
-		render.ResultNotFound.SetError("Bad body structure").Render(w)
+		render.ResultNotFound.SetError("Not found").Render(w)
 		return
 	}
 
 	dataQ := models.NewBuzzFeedQ(models.NewQ(nil))
 	err = dataQ.UpdateBuzzDescription(int64(idINT), data.Description)
 	if err != nil {
-		render.ResultNotFound.SetError("Cant found buzz with such user Id").Render(w)
+		render.ResultNotFound.SetError("Not found").Render(w)
 		log.Default.WithError(err).Error("Can not insert data into database")
 		return
 	}

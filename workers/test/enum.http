@@ -1,6 +1,6 @@
 #Verify generated enum type
 
-POST http://localhost:2490/dev/buzz?param=test
+POST http://localhost:2490/dev/test/buzz
 Accept: */*
 Content-Type: application/json
 Jwt: {"jti":"1"}

@@ -22,57 +22,16 @@ consumes:
 - application/json
 
 paths:
-  /buzz:
-    post:
-      tags:
-      - post
-      summary: Add new raw in db
-      parameters:
-      - name: param
-        in: query
-        description: Query param for middleware
-        required: true
-        type: string
-      - name: json
-        in: body
-        description: Buzz object that needs to be added to the database
-        required: false
-        schema:
-          $ref: "#/definitions/PostJSON"
-      responses:
-        201:
-          description: 'Raw was successfully added'
-          schema:
-            $ref: "#/definitions/PostJSON"
-        400:
-          $ref: "#/responses/UnauthorizedError"
-        404:
-          $ref: "#/responses/NotFoundError"
+  /{mId}/buzz:
     get:
       tags:
-      - getAll
-      summary: Returns number of rows from database
+      - Buzz
+      summary: Returns all records from database
       parameters:
-      - name: param
-        in: query
-        description: Query param for middleware
-        required: true
-        type: string
-      - name: order
-        in: query
-        description: Order of objects
-        required: false
-        type: string
-      - name: pageSize
-        in: query
-        description: Query param for setting number of elements on the page
-        required: false
-        type: integer
-      - name: page
-        in: query
-        description: Query param for setting page number
-        required: false
-        type: integer
+        - $ref: "#/parameters/MID"
+        - $ref: "#/parameters/Order"
+        - $ref: "#/parameters/Page"
+        - $ref: "#/parameters/PageSize"
       responses:
         200:
           description: successful operation
@@ -81,74 +40,59 @@ paths:
         400:
           $ref: "#/responses/UnauthorizedError"
         404:
-          $ref: "#/responses/BadParam"
-
-  /middleware:
-    get:
+          $ref: "#/responses/NotFoundError"
+    post:
       tags:
-      - middleware
-      summary: Verify middleware
+      - Buzz
+      summary: Add new buzz record in db
       parameters:
-      - name: param
-        in: query
-        description: Query param for middleware
-        required: true
-        type: string
-      responses:
-        200:
-          description: successful operation
+        - $ref: "#/parameters/MID"
+        - name: json
+          in: body
+          description: Buzz object that needs to be added to the database
+          required: false
           schema:
-            type: string
-            example: "test"
-        400:
-          $ref: "#/responses/UnauthorizedError"
-
-  /buzz/{buzzId}:
-    delete:
-      tags:
-      - delete
-      summary: Delete raw from database
-      parameters:
-      - name: param
-        in: query
-        description: Query param for middleware
-        required: true
-        type: string
-      - name: buzzId
-        in: path
-        required: true
-        type: integer
+            $ref: "#/definitions/Buzz"
       responses:
-        200:
-          description: successful operation
+        201:
+          description: 'Record was successfully added'
           schema:
-            type: string
-            example: "success"
+            $ref: "#/definitions/Buzz"
         400:
           $ref: "#/responses/UnauthorizedError"
         404:
-          $ref: "#/responses/BadId"
+          $ref: "#/responses/NotFoundError"
 
+  /{mId}/buzz/{buzzId}:
+    get:
+      tags:
+      - Buzz
+      summary: Returns buzz record with given id
+      parameters:
+        - $ref: "#/parameters/MID"
+        - $ref: "#/parameters/BuzzID"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: "#/definitions/PaginationParam"
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        404:
+          $ref: "#/responses/NotFoundError"
     put:
       tags:
-      - put
-      summary: Update raw in database
+      - Buzz
+      summary: Update record in database with given id
       parameters:
-      - name: param
-        in: query
-        description: Query param for middleware
-        required: true
-        type: string
-      - name: buzzId
-        in: path
-        required: true
-        type: integer
-      - name: json
-        in: body
-        description: Buzz object for updating existing raw in database
-        required: false
-        schema:
-          $ref: "#/definitions/PostJSON"
+        - $ref: "#/parameters/MID"
+        - $ref: "#/parameters/BuzzID"
+        - name: json
+          in: body
+          description: Buzz object for updating existing records in database
+          required: false
+          schema:
+            $ref: "#/definitions/Buzz"
       responses:
         200:
           description: successful operation
@@ -160,34 +104,68 @@ paths:
         400:
           $ref: "#/responses/UnauthorizedError"
         404:
-          $ref: "#/responses/BadId"
-    get:
+          $ref: "#/responses/NotFoundError"
+    delete:
       tags:
-      - get
-      summary: Returns buzz_feed with buzzId
+      - Buzz
+      summary: Delete record from database with given id
       parameters:
-      - name: param
-        in: query
-        description: Query param for middleware
-        required: true
-        type: string
-      - name: buzzId
-        in: path
-        required: true
-        type: integer
+        - $ref: "#/parameters/MID"
+        - $ref: "#/parameters/BuzzID"
       responses:
         200:
           description: successful operation
           schema:
-            $ref: "#/definitions/PaginationParam"
+            type: string
+            example: "success"
         400:
           $ref: "#/responses/UnauthorizedError"
         404:
-          $ref: "#/responses/BadId"
+          $ref: "#/responses/NotFoundError"
 
+parameters:
+  MID:
+    name: mId
+    type: string
+    in: path
+    required: true
+    description: 'Param for middleware'
+  BuzzID:
+    name: buzzId
+    type: number
+    in: path
+    required: true
+    format: int64
+    description: 'buzz record id'
+  Page:
+    name: page
+    type: number
+    in: query
+    required: false
+    format: int32
+    description: 'Page number'
+    default: 1
+  Order:
+    name: order
+    in: query
+    required: false
+    type: string
+    enum:
+    - asc
+    - desc
+    description: 'Sorting order of records'
+    default: asc
+  PageSize:
+    name: pageSize
+    in: query
+    required: false
+    type: number
+    format: int32
+    description: 'Number of records on one page'
+    default: 20
 
 definitions:
-  PostJSON:
+  Buzz:
     properties:
       name:
         type: string
@@ -267,33 +245,8 @@ responses:
     examples:
       bad_body:
         "errcode": 404
-        "errmsg": "Bad body structure"
         "message": "Not Found"
-    description: "Bad body structure"
-  BadParam:
-    examples:
-      bad_param:
-        "errcode": 404
-        "errmsg": "Wrong parameters type"
-        "message": "Not Found"
-      not_existing:
-        "errcode": 404
-        "message": "Not Found"
-        "errmsg": "Wrong parameters range"
-    description: "Wrong parameters"
-  BadId:
-    examples:
-      incorrect_id:
-        "errcode": 404
-        "message": "Not Found"
-        "errmsg": "wrong id"
-      bad_body:
-        $ref: "#/responses/NotFoundError/examples/bad_body"
-      not_existing:
-        "errcode": 404
-        "message": "Not Found"
-        "errmsg": "Cant found buzz with such user Id"
-    description: "Wrong id"
+    description: "Can't found resource"
 
 
 securityDefinitions:
