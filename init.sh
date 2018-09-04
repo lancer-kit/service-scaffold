@@ -59,6 +59,7 @@ replace_imports() {
 copy_project() {
   orig_dir=`pwd`
   mkdir -p ${FULL_PATH}/
+  shopt -s dotglob
   cp -rf ./* ${FULL_PATH}/
 
   cd ${FULL_PATH}/

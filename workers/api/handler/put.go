@@ -1,17 +1,34 @@
 package handler
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
 
+	"encoding/json"
+	"io/ioutil"
+
+	"strconv"
+
+	"github.com/go-chi/chi"
 	"gitlab.inn4science.com/gophers/service-kit/api/render"
 	"gitlab.inn4science.com/gophers/service-kit/log"
 	"gitlab.inn4science.com/gophers/service-scaffold/models"
 )
 
-func AddBuzz(w http.ResponseWriter, r *http.Request) {
-	data := new(models.BuzzFeed)
+func ChangeBuzz(w http.ResponseWriter, r *http.Request) {
+	type inputData struct {
+		Description string `json:"description"`
+	}
+
+	uid := chi.URLParam(r, "id")
+	idINT, err := strconv.Atoi(uid)
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	data := new(inputData)
+
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Default.Error(err)
@@ -26,15 +43,14 @@ func AddBuzz(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Default.Info("Trying to write data into database")
 	dataQ := models.NewBuzzFeedQ(models.NewQ(nil))
-	err = dataQ.Insert(*data)
+	err = dataQ.UpdateBuzzDescription(int64(idINT), data.Description)
 	if err != nil {
-		log.Default.WithError(err).Error("Can not insert data into database")
 		render.ResultNotFound.SetError("Not found").Render(w)
+		log.Default.WithError(err).Error("Can not insert data into database")
 		return
 	}
 
 	log.Default.Info("Data has been written successfully")
-	render.WriteJSON(w, 201, data)
+	render.Success(w, data)
 }
