@@ -80,6 +80,14 @@
   revision = "62de8c46ede02a7675c4c79c84883eb164cb71e3"
 
 [[projects]]
+  digest = "1:5bacbfb5d33194aba1ce0cd091f40d752b0617f642b636627b3dd50bce10fd68"
+  name = "github.com/leesper/couchdb-golang"
+  packages = ["."]
+  pruneopts = ""
+  revision = "1fe73a5682dc83913c5944b52a8506b9e2f85717"
+  version = "v1.2.1"
+
+[[projects]]
   branch = "master"
   digest = "1:09792d732b079867772cdbabdf7dc54ef9f9d04c998a9ce6226657151fccbb94"
   name = "github.com/lib/pq"
@@ -255,6 +263,7 @@
     "github.com/go-chi/chi/middleware",
     "github.com/go-chi/cors",
     "github.com/go-ozzo/ozzo-validation",
+    "github.com/leesper/couchdb-golang",
     "github.com/pkg/errors",
     "github.com/rubenv/sql-migrate",
     "github.com/sirupsen/logrus",
