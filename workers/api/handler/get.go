@@ -80,3 +80,31 @@ func GetAllDocument(w http.ResponseWriter, r *http.Request) {
 	log.Default.Info("All documents were successfully obtained from couchdb")
 	render.RenderListWithPages(w, pageQuery, int64(len(res)), res)
 }
+
+func GetDocument(w http.ResponseWriter, r *http.Request) {
+	uid := chi.URLParam(r, "id")
+	idINT, err := strconv.Atoi(uid)
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	docQ, err := models.CreateCustomDocumentQ()
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	res, err := docQ.GetDocument(idINT)
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	log.Default.Info("Document was successfully obtained")
+	render.Success(w, res)
+
+}
