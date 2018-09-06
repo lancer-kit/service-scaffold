@@ -7,7 +7,7 @@ Jwt: {"jti":"1"}
 
 ###
 
-GET http://localhost:2490/dev/couch/1
+GET http://localhost:2490/dev/couch/4
 Accept: */*
 Content-Type: application/json
 Jwt: {"jti":"1"}
