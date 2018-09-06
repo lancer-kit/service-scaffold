@@ -43,7 +43,8 @@ func (d *customDocumentQ) AddDocument(doc *CustomDocument) error {
 
 func (d *customDocumentQ) GetAllDocument(pQ db.PageQuery) ([]CustomDocument, error) {
 	fields := []string{"id", "firstName", "secondName"}
-	res, err := d.dbInstance.Query(fields, `exists(id,true)`, nil, nil, nil, nil)
+
+	res, err := d.dbInstance.Query(fields, `exists(id,true)`, nil, int(pQ.PageSize), int(pQ.PageSize*(pQ.Page-1)), nil)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "Unable to write into couchdb")
