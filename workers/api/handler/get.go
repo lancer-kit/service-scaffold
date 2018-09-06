@@ -54,3 +54,29 @@ func GetBuzz(w http.ResponseWriter, r *http.Request) {
 	log.Default.Info("Buzz instance was successfully obtained")
 	render.Success(w, res)
 }
+
+func GetAllDocument(w http.ResponseWriter, r *http.Request) {
+	pageQuery, err := db.ParsePageQuery(r.URL.Query())
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	docQ, err := models.CreateCustomDocumentQ()
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	res, err := docQ.GetAllDocument(pageQuery)
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	log.Default.Info("All documents were successfully obtained from couchdb")
+	render.RenderListWithPages(w, pageQuery, int64(len(res)), res)
+}
