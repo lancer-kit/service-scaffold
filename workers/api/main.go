@@ -82,8 +82,8 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 
 			r.Route("/{id}", func(r chi.Router) {
 				r.Get("/", handler.GetDocument)
-				//r.Put("/", handler.ChangeDocument)
-				//r.Delete("/", handler.DeleteDocument)
+				r.Put("/", handler.ChangeDocument)
+				r.Delete("/", handler.DeleteDocument)
 			})
 		})
 

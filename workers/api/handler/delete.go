@@ -31,3 +31,29 @@ func DeleteBuzz(w http.ResponseWriter, r *http.Request) {
 	log.Default.Info("Data has been deleted successfully")
 	render.Success(w, "success")
 }
+
+func DeleteDocument(w http.ResponseWriter, r *http.Request) {
+	uid := chi.URLParam(r, "id")
+	idINT, err := strconv.Atoi(uid)
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	docQ, err := models.CreateCustomDocumentQ()
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	err = docQ.DeleteDocument(idINT)
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	render.Success(w, "Document was successfully deleted")
+}
