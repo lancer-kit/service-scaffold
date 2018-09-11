@@ -59,7 +59,7 @@ replace_imports() {
 copy_project() {
   orig_dir=`pwd`
   mkdir -p ${FULL_PATH}/
-  cp -rf ./* ${FULL_PATH}/
+  cp -rf ./ ${FULL_PATH}/
 
   cd ${FULL_PATH}/
 
