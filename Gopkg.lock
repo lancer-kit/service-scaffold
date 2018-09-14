@@ -183,10 +183,11 @@
 
 [[projects]]
   branch = "dev"
-  digest = "1:e0e66acfa5c4007ef68b014b3d81d3e852da1e5b60f18b3542fb9c87bd459342"
+  digest = "1:24283c9beab26bb238876850cccaba9a2c05ebbb167f8ffc74254124678fe860"
   name = "gitlab.inn4science.com/gophers/service-kit"
   packages = [
     "api",
+    "api/infoworker",
     "api/render",
     "auth",
     "crypto",
@@ -197,7 +198,7 @@
     "tools",
   ]
   pruneopts = ""
-  revision = "8bf8109921559f56611e51ff42a7da2a089967f3"
+  revision = "1a6570dd292aa93658de872e7549828714fbdc86"
 
 [[projects]]
   branch = "master"
@@ -260,6 +261,7 @@
     "github.com/sirupsen/logrus",
     "github.com/urfave/cli",
     "gitlab.inn4science.com/gophers/service-kit/api",
+    "gitlab.inn4science.com/gophers/service-kit/api/infoworker",
     "gitlab.inn4science.com/gophers/service-kit/api/render",
     "gitlab.inn4science.com/gophers/service-kit/auth",
     "gitlab.inn4science.com/gophers/service-kit/db",

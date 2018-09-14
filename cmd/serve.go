@@ -8,6 +8,7 @@ import (
 	"gitlab.inn4science.com/gophers/service-kit/log"
 	"gitlab.inn4science.com/gophers/service-scaffold/config"
 	"gitlab.inn4science.com/gophers/service-scaffold/dbschema"
+	"gitlab.inn4science.com/gophers/service-scaffold/info"
 	"gitlab.inn4science.com/gophers/service-scaffold/workers"
 )
 
@@ -31,6 +32,6 @@ func serveAction(c *cli.Context) error {
 		log.Default.Info(fmt.Sprintf("Applied %d %s migration", count, "up"))
 	}
 
-	workers.WorkerChief.RunAll(cfg.Log.AppName, cfg.Workers...)
+	workers.GetChief().RunAll(info.App.App, cfg.Workers...)
 	return nil
 }

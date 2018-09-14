@@ -1,0 +1,124 @@
+package {{.Package}}
+
+import (
+	"database/sql"
+
+	sq "github.com/Masterminds/squirrel"
+	"gitlab.inn4science.com/gophers/service-kit/db"
+)
+
+const table{{.TypeName}}s = "{{.TypeString}}s"
+
+type {{.TypeName}}Q struct {
+	*db.SQLConn
+	db.Table
+}
+
+func New{{.TypeName}}Q(conn *db.SQLConn) *{{.TypeName}}Q {
+	return &{{.TypeName}}Q{
+		SQLConn: conn.Clone(),
+		Table: db.Table{
+			Name:     table{{.TypeName}}s,
+			QBuilder: sq.Select("*").From(table{{.TypeName}}s),
+		},
+	}
+}
+
+// Insert adds new  `{{.TypeName}}` record to `{{.TypeString}}s` table.
+func (q *{{.TypeName}}Q) Insert({{.TypeString}} *{{.TypeName}}) error {
+	query := sq.Insert(q.Name).SetMap(map[string]interface{}{
+		{{ $self := . }}
+		{{range .Fields}}"{{.Tags.db}}":  {{$self.TypeString}}.{{.Name}},
+		{{end}}
+	})
+
+	var err error
+	_, err = q.SQLConn.Insert(query)
+	return err
+}
+
+// Update updates row with passed `uid`.
+func (q *{{.TypeName}}Q) Update(uid string, {{.TypeString}} *{{.TypeName}}) error {
+  panic("fixme")
+	query := sq.Update(q.Name).SetMap(map[string]interface{}{
+	  {{ $self := . }}
+		{{range .Fields}}"{{.Name}}": {{$self.TypeString}}.{{.Name}},
+		{{end}}
+	}).Where("uid = ?", uid) //fixme: set correct rule
+	return q.SQLConn.Exec(query)
+}
+
+{{ $self := . }}
+{{range .Fields}}
+// With{{.Name}} adds filter by `{{.Name}}` column.
+func (q *{{$self.TypeName}}Q) With{{.Name}}({{.Name}} {{.FType}}) *{{$self.TypeName}}Q {
+	q.QBuilder = q.QBuilder.Where("{{.Name}} = ?", {{.Name}})
+	return q
+}
+{{end}}
+
+// Until sets lower time bound.
+func (q *{{.TypeName}}Q) Since(timestamp int64) *{{.TypeName}}Q {
+	q.QBuilder = q.QBuilder.Where("created_at >= ?", timestamp)
+	return q
+}
+
+// Until sets upper time bound.
+func (q *{{.TypeName}}Q) Until(timestamp int64) *{{.TypeName}}Q {
+	q.QBuilder = q.QBuilder.Where("created_at <= ?", timestamp)
+	return q
+}
+
+// SetPage applies pagination parameters.
+func (q *{{.TypeName}}Q) SetPage(pq *db.PageQuery) *{{.TypeName}}Q {
+	q.Table.SetPage(pq)
+	q.WithCount()
+	return q
+}
+
+// Get returns first row of the result of query execution.
+func (q *{{.TypeName}}Q) Get() (*{{.TypeName}}, error) {
+	res := new({{.TypeName}})
+	q.ApplyPage("id")
+
+	err := q.SQLConn.Get(q.QBuilder, res)
+	if err == sql.ErrNoRows {
+		return res, nil
+	}
+
+	return res, err
+}
+
+// Select returns all records.
+func (q *{{.TypeName}}Q) Select() ([]{{.TypeName}}, error) {
+	res := make([]{{.TypeName}}, 0, 1)
+	q.ApplyPage("id")
+
+	err := q.SQLConn.Select(q.QBuilder, &res)
+	if err == sql.ErrNoRows {
+		return res, nil
+	}
+
+	return res, err
+}
+
+//fixme: set correct getter
+func (q *{{.TypeName}}Q) ByID(id int64) (*{{.TypeName}}, error) {
+	res := new({{.TypeName}})
+	err := q.SQLConn.Get(q.QBuilder.Where("id = ?", id), res)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	return res, err
+}
+
+func (q *{{.TypeName}}Q) ByKey(key string) (*{{.TypeName}}, error) {
+  panic("fixme")
+  // fixme: set correct getter
+	res := new({{.TypeName}})
+	err := q.SQLConn.Get(q.QBuilder.Where("key = ?", key), res)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	return res, err
+}
