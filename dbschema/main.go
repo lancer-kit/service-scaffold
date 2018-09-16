@@ -10,10 +10,11 @@ import (
 //go:generate go-bindata -ignore .+\.go$ -pkg dbschema -o bindata.go ./...
 //go:generate gofmt -w bindata.go
 
-func SetAssets() {
+func Migrate(connStr string, dir db.MigrateDir) (int, error) {
 	db.SetAssets(migrate.AssetMigrationSource{
 		Asset:    Asset,
 		AssetDir: AssetDir,
 		Dir:      "migrations",
 	})
+	return db.Migrate(connStr, dir)
 }
