@@ -19,9 +19,10 @@ var migrateCommand = cli.Command{
 		{
 			Name:  "up",
 			Usage: "apply up migration direction",
-			Flags: cfgFlag,
 			Action: func(c *cli.Context) error {
-				err := migrateDB(c.String("config"), db.MigrateUp)
+				config.Init(c.GlobalString(FlagConfig))
+
+				err := migrateDB(db.MigrateUp)
 				if err != nil {
 					return err
 				}
@@ -31,9 +32,10 @@ var migrateCommand = cli.Command{
 		{
 			Name:  "down",
 			Usage: "drop and clean database schema",
-			Flags: cfgFlag,
 			Action: func(c *cli.Context) error {
-				err := migrateDB(c.String("config"), db.MigrateDown)
+				config.Init(c.GlobalString(FlagConfig))
+
+				err := migrateDB(db.MigrateDown)
 				if err != nil {
 					return err
 				}
@@ -43,13 +45,15 @@ var migrateCommand = cli.Command{
 		{
 			Name:  "redo",
 			Usage: "reset database schema",
-			Flags: cfgFlag,
 			Action: func(c *cli.Context) error {
-				err := migrateDB(c.String("config"), db.MigrateDown)
+				config.Init(c.GlobalString(FlagConfig))
+
+				err := migrateDB(db.MigrateDown)
 				if err != nil {
 					return err
 				}
-				err = migrateDB(c.String("config"), db.MigrateUp)
+
+				err = migrateDB(db.MigrateUp)
 				if err != nil {
 					return err
 				}
@@ -60,12 +64,8 @@ var migrateCommand = cli.Command{
 	},
 }
 
-func migrateDB(cfgPath string, direction db.MigrateDir) *cli.ExitError {
-	config.Init(cfgPath)
-
-	dbschema.SetAssets()
-
-	count, err := db.Migrate(config.Config().DB, direction)
+func migrateDB(direction db.MigrateDir) *cli.ExitError {
+	count, err := dbschema.Migrate(config.Config().DB, direction)
 	if err != nil {
 		log.Default.WithError(err).Error("Migrations failed")
 		return cli.NewExitError(fmt.Sprintf("migration %s failed", direction), 1)

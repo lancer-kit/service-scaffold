@@ -1,0 +1,19 @@
+#Verify put method
+
+PUT http://localhost:2490/dev/test/buzz/1
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"2"}
+
+{"description": "new description"}
+
+###
+
+PUT http://localhost:2490/dev/couch/3
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"2"}
+
+{"firstName": "new first name", "secondName": "new second name"}
+
+###

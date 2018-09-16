@@ -1,0 +1,49 @@
+# get the list of obj
+GET http://localhost:2490/dev/test/buzz
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"1"}
+###
+# get the list of obj from the end
+GET http://localhost:2490/dev/test/buzz?order=desc
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"1"}
+###
+# get the first 10 obj
+GET http://localhost:2490/dev/test/buzz?pageSize=10
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"1"}
+###
+# get 10 obj on second page
+GET http://localhost:2490/dev/test/buzz?pageSize=10&page=2
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"1"}
+###
+
+# get the list of obj
+GET http://localhost:2490/dev/couch
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"1"}
+###
+# get the list of obj from the end
+GET http://localhost:2490/dev/couch?order=desc
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"1"}
+###
+# get the first 10 obj
+GET http://localhost:2490/dev/couch?pageSize=3
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"1"}
+###
+# get 10 obj on second page
+GET http://localhost:2490/dev/couch?pageSize=3&page=2
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"1"}
+###

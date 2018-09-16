@@ -5,15 +5,17 @@ import (
 )
 
 const (
-	WorkerAPIServer = "api-server"
-	WorkerDBKeeper  = "db-keeper"
-	WorkerFooBar    = "foobar"
+	WorkerInfoServer = "info-server"
+	WorkerAPIServer  = "api-server"
+	WorkerDBKeeper   = "db-keeper"
+	WorkerFooBar     = "foobar"
 )
 
 var AvailableWorkers = map[string]struct{}{
-	WorkerDBKeeper:  {},
-	WorkerAPIServer: {},
-	WorkerFooBar:    {},
+	WorkerInfoServer: {},
+	WorkerDBKeeper:   {},
+	WorkerAPIServer:  {},
+	WorkerFooBar:     {},
 }
 
 type WorkerExistRule struct {

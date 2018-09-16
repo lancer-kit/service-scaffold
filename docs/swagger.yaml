@@ -1,0 +1,436 @@
+swagger: '2.0'
+info:
+  version: '0.1'
+  title: Scaffold Servise
+  description: 'Base for other projects'
+
+host: localhost:2490
+
+schemes:
+- http
+
+basePath: /dev
+
+security:
+- User: []
+- Jwt: []
+
+produces:
+- application/json
+
+consumes:
+- application/json
+
+paths:
+  /status:
+    get:
+      summary: Get status
+      description: 'Returns info about service'
+      tags:
+      - Health-Check
+      responses:
+        200:
+          description: 'Service info'
+          schema:
+            $ref: '#/definitions/Health'
+  /{mId}/buzz:
+    get:
+      tags:
+      - Buzz
+      summary: Returns all records from database
+      parameters:
+      - $ref: "#/parameters/MID"
+      - $ref: "#/parameters/Order"
+      - $ref: "#/parameters/Page"
+      - $ref: "#/parameters/PageSize"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: "#/definitions/PaginationParam"
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        404:
+          $ref: "#/responses/NotFoundError"
+    post:
+      tags:
+      - Buzz
+      summary: Add new buzz record in db
+      parameters:
+      - $ref: "#/parameters/MID"
+      - name: json
+        in: body
+        description: Buzz object that needs to be added to the database
+        required: false
+        schema:
+          $ref: "#/definitions/Buzz"
+      responses:
+        201:
+          description: 'Record was successfully added'
+          schema:
+            $ref: "#/definitions/Buzz"
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        404:
+          $ref: "#/responses/NotFoundError"
+
+  /{mId}/buzz/{Id}:
+    get:
+      tags:
+      - Buzz
+      summary: Returns buzz record with given id
+      parameters:
+      - $ref: "#/parameters/MID"
+      - $ref: "#/parameters/ID"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: "#/definitions/PaginationParam"
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        404:
+          $ref: "#/responses/NotFoundError"
+    put:
+      tags:
+      - Buzz
+      summary: Update record in database with given id
+      parameters:
+      - $ref: "#/parameters/MID"
+      - $ref: "#/parameters/ID"
+      - name: json
+        in: body
+        description: Buzz object for updating existing records in database
+        required: false
+        schema:
+          $ref: "#/definitions/Buzz"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            properties:
+              description:
+                type: string
+                example: "new description"
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        404:
+          $ref: "#/responses/NotFoundError"
+    delete:
+      tags:
+      - Buzz
+      summary: Delete record from database with given id
+      parameters:
+      - $ref: "#/parameters/MID"
+      - $ref: "#/parameters/ID"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: string
+            example: "success"
+        400:
+          $ref: "#/responses/UnauthorizedError"
+        404:
+          $ref: "#/responses/NotFoundError"
+
+  /couch:
+    get:
+      tags:
+      - CouchDB
+      summary: Returns all records from couchDB database
+      parameters:
+      - $ref: "#/parameters/Order"
+      - $ref: "#/parameters/Page"
+      - $ref: "#/parameters/PageSize"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: "#/definitions/PaginationParamCouch"
+        400:
+          $ref: "#/responses/JWTError"
+        404:
+          $ref: "#/responses/NotFoundError"
+    post:
+      tags:
+      - CouchDB
+      summary: Add new document in couchDB
+      parameters:
+      - name: json
+        in: body
+        description: Document that needs to be added to the couchDB
+        required: false
+        schema:
+          $ref: "#/definitions/Couch"
+      responses:
+        201:
+          description: 'Document was successfully added'
+          schema:
+            $ref: "#/definitions/Couch"
+        400:
+          $ref: "#/responses/JWTError"
+        404:
+          $ref: "#/responses/NotFoundError"
+
+  /couch/{Id}:
+    get:
+      tags:
+      - CouchDB
+      summary: Returns document with given id
+      parameters:
+      - $ref: "#/parameters/ID"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Couch"
+        400:
+          $ref: "#/responses/JWTError"
+        404:
+          $ref: "#/responses/NotFoundError"
+    put:
+      tags:
+      - CouchDB
+      summary: Update document in couchDB with given id
+      parameters:
+      - $ref: "#/parameters/ID"
+      - name: json
+        in: body
+        description: Document for updating existing records in couchDB
+        required: false
+        schema:
+          $ref: "#/definitions/CouchPUT"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: string
+            example: "Document was updated successful"
+        400:
+          $ref: "#/responses/JWTError"
+        404:
+          $ref: "#/responses/NotFoundError"
+    delete:
+      tags:
+      - CouchDB
+      summary: Delete document from couchDB with given id
+      parameters:
+      - $ref: "#/parameters/ID"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: string
+            example: "Document was successfully deleted"
+        400:
+          $ref: "#/responses/JWTError"
+        404:
+          $ref: "#/responses/NotFoundError"
+
+parameters:
+  MID:
+    name: mId
+    type: string
+    in: path
+    required: true
+    description: 'Param for middleware'
+  ID:
+    name: Id
+    type: number
+    in: path
+    required: true
+    format: int64
+    description: 'id'
+  Page:
+    name: page
+    type: number
+    in: query
+    required: false
+    format: int32
+    description: 'Page number'
+    default: 1
+  Order:
+    name: order
+    in: query
+    required: false
+    type: string
+    enum:
+    - asc
+    - desc
+    description: 'Sorting order of records'
+    default: asc
+  PageSize:
+    name: pageSize
+    in: query
+    required: false
+    type: number
+    format: int32
+    description: 'Number of records on one page'
+    default: 20
+
+definitions:
+  Health:
+    properties:
+      app:
+        type: string
+        description: app name
+      version:
+        type: string
+        description: app version
+      tag:
+        type: string
+        description: app tag
+      build:
+        type: string
+        description: app build
+  Buzz:
+    properties:
+      name:
+        type: string
+        example: 'test'
+      buzzType:
+        type: string
+        example: 'testA'
+      description:
+        type: string
+        example: 'test object'
+  Couch:
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 1
+      firstName:
+        type: string
+        example: 'Firs name example'
+      secondName:
+        type: string
+        example: 'Second name example'
+  CouchPUT:
+    properties:
+      firstName:
+        type: string
+        example: 'Firs name example'
+      secondName:
+        type: string
+        example: 'Second name example'
+  ReturnedJSON:
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 1
+      name:
+        type: string
+        example: 'test'
+      buzzType:
+        type: string
+        example: 'testA'
+      description:
+        type: string
+        example: 'test object'
+      details:
+        type: object
+        example: {}
+      createdAt:
+        type: integer
+        format: int
+        example: 0
+      updatedAt:
+        type: integer
+        format: int
+        example: 0
+  PaginationParam:
+    properties:
+      page:
+        type: integer
+        format: int64
+        example: 1
+      pageSize:
+        type: integer
+        format: int64
+        example: 10
+      order:
+        type: string
+        example: "asc"
+      total:
+        type: integer
+        format: int64
+        example: 10
+      records:
+        type: array
+        items:
+          $ref: "#/definitions/ReturnedJSON"
+  PaginationParamCouch:
+    properties:
+      page:
+        type: integer
+        format: int64
+        example: 1
+      pageSize:
+        type: integer
+        format: int64
+        example: 10
+      order:
+        type: string
+        example: "asc"
+      total:
+        type: integer
+        format: int64
+        example: 10
+      records:
+        type: array
+        items:
+          $ref: "#/definitions/Couch"
+
+
+responses:
+  JWTError:
+    examples:
+      no_token:
+        "errcode": 400
+        "errmsg": "JWT Header must not bee empty"
+        "data": null
+      token_is_invalid:
+        "errcode": 400
+        "errmsg": "JWT Header is invalid json"
+        "data": null
+    description: "Autorization header invalid"
+
+  UnauthorizedError:
+    examples:
+      no_token:
+        "errcode": 400
+        "errmsg": "JWT Header must not bee empty"
+        "data": null
+      token_is_invalid:
+        "errcode": 400
+        "errmsg": "JWT Header is invalid json"
+        "data": null
+      bad_param:
+        "errcode": 400
+        "errmsg": "Wrong param"
+        "data": null
+    description: "Autorization header invalid or bad param for middleware"
+  NotFoundError:
+    examples:
+      bad_body:
+        "errcode": 404
+        "message": "Not Found"
+    description: "Can't found resource"
+
+
+securityDefinitions:
+  Jwt:
+    type: apiKey
+    in: header
+    name: Jwt
+    description: '{\\"jti\\":\\"1\\"} - use it without proxy; When using curl escape double quotes'
+  User:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: "Get from POST:{USER-API}/login/ OR POST:{USER-API}/auth/ OR POST:{USER-API}/verify/password/"

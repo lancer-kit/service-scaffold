@@ -1,0 +1,10 @@
+#Verify generated enum type
+
+POST http://localhost:2490/dev/couch
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"1"}
+
+{"id":1, "firstName": "Johny", "secondName": "BeGood"}
+
+###

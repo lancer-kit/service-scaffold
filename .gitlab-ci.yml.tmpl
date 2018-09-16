@@ -10,7 +10,7 @@ before_script:
 
 variables:
   PROJECT_PATH: gitlab.inn4science.com/gophers/service-scaffold
-  PROJECT_NAME: skeleton
+  PROJECT_NAME: service-scaffold
 
 stages:
   - build
@@ -29,7 +29,9 @@ build:
     - mkdir -p ${GOPATH}/src/${PROJECT_PATH}
     - cp -rf ./* ${GOPATH}/src/${PROJECT_PATH}/
     - cd ${GOPATH}/src/${PROJECT_PATH}/
-    - go build -o app
+    - COMMIT=${CI_COMMIT_SHA:0:8}
+    - TAG=$CI_COMMIT_REF_NAME
+    - go build -ldflags "-X main.Build=$COMMIT -X main.Tag=$TAG" -o app
     - cp app ${orig}/
   only:
     - dev
