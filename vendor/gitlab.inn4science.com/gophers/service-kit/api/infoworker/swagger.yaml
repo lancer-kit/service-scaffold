@@ -1,0 +1,93 @@
+swagger: '2.0'
+info:
+  version: '0.1'
+  title: Health Check worker
+  description: 'Worker for monitoring other workers'
+
+host: localhost:2443
+
+schemes:
+- http
+
+produces:
+- application/json
+
+paths:
+  /{prefix}/info:
+    get:
+      tags:
+      - Workers
+      summary: Returns app info
+      parameters:
+      - $ref: "#/parameters/prefix"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: "#/definitions/AppInfo"
+        500:
+          $ref: "#/responses/NoInfo"
+
+
+  /{prefix}/info/workers:
+    get:
+      tags:
+      - Workers
+      summary: Returns array with workers statuses
+      parameters:
+      - $ref: "#/parameters/prefix"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: "#/definitions/Worker"
+        500:
+          $ref: "#/responses/NoContext"
+
+responses:
+  NoContext:
+    examples:
+      no_context:
+        "errcode": 500
+        "errmsg": "Context must not be empty!"
+        "data": null
+    description: "Context was not set when initializing worker"
+  NoInfo:
+    examples:
+      no_context:
+        "errcode": 500
+        "errmsg": "Info must not be empty!"
+        "data": null
+    description: "Info about service was not set when initializing worker"
+
+definitions:
+  Worker:
+    properties:
+      WorkerName:
+        type: string
+        example: 'api-server'
+      WorkerStatus:
+        type: string
+        example: 'run'
+  AppInfo:
+    properties:
+      app:
+        type: string
+        example: 'Transaction'
+      version:
+        type: string
+        example: '1.0'
+      tag:
+        type: string
+        example: 'tag'
+      build:
+        type: string
+        example: 'build'
+
+parameters:
+  prefix:
+    name: prefix
+    type: string
+    in: path
+    required: false
+    description: 'Optional prefix specified in worker config'

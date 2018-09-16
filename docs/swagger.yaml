@@ -22,6 +22,17 @@ consumes:
 - application/json
 
 paths:
+  /status:
+    get:
+      summary: Get status
+      description: 'Returns info about service'
+      tags:
+      - Health-Check
+      responses:
+        200:
+          description: 'Service info'
+          schema:
+            $ref: '#/definitions/Health'
   /{mId}/buzz:
     get:
       tags:
@@ -261,6 +272,20 @@ parameters:
     default: 20
 
 definitions:
+  Health:
+    properties:
+      app:
+        type: string
+        description: app name
+      version:
+        type: string
+        description: app version
+      tag:
+        type: string
+        description: app tag
+      build:
+        type: string
+        description: app build
   Buzz:
     properties:
       name:

@@ -8,18 +8,18 @@ import (
 	"gitlab.inn4science.com/gophers/service-kit/log"
 	"gitlab.inn4science.com/gophers/service-scaffold/config"
 	"gitlab.inn4science.com/gophers/service-scaffold/dbschema"
+	"gitlab.inn4science.com/gophers/service-scaffold/info"
 	"gitlab.inn4science.com/gophers/service-scaffold/workers"
 )
 
 var serveCommand = cli.Command{
 	Name:   "serve",
 	Usage:  "starts " + config.ServiceName + " workers",
-	Flags:  cfgFlag,
 	Action: serveAction,
 }
 
 func serveAction(c *cli.Context) error {
-	config.Init(c.String("config"))
+	config.Init(c.GlobalString(FlagConfig))
 	cfg := config.Config()
 
 	if cfg.AutoMigrate {
@@ -31,6 +31,6 @@ func serveAction(c *cli.Context) error {
 		log.Default.Info(fmt.Sprintf("Applied %d %s migration", count, "up"))
 	}
 
-	workers.WorkerChief.RunAll(cfg.Log.AppName, cfg.Workers...)
+	workers.GetChief().RunAll(info.App.App, cfg.Workers...)
 	return nil
 }
