@@ -12,8 +12,8 @@ import (
 type Cfg struct {
 	DB string `json:"db" yaml:"db"` // DB is a database connection string.
 
-	Api        api.Config      `json:"api" yaml:"api"`
-	InfoWorker infoworker.Conf `yaml:"info_worker"`
+	Api        api.Config       `json:"api" yaml:"api"`
+	InfoWorker *infoworker.Conf `yaml:"info_worker"`
 
 	// AutoMigrate if `true` execute db migrate up on start.
 	AutoMigrate bool `json:"auto_migrate" yaml:"auto_migrate"`

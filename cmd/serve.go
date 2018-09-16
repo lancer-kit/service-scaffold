@@ -15,12 +15,11 @@ import (
 var serveCommand = cli.Command{
 	Name:   "serve",
 	Usage:  "starts " + config.ServiceName + " workers",
-	Flags:  cfgFlag,
 	Action: serveAction,
 }
 
 func serveAction(c *cli.Context) error {
-	config.Init(c.String("config"))
+	config.Init(c.GlobalString(FlagConfig))
 	cfg := config.Config()
 
 	if cfg.AutoMigrate {
