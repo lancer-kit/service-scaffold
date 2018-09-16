@@ -31,6 +31,6 @@ func serveAction(c *cli.Context) error {
 		log.Default.Info(fmt.Sprintf("Applied %d %s migration", count, "up"))
 	}
 
-	workers.GetChief().RunAll(info.App.App, cfg.Workers...)
+	workers.GetChief().RunAll(cfg.Log.AppName, cfg.Workers...)
 	return nil
 }

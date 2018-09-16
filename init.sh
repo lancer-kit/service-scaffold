@@ -59,8 +59,7 @@ replace_imports() {
 copy_project() {
   orig_dir=`pwd`
   mkdir -p ${FULL_PATH}/
-  shopt -s dotglob
-  cp -rf ./* ${FULL_PATH}/
+  cp -rf ./ ${FULL_PATH}/
 
   cd ${FULL_PATH}/
 
@@ -68,7 +67,8 @@ copy_project() {
   rm -rf ./.idea
   rm -rf ./init.sh
   mv ./README.md.tmpl ./README.md
-  mv ./.gitlab-ci.yml.tmpl ./.gitlab-ci.yml
+# fixme
+#  mv ./.gitlab-ci.yml.tmpl ./.gitlab-ci.yml
 }
 
 
