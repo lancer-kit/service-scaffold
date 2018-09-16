@@ -8,3 +8,12 @@ Jwt: {"jti":"2"}
 {"description": "new description"}
 
 ###
+
+PUT http://localhost:2490/dev/couch/3
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"2"}
+
+{"firstName": "new first name", "secondName": "new second name"}
+
+###

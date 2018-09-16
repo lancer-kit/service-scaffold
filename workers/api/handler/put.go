@@ -54,3 +54,46 @@ func ChangeBuzz(w http.ResponseWriter, r *http.Request) {
 	log.Default.Info("Data has been written successfully")
 	render.Success(w, data)
 }
+
+func ChangeDocument(w http.ResponseWriter, r *http.Request) {
+	uid := chi.URLParam(r, "id")
+	idINT, err := strconv.Atoi(uid)
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	data := new(models.CustomDocument)
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	err = json.Unmarshal(body, data)
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	docQ, err := models.CreateCustomDocumentQ()
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	err = docQ.UpdateDocument(idINT, data)
+	if err != nil {
+		log.Default.Error(err)
+		render.ResultNotFound.SetError("Not found").Render(w)
+		return
+	}
+
+	log.Default.Info("Data has been written successfully")
+	render.Success(w, "Document was updated successful")
+}

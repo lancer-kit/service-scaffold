@@ -5,3 +5,10 @@ Content-Type: application/json
 Jwt: {"jti":"1"}
 
 ###
+
+DELETE http://localhost:2490/dev/couch/3
+Accept: */*
+Content-Type: application/json
+Jwt: {"jti":"1"}
+
+###

@@ -79,6 +79,17 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 			})
 		})
 
+		r.Route("/couch", func(r chi.Router) {
+			r.Post("/", handler.AddDocument)
+			r.Get("/", handler.GetAllDocument)
+
+			r.Route("/{id}", func(r chi.Router) {
+				r.Get("/", handler.GetDocument)
+				r.Put("/", handler.ChangeDocument)
+				r.Delete("/", handler.DeleteDocument)
+			})
+		})
+
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
