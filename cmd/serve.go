@@ -7,8 +7,6 @@ import (
 	"gitlab.inn4science.com/gophers/service-kit/db"
 	"gitlab.inn4science.com/gophers/service-kit/log"
 	"gitlab.inn4science.com/gophers/service-scaffold/config"
-	"gitlab.inn4science.com/gophers/service-scaffold/dbschema"
-	"gitlab.inn4science.com/gophers/service-scaffold/info"
 	"gitlab.inn4science.com/gophers/service-scaffold/workers"
 )
 
@@ -23,7 +21,7 @@ func serveAction(c *cli.Context) error {
 	cfg := config.Config()
 
 	if cfg.AutoMigrate {
-		dbschema.SetAssets()
+		//dbschema.SetAssets()
 		count, err := db.Migrate(config.Config().DB, "up")
 		if err != nil {
 			log.Default.WithError(err).Error("Migrations failed")
