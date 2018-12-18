@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 set -e
+
+# !! DO NOT REMOVE !!
+# FIX of "sed: RE error: illegal byte sequence"
+export LC_CTYPE=C
+export LANG=C
+
 scaffold_path="gitlab.inn4science.com\/gophers\/service-scaffold"
 VCS_DOMAIN=""
 VCS_USER=""

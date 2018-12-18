@@ -43,7 +43,7 @@ func ChangeBuzz(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dataQ := models.NewBuzzFeedQ(models.NewQ(nil))
+	dataQ := models.NewQ(nil).BuzzFeed()
 	err = dataQ.UpdateBuzzDescription(int64(idINT), data.Description)
 	if err != nil {
 		render.ResultNotFound.SetError("Not found").Render(w)

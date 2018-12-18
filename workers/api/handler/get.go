@@ -43,8 +43,8 @@ func GetBuzz(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dataQ := models.NewBuzzFeedQ(models.NewQ(nil))
-	res, err := dataQ.ByID(int64(idINT))
+	dataQ := models.NewQ(nil).BuzzFeed()
+	res, err := dataQ.GetByID(int64(idINT))
 	if err != nil {
 		log.Default.Error(err)
 		render.ResultNotFound.SetError("Not found").Render(w)

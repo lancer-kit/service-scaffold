@@ -27,8 +27,8 @@ func AddBuzz(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Default.Info("Trying to write data into database")
-	dataQ := models.NewBuzzFeedQ(models.NewQ(nil))
-	err = dataQ.Insert(*data)
+	dataQ := models.NewQ(nil).BuzzFeed()
+	err = dataQ.Insert(data)
 	if err != nil {
 		log.Default.WithError(err).Error("Can not insert data into database")
 		render.ResultNotFound.SetError("Not found").Render(w)

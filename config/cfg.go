@@ -35,7 +35,8 @@ type Cfg struct {
 func (cfg Cfg) Validate() error {
 	return validation.ValidateStruct(&cfg,
 		validation.Field(&cfg.DB, validation.Required),
-		validation.Field(&cfg.CouchDB, validation.Required),
+		//uncomment this if you want to use CouchDB
+		//validation.Field(&cfg.CouchDB, validation.Required),
 		validation.Field(&cfg.Api, validation.Required),
 		validation.Field(&cfg.Links, validation.Required),
 		validation.Field(&cfg.NATS, validation.Required),
