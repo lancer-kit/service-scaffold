@@ -2,13 +2,9 @@ package config
 
 import (
 	"io/ioutil"
-	"time"
 
 	"github.com/sirupsen/logrus"
-	"gitlab.inn4science.com/gophers/service-kit/db"
 	"gitlab.inn4science.com/gophers/service-kit/log"
-	"gitlab.inn4science.com/gophers/service-kit/natswrap"
-	"gitlab.inn4science.com/gophers/service-kit/tools"
 	"gopkg.in/yaml.v2"
 )
 
@@ -48,8 +44,6 @@ func Init(path string) {
 	}
 
 	initLog()
-	initDB()
-	initNats()
 }
 
 // Config returns the config obj.
@@ -64,28 +58,4 @@ func initLog() {
 			WithError(err).
 			Fatal("Unable to init log")
 	}
-}
-
-func initDB() {
-	if !config.WaitForDB {
-		err := db.Init(config.DB, log.Default)
-		if err != nil {
-			log.Default.WithError(err).Fatal("Can't to init database connection")
-		}
-		return
-	}
-
-	tools.RetryIncrementally(
-		5*time.Second,
-		func() bool {
-			err := db.Init(config.DB, log.Default)
-			if err != nil {
-				log.Default.WithError(err).Warning("Can't to init database connection")
-			}
-			return err == nil
-		})
-}
-
-func initNats() {
-	natswrap.SetConfig(&config.NATS)
 }

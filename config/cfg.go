@@ -10,10 +10,12 @@ import (
 
 // Cfg main structure of the app configuration.
 type Cfg struct {
-	DB         string `json:"db" yaml:"db"` // DB is a database connection string.
-    CouchDB    string     `json:"couchdb" yaml:"couchdb"` // CouchDB is a couchdb url connection string.
-	Api        api.Config `json:"api" yaml:"api"`
-	InfoWorker *infoworker.Conf `yaml:"info_worker"`
+	DB                  string           `json:"db" yaml:"db"` // DB is a database connection string.
+	DBInitTimeout       int              `json:"dbInitTimeout" yaml:"db_init_timeout"`
+	ServicesInitTimeout int              `json:"servicesInitTimeout" yaml:"services_init_timeout"`
+	CouchDB             string           `json:"couchdb" yaml:"couchdb"` // CouchDB is a couchdb url connection string.
+	Api                 api.Config       `json:"api" yaml:"api"`
+	InfoWorker          *infoworker.Conf `yaml:"info_worker"`
 
 	// AutoMigrate if `true` execute db migrate up on start.
 	AutoMigrate bool `json:"auto_migrate" yaml:"auto_migrate"`
@@ -35,6 +37,8 @@ type Cfg struct {
 func (cfg Cfg) Validate() error {
 	return validation.ValidateStruct(&cfg,
 		validation.Field(&cfg.DB, validation.Required),
+		validation.Field(&cfg.DBInitTimeout, validation.Required),
+		validation.Field(&cfg.ServicesInitTimeout, validation.Required),
 		//uncomment this if you want to use CouchDB
 		//validation.Field(&cfg.CouchDB, validation.Required),
 		validation.Field(&cfg.Api, validation.Required),

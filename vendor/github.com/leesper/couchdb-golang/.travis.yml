@@ -1,0 +1,12 @@
+language: go
+
+services:
+  - couchdb
+
+go:
+  - 1.7.x
+
+before_script:
+  - go vet
+
+gobuild_args: -v -race

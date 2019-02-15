@@ -23,3 +23,21 @@ func TestVerifySignature(t *testing.T) {
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, ok)
 }
+
+func TestBase64EncodeNP(t *testing.T) {
+	key := "this is key"
+	out := Base64EncodeNP([]byte(key))
+	println(out)
+	in, err := Base64DecodeNP(out)
+	assert.NoError(t, err)
+	assert.Equal(t, string(in), key)
+}
+
+func TestBase32EncodeNP(t *testing.T) {
+	key := "this is key"
+	out := Base32EncodeNP([]byte(key))
+	println(out)
+	in, err := Base32DecodeNP(out)
+	assert.NoError(t, err)
+	assert.Equal(t, string(in), key)
+}

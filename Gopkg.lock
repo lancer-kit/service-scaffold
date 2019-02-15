@@ -191,7 +191,7 @@
 
 [[projects]]
   branch = "dev"
-  digest = "1:24283c9beab26bb238876850cccaba9a2c05ebbb167f8ffc74254124678fe860"
+  digest = "1:b6022571aaec38042d052f2b6fc8d06dfff852011b87ef2b06473f5710fb0b6c"
   name = "gitlab.inn4science.com/gophers/service-kit"
   packages = [
     "api",
@@ -206,7 +206,7 @@
     "tools",
   ]
   pruneopts = ""
-  revision = "1a6570dd292aa93658de872e7549828714fbdc86"
+  revision = "6a456735e23c980fd78213416a424b70e7e470ff"
 
 [[projects]]
   branch = "master"
