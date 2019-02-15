@@ -67,7 +67,7 @@ func TestXClient_SignRequest(t *testing.T) {
 	req, err := http.NewRequest(http.MethodGet, "http://example.com/test?user=foo", nil)
 	_ = err
 
-	req, err = client.SignRequest(req, nil)
+	req, err = client.SignRequest(req, nil, nil)
 	assert.Nil(t, err)
 
 	assert.NotEmpty(t, req.Header.Get(HeaderBodyHash))
@@ -84,7 +84,7 @@ func TestXClient_SignRequest(t *testing.T) {
 	req, err = http.NewRequest(http.MethodPost, "http://example.com/test?user=foo", bytes.NewBuffer([]byte("{}")))
 	_ = err
 
-	req, err = client.SignRequest(req, nil)
+	req, err = client.SignRequest(req, nil, nil)
 	assert.Nil(t, err)
 
 	assert.NotEmpty(t, req.Header.Get(HeaderBodyHash))
@@ -209,6 +209,10 @@ func sendCorrectRequests(t *testing.T, client *XClient, port int, data interface
 	resBody, _ = ioutil.ReadAll(res.Body)
 	log.Default.WithField("POST response: ", string(resBody)).Info("Happy flow")
 
+	res, err = client.WithCookies([]*http.Cookie{}).PostJSON(url, data, nil)
+	require.NoErrorf(err, "Error when trying to send POST request")
+	resBody, _ = ioutil.ReadAll(res.Body)
+	log.Default.WithField("POST response: ", string(resBody)).Info("Happy flow")
 }
 
 func sendBadRequests(t *testing.T, client *XClient, port int, data interface{}) {
@@ -236,7 +240,7 @@ func sendBadRequests(t *testing.T, client *XClient, port int, data interface{}) 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://127.0.0.1:%d/test/bad", port), body)
 	_ = err
 
-	req, err = client.SignRequest(req, nil)
+	req, err = client.SignRequest(req, nil, nil)
 	require.NoErrorf(err, "Error when trying to sign GET request")
 	req.Header.Set(HeaderSignature, "bad sign")
 
@@ -248,7 +252,7 @@ func sendBadRequests(t *testing.T, client *XClient, port int, data interface{}) 
 	req, err = http.NewRequest(http.MethodPost, url, body)
 	require.NoErrorf(err, "Error when trying to create POST request")
 
-	req, err = client.SignRequest(req, rawData)
+	req, err = client.SignRequest(req, rawData, nil)
 	require.NoErrorf(err, "Error when trying to sign POST request")
 	req.Header.Set(HeaderBodyHash, "bad body hash")
 

@@ -19,6 +19,26 @@ type WorkerPool struct {
 	rw      sync.RWMutex
 }
 
+//GetWorker -  get Worker interface by name
+func (pool *WorkerPool) GetWorker(name string) Worker {
+	pool.rw.Lock()
+	defer pool.rw.Unlock()
+	if wk, ok := pool.workers[name]; ok {
+		return wk
+	}
+	return nil
+}
+
+//GetState -  get Worker state by name
+func (pool *WorkerPool) GetState(name string) WorkerState {
+	pool.rw.Lock()
+	defer pool.rw.Unlock()
+	if wk, ok := pool.states[name]; ok {
+		return wk
+	}
+	return WorkerDisabled
+}
+
 // DisableWorker sets state `WorkerDisabled` for workers with the specified `name`.
 func (pool *WorkerPool) DisableWorker(name string) {
 	pool.SetState(name, WorkerDisabled)
@@ -35,7 +55,7 @@ func (pool *WorkerPool) EnableWorker(name string) {
 
 // StartWorker sets state `WorkerEnabled` for workers with the specified `name`.
 func (pool *WorkerPool) StartWorker(name string) {
-	if s := pool.states[name]; s != WorkerStopped &&
+	if s := pool.GetState(name); s != WorkerStopped &&
 		s != WorkerInitialized && s != WorkerFailed {
 		pool.SetState(name, WorkerWrongStateChange)
 		return
@@ -45,7 +65,7 @@ func (pool *WorkerPool) StartWorker(name string) {
 
 // StopWorker sets state `WorkerStopped` for workers with the specified `name`.
 func (pool *WorkerPool) StopWorker(name string) {
-	if s := pool.states[name]; s != WorkerRun && s != WorkerFailed {
+	if s := pool.GetState(name); s != WorkerRun && s != WorkerFailed {
 		pool.SetState(name, WorkerWrongStateChange)
 		return
 	}
@@ -63,7 +83,7 @@ func (pool *WorkerPool) IsEnabled(name string) bool {
 		return false
 	}
 
-	state := pool.states[name]
+	state := pool.GetState(name)
 	return state >= WorkerEnabled
 }
 
@@ -73,7 +93,7 @@ func (pool *WorkerPool) IsAlive(name string) bool {
 		return false
 	}
 
-	state := pool.states[name]
+	state := pool.GetState(name)
 	return state == WorkerRun
 }
 
@@ -126,7 +146,7 @@ func (pool *WorkerPool) RunWorkerExec(name string) (err error) {
 		}
 	}()
 
-	if s := pool.states[name]; s != WorkerInitialized {
+	if s := pool.GetState(name); s != WorkerInitialized {
 		return ErrWorkerNotInitialized
 	}
 

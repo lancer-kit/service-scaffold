@@ -34,6 +34,26 @@ func GenKeyPair() (privateKey, publicKey string) {
 	return
 }
 
+//SetPubKeyFromString - set public key from string
+func (kp *KP) SetPubKeyFromString(publicKey string) (err error) {
+	pbKey, err := FromString(publicKey)
+	if err != nil {
+		return
+	}
+	kp.Public = *pbKey
+	return
+}
+
+//SetPrivKeyFromString - set private key from string
+func (kp *KP) SetPrivKeyFromString(privateKey string) (err error) {
+	prKey, err := FromString(privateKey)
+	if err != nil {
+		return
+	}
+	kp.Private = *prKey
+	return
+}
+
 // SignData serializes the `data` and signs it using the `privateKey`.
 func (kp *KP) SignData(data interface{}) (string, error) {
 	message, err := json.Marshal(data)
