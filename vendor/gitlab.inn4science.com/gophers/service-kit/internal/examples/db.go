@@ -57,7 +57,6 @@ func (q *UserQ) ByAge(age int) *UserQ {
 // by the parameters from `db.PageQuery`.
 func (q *UserQ) SetPage(pq *db.PageQuery) *UserQ {
 	q.Table.SetPage(pq)
-	q.WithCount()
 	return q
 }
 

@@ -7,94 +7,107 @@ import (
 	"gitlab.inn4science.com/gophers/service-kit/db"
 )
 
-const table{{.TypeName}}s = "{{.TypeString}}s"
+type {{.TypeName}}QI interface {
+	// Insert adds new `{{.TypeName}}` record to `{{.TypeString}}s` table.
+	Insert({{.TypeString}} *{{.TypeName}}) error
+	// Update updates row with passed `uid`.
+	Update(id int64, {{.TypeString}} *{{.TypeName}}) error
+	// DeleteByID deletes row with passed `id`.
+	DeleteByID(id int64) error
+	{{ $self := . }}
+	{{range .Fields}}// With{{.Name}} adds filter by `{{.Name}}` column.
+	With{{.Name}}({{.Name}} {{.FType}}) {{$self.TypeName}}QI
+	{{end}}
+	// Get returns first row of the result of query execution.
+	Get() (*{{.TypeName}}, error)
+	// Select returns all records of the result of query execution.
+	Select() ([]{{.TypeName}}, error)
+	// GetByID returns one row with passed `id`.
+	GetByID(id int64) (*{{.TypeName}}, error)
 
-type {{.TypeName}}Q struct {
-	*db.SQLConn
-	db.Table
+  // Until sets lower time bound.
+	Since(timestamp int64) {{$self.TypeName}}QI
+	// Until sets upper time bound.
+	Until(timestamp int64) {{$self.TypeName}}QI
+	// SetPage applies pagination parameters.
+	SetPage(pq *db.PageQuery) {{$self.TypeName}}QI
 }
 
-func New{{.TypeName}}Q(conn *db.SQLConn) *{{.TypeName}}Q {
-	return &{{.TypeName}}Q{
-		SQLConn: conn.Clone(),
-		Table: db.Table{
+const table{{.TypeName}}s = "{{.TypeString}}s"
+
+type {{.TypeString}}Q struct {
+	parent *Q
+ 	table  db.Table
+
+ 	Err    error
+}
+
+func (q *Q) {{.TypeName}}() {{.TypeName}}QI {
+	return &{{.TypeString}}Q{
+		parent: q,
+		table: db.Table{
 			Name:     table{{.TypeName}}s,
 			QBuilder: sq.Select("*").From(table{{.TypeName}}s),
 		},
 	}
 }
 
-// Insert adds new  `{{.TypeName}}` record to `{{.TypeString}}s` table.
-func (q *{{.TypeName}}Q) Insert({{.TypeString}} *{{.TypeName}}) error {
-	query := sq.Insert(q.Name).SetMap(map[string]interface{}{
+// Insert adds new `{{.TypeName}}` record to `{{.TypeString}}s` table.
+func (q *{{.TypeString}}Q) Insert({{.TypeString}} *{{.TypeName}}) error {
+	query := sq.Insert(q.table.Name).SetMap(map[string]interface{}{
 		{{ $self := . }}
 		{{range .Fields}}"{{.Tags.db}}":  {{$self.TypeString}}.{{.Name}},
 		{{end}}
 	})
 
 	var err error
-	_, err = q.SQLConn.Insert(query)
+	_, err = q.parent.Insert(query)
 	return err
 }
 
 // Update updates row with passed `uid`.
-func (q *{{.TypeName}}Q) Update(uid string, {{.TypeString}} *{{.TypeName}}) error {
-  panic("fixme")
-	query := sq.Update(q.Name).SetMap(map[string]interface{}{
+//fixme: check that this is the correct update
+func (q *{{.TypeString}}Q) Update(id int64, {{.TypeString}} *{{.TypeName}}) error {
+	query := sq.Update(q.table.Name).SetMap(map[string]interface{}{
 	  {{ $self := . }}
-		{{range .Fields}}"{{.Name}}": {{$self.TypeString}}.{{.Name}},
+		{{range .Fields}}"{{.Tags.db}}": {{$self.TypeString}}.{{.Name}},
 		{{end}}
-	}).Where("uid = ?", uid) //fixme: set correct rule
-	return q.SQLConn.Exec(query)
+	}).Where("id = ?", id)
+	return q.parent.Exec(query)
 }
-
 {{ $self := . }}
 {{range .Fields}}
 // With{{.Name}} adds filter by `{{.Name}}` column.
-func (q *{{$self.TypeName}}Q) With{{.Name}}({{.Name}} {{.FType}}) *{{$self.TypeName}}Q {
-	q.QBuilder = q.QBuilder.Where("{{.Name}} = ?", {{.Name}})
+func (q *{{$self.TypeString}}Q) With{{.Name}}({{.Name}} {{.FType}}) {{$self.TypeName}}QI {
+	q.table.QBuilder = q.table.QBuilder.Where("{{.Tags.db}} = ?", {{.Name}})
 	return q
 }
 {{end}}
 
 // Until sets lower time bound.
-func (q *{{.TypeName}}Q) Since(timestamp int64) *{{.TypeName}}Q {
-	q.QBuilder = q.QBuilder.Where("created_at >= ?", timestamp)
+func (q *{{.TypeString}}Q) Since(timestamp int64) {{$self.TypeName}}QI {
+	q.table.QBuilder = q.table.QBuilder.Where("created_at >= ?", timestamp)
 	return q
 }
 
 // Until sets upper time bound.
-func (q *{{.TypeName}}Q) Until(timestamp int64) *{{.TypeName}}Q {
-	q.QBuilder = q.QBuilder.Where("created_at <= ?", timestamp)
+func (q *{{.TypeString}}Q) Until(timestamp int64) {{$self.TypeName}}QI {
+	q.table.QBuilder = q.table.QBuilder.Where("created_at <= ?", timestamp)
 	return q
 }
 
 // SetPage applies pagination parameters.
-func (q *{{.TypeName}}Q) SetPage(pq *db.PageQuery) *{{.TypeName}}Q {
-	q.Table.SetPage(pq)
-	q.WithCount()
+func (q *{{.TypeString}}Q) SetPage(pq *db.PageQuery) {{$self.TypeName}}QI {
+	q.table.SetPage(pq)
 	return q
 }
 
-// Get returns first row of the result of query execution.
-func (q *{{.TypeName}}Q) Get() (*{{.TypeName}}, error) {
-	res := new({{.TypeName}})
-	q.ApplyPage("id")
-
-	err := q.SQLConn.Get(q.QBuilder, res)
-	if err == sql.ErrNoRows {
-		return res, nil
-	}
-
-	return res, err
-}
-
-// Select returns all records.
-func (q *{{.TypeName}}Q) Select() ([]{{.TypeName}}, error) {
+// Select returns all records of the result of query execution.
+func (q *{{.TypeString}}Q) Select() ([]{{.TypeName}}, error) {
 	res := make([]{{.TypeName}}, 0, 1)
-	q.ApplyPage("id")
+	q.table.ApplyPage("id")
 
-	err := q.SQLConn.Select(q.QBuilder, &res)
+	err := q.parent.Select(q.table.QBuilder, &res)
 	if err == sql.ErrNoRows {
 		return res, nil
 	}
@@ -102,23 +115,32 @@ func (q *{{.TypeName}}Q) Select() ([]{{.TypeName}}, error) {
 	return res, err
 }
 
-//fixme: set correct getter
-func (q *{{.TypeName}}Q) ByID(id int64) (*{{.TypeName}}, error) {
+// Get returns first row of the result of query execution.
+func (q *{{.TypeString}}Q) Get() (*{{.TypeName}}, error) {
 	res := new({{.TypeName}})
-	err := q.SQLConn.Get(q.QBuilder.Where("id = ?", id), res)
+	q.table.ApplyPage("id")
+
+	err := q.parent.Get(q.table.QBuilder, res)
+	if err == sql.ErrNoRows {
+		return res, nil
+	}
+
+	return res, err
+}
+
+// GetByID returns one row with passed `id`.
+// fixme: check that this is the correct getter
+func (q *{{.TypeString}}Q) GetByID(id int64) (*{{.TypeName}}, error) {
+	res := new({{.TypeName}})
+	err := q.parent.Get(q.table.QBuilder.Where("id = ?", id), res)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
 	return res, err
 }
 
-func (q *{{.TypeName}}Q) ByKey(key string) (*{{.TypeName}}, error) {
-  panic("fixme")
-  // fixme: set correct getter
-	res := new({{.TypeName}})
-	err := q.SQLConn.Get(q.QBuilder.Where("key = ?", key), res)
-	if err == sql.ErrNoRows {
-		return nil, nil
-	}
-	return res, err
+// DeleteByID deletes row with passed `id`.
+// fixme: check that this is the correct getter
+func (q *{{.TypeString}}Q) DeleteByID(id int64) error{
+	return q.parent.Exec(sq.Delete(q.table.Name).Where("id = ?", id))
 }

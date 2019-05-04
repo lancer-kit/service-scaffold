@@ -39,6 +39,8 @@ func (t *Table) ApplyPage(orderColumn string) {
 	t.QBuilder = t.QBuilder.OrderBy(orderColumn)
 }
 
+// DEPRECATED! Do not use this method for counting,
+// because it very slow and does count for each row,
 // WithCount adds a column with the total number of records.
 // ATTENTION! The model must have a destination for this `row_count` column.
 func (t *Table) WithCount() {

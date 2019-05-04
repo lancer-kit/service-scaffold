@@ -114,10 +114,29 @@ func (conn *SQLConn) Insert(sqq sq.InsertBuilder) (id interface{}, err error) {
 		PlaceholderFormat(sq.Dollar).
 		QueryRow().Scan(&id)
 
-	query, args, _ := sqq.ToSql()
+	query, args, err := sqq.ToSql()
+	if err != nil {
+		return nil, err
+	}
 	conn.log("insert", start, query, args)
 
 	return id, errors.Wrap(err, "failed to insert")
+}
+
+func (conn *SQLConn) SetMaxIdleConns(n int) {
+	conn.db.SetMaxIdleConns(n)
+}
+
+func (conn *SQLConn) SetMaxOpenConns(n int) {
+	conn.db.SetMaxOpenConns(n)
+}
+
+func (conn *SQLConn) SetConnMaxLifetime(d int64) {
+	conn.db.SetConnMaxLifetime(time.Duration(d))
+}
+
+func (conn *SQLConn) Stats() sql.DBStats {
+	return conn.db.Stats()
 }
 
 func (conn *SQLConn) conn() сonn {

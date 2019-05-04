@@ -17,7 +17,10 @@ var Default *logrus.Entry
 func init() {
 	l := logrus.New()
 	l.Level = logrus.InfoLevel
-	host, _ := os.Hostname()
+	host, err := os.Hostname()
+	if err != nil {
+		logrus.Error(err)
+	}
 	Default = logrus.NewEntry(l).WithField("hostname", host)
 }
 

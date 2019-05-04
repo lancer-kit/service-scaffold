@@ -3,7 +3,9 @@
 // `Message` can be sent through the HTTP or NATS.
 package sender
 
-import "github.com/go-ozzo/ozzo-validation"
+import (
+	"github.com/go-ozzo/ozzo-validation"
+)
 
 // LetterType is an enum of predefined letter templates.
 type LetterType int
@@ -17,6 +19,7 @@ const (
 	LetterUserEmailVerify
 	LetterUserRecovery
 	LetterUserNewDevice
+	LetterUserDeferredPaymentNotify
 )
 
 const (
@@ -61,15 +64,18 @@ func (m Message) Validate() (err error) {
 			return
 		}
 		err = m.Data.Device.Validate()
+	case LetterUserDeferredPaymentNotify:
+		err = m.Data.DeferredPaymentNotify.Validate()
 	}
 	return
 }
 
 // MsgData data for letter templates.
 type MsgData struct {
-	Base      Base      `json:"base,omitempty"`
-	Device    Device    `json:"device,omitempty"`
-	Universal Universal `json:"universal,omitempty"`
+	Base                  Base                  `json:"base,omitempty"`
+	Device                Device                `json:"device,omitempty"`
+	Universal             Universal             `json:"universal,omitempty"`
+	DeferredPaymentNotify DeferredPaymentNotify `json:"deferredPaymentNotify,omitempty"`
 }
 
 func (ms MsgData) Validate() error {
@@ -77,6 +83,7 @@ func (ms MsgData) Validate() error {
 		validation.Field(&ms.Device),
 		validation.Field(&ms.Universal),
 		validation.Field(&ms.Base),
+		validation.Field(&ms.DeferredPaymentNotify),
 	)
 }
 
@@ -124,6 +131,22 @@ func (un Universal) Validate() error {
 	return validation.ValidateStruct(&un,
 		validation.Field(&un.Email, validation.Required),
 		validation.Field(&un.Subject, validation.Required),
+	)
+}
+
+// DefferedPaymentNotify is a data extension for `deferred payment` letter
+type DeferredPaymentNotify struct {
+	ExpDate          string
+	WalletID         string
+	Amount           string
+	ConfirmationLink string
+	CancellationLink string
+}
+
+func (dp DeferredPaymentNotify) Validate() error {
+	return validation.ValidateStruct(&dp,
+		validation.Field(&dp.ConfirmationLink, validation.Required),
+		validation.Field(&dp.CancellationLink, validation.Required),
 	)
 }
 

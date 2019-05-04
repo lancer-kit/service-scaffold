@@ -53,6 +53,23 @@
   version = "v3.4.0"
 
 [[projects]]
+  digest = "1:52735cb54d5122db78b96f7c8980fcb91dba9a65497bae324996d1ea152ad7d4"
+  name = "github.com/go-redis/redis"
+  packages = [
+    ".",
+    "internal",
+    "internal/consistenthash",
+    "internal/hashtag",
+    "internal/pool",
+    "internal/proto",
+    "internal/singleflight",
+    "internal/util",
+  ]
+  pruneopts = ""
+  revision = "f3bba01df2026fc865f7782948845db9cf44cf23"
+  version = "v6.14.1"
+
+[[projects]]
   branch = "master"
   digest = "1:6919f4f0d769f1e797a3e85f58fbb6f6238fbe434e55638c24ee572aff90e1fc"
   name = "github.com/gopherjs/gopherjs"
@@ -279,6 +296,7 @@
     "github.com/go-chi/chi",
     "github.com/go-chi/chi/middleware",
     "github.com/go-ozzo/ozzo-validation",
+    "github.com/go-redis/redis",
     "github.com/jmoiron/sqlx",
     "github.com/lib/pq",
     "github.com/nats-io/go-nats",

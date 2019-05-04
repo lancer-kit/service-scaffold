@@ -39,8 +39,16 @@ func AddElasticHook(config ElasticConfig) {
 		Default.WithError(err).Error("unable to init elastic")
 		return
 	}
-	host, _ := os.Hostname()
-	level, _ := logrus.ParseLevel(config.Level)
+	host, err := os.Hostname()
+	if err != nil {
+		Default.WithError(err).Error("unable to init ")
+		return
+	}
+	level, err := logrus.ParseLevel(config.Level)
+	if err != nil {
+		Default.WithError(err).Error("unable to init ")
+		return
+	}
 	hook, err := elogrus.NewElasticHook(client, host, level, config.Index)
 	if err != nil {
 		Default.WithError(err).Error("unable to init elastic hook")

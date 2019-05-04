@@ -31,6 +31,16 @@ func (key Key) String() string {
 	return Base32Encode(key)
 }
 
+//FromString initialize type from string key
+func FromString(keyS string) (*Key, error) {
+	keyBytes, err := Base32Decode(keyS)
+	if err != nil {
+		return nil, err
+	}
+	result := Key(keyBytes)
+	return &result, nil
+}
+
 // UnmarshalJSON is a realization of the `Unmarshaller` interface.
 func (key *Key) UnmarshalJSON(data []byte) error {
 	var rawStr string
