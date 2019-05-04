@@ -7,15 +7,15 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
+	"github.com/lancer-kit/armory/api"
+	"github.com/lancer-kit/armory/api/render"
+	"github.com/lancer-kit/armory/auth"
+	"github.com/lancer-kit/armory/log"
+	"github.com/lancer-kit/service-scaffold/config"
+	"github.com/lancer-kit/service-scaffold/info"
+	"github.com/lancer-kit/service-scaffold/workers/api/handler"
+	"github.com/lancer-kit/service-scaffold/workers/api/middlewares"
 	"github.com/sirupsen/logrus"
-	"gitlab.inn4science.com/gophers/service-kit/api"
-	"gitlab.inn4science.com/gophers/service-kit/api/render"
-	"gitlab.inn4science.com/gophers/service-kit/auth"
-	"gitlab.inn4science.com/gophers/service-kit/log"
-	"gitlab.inn4science.com/gophers/service-scaffold/config"
-	"gitlab.inn4science.com/gophers/service-scaffold/info"
-	"gitlab.inn4science.com/gophers/service-scaffold/workers/api/handler"
-	"gitlab.inn4science.com/gophers/service-scaffold/workers/api/middlewares"
 )
 
 func Server() *api.Server {

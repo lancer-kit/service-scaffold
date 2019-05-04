@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gitlab.inn4science.com/gophers/service-scaffold/info"
+	"github.com/lancer-kit/service-scaffold/info"
 )
 
 var (

@@ -5,9 +5,9 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"gitlab.inn4science.com/gophers/service-kit/api/render"
-	"gitlab.inn4science.com/gophers/service-kit/log"
-	"gitlab.inn4science.com/gophers/service-scaffold/models"
+	"github.com/lancer-kit/armory/api/render"
+	"github.com/lancer-kit/armory/log"
+	"github.com/lancer-kit/service-scaffold/models"
 )
 
 func AddBuzz(w http.ResponseWriter, r *http.Request) {

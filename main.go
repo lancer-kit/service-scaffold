@@ -3,10 +3,10 @@ package main
 import (
 	"os"
 
+	"github.com/lancer-kit/service-scaffold/cmd"
+	"github.com/lancer-kit/service-scaffold/config"
+	"github.com/lancer-kit/service-scaffold/info"
 	"github.com/urfave/cli"
-	"gitlab.inn4science.com/gophers/service-scaffold/cmd"
-	"gitlab.inn4science.com/gophers/service-scaffold/config"
-	"gitlab.inn4science.com/gophers/service-scaffold/info"
 )
 
 func main() {

@@ -3,8 +3,8 @@ package config
 import (
 	"io/ioutil"
 
+	"github.com/lancer-kit/armory/log"
 	"github.com/sirupsen/logrus"
-	"gitlab.inn4science.com/gophers/service-kit/log"
 	"gopkg.in/yaml.v2"
 )
 

@@ -3,7 +3,7 @@ package foobar
 import (
 	"context"
 
-	"gitlab.inn4science.com/gophers/service-kit/routines"
+	"github.com/lancer-kit/armory/routines"
 )
 
 type Service struct {

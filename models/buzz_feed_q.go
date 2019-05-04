@@ -5,7 +5,7 @@ import (
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
-	"gitlab.inn4science.com/gophers/service-kit/db"
+	"github.com/lancer-kit/armory/db"
 )
 
 type BuzzFeedQI interface {

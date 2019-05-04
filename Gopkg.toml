@@ -1,4 +1,4 @@
-ignored = ["gitlab.inn4science.com/gophers/service-kit"]
+#ignored = ["github.com/lancer-kit/armory"]
 
 [[constraint]]
   name = "github.com/Masterminds/squirrel"
@@ -12,9 +12,9 @@ ignored = ["gitlab.inn4science.com/gophers/service-kit"]
   name = "github.com/go-chi/cors"
   version = "1.0.0"
 
-#[[constraint]]
-#  branch = "dev"
-#  name = "gitlab.inn4science.com/gophers/service-kit"
+[[constraint]]
+  branch = "master"
+  name = "github.com/lancer-kit/armory"
 
 [[constraint]]
   name = "github.com/pkg/errors"

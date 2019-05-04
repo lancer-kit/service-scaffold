@@ -65,6 +65,25 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:6706662cf4a166999b9e605c43bae71cb2c1b7d362833fe9c46f91d94c9f8420"
+  name = "github.com/lancer-kit/armory"
+  packages = [
+    "api",
+    "api/infoworker",
+    "api/render",
+    "auth",
+    "crypto",
+    "db",
+    "log",
+    "natsx",
+    "routines",
+    "tools",
+  ]
+  pruneopts = ""
+  revision = "a21780189c219739f1bcea7ecc441bbe362ce1a5"
+
+[[projects]]
+  branch = "master"
   digest = "1:0fe2dd9762093b9d72e4c9eeb4f0832fb6582428cee2c62b074e1c9aa68564d8"
   name = "github.com/lann/builder"
   packages = ["."]
@@ -190,25 +209,6 @@
   version = "v1.20.0"
 
 [[projects]]
-  branch = "dev"
-  digest = "1:b6022571aaec38042d052f2b6fc8d06dfff852011b87ef2b06473f5710fb0b6c"
-  name = "gitlab.inn4science.com/gophers/service-kit"
-  packages = [
-    "api",
-    "api/infoworker",
-    "api/render",
-    "auth",
-    "crypto",
-    "db",
-    "log",
-    "natswrap",
-    "routines",
-    "tools",
-  ]
-  pruneopts = ""
-  revision = "6a456735e23c980fd78213416a424b70e7e470ff"
-
-[[projects]]
   branch = "master"
   digest = "1:4cae11053a5fc8e7b08228fcc14d161d3e60b64ba508a8b216937da472690991"
   name = "golang.org/x/crypto"
@@ -264,20 +264,20 @@
     "github.com/go-chi/chi/middleware",
     "github.com/go-chi/cors",
     "github.com/go-ozzo/ozzo-validation",
+    "github.com/lancer-kit/armory/api",
+    "github.com/lancer-kit/armory/api/infoworker",
+    "github.com/lancer-kit/armory/api/render",
+    "github.com/lancer-kit/armory/auth",
+    "github.com/lancer-kit/armory/db",
+    "github.com/lancer-kit/armory/log",
+    "github.com/lancer-kit/armory/natsx",
+    "github.com/lancer-kit/armory/routines",
+    "github.com/lancer-kit/armory/tools",
     "github.com/leesper/couchdb-golang",
     "github.com/pkg/errors",
     "github.com/rubenv/sql-migrate",
     "github.com/sirupsen/logrus",
     "github.com/urfave/cli",
-    "gitlab.inn4science.com/gophers/service-kit/api",
-    "gitlab.inn4science.com/gophers/service-kit/api/infoworker",
-    "gitlab.inn4science.com/gophers/service-kit/api/render",
-    "gitlab.inn4science.com/gophers/service-kit/auth",
-    "gitlab.inn4science.com/gophers/service-kit/db",
-    "gitlab.inn4science.com/gophers/service-kit/log",
-    "gitlab.inn4science.com/gophers/service-kit/natswrap",
-    "gitlab.inn4science.com/gophers/service-kit/routines",
-    "gitlab.inn4science.com/gophers/service-kit/tools",
     "gopkg.in/yaml.v2",
   ]
   solver-name = "gps-cdcl"

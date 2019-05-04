@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"gitlab.inn4science.com/gophers/service-kit/api/render"
+	"github.com/lancer-kit/armory/api/render"
 )
 
 // VerifySomething is an example of custom middleware which checks parameter value from url

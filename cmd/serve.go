@@ -1,10 +1,10 @@
 package cmd
 
 import (
+	"github.com/lancer-kit/service-scaffold/config"
+	"github.com/lancer-kit/service-scaffold/initialization"
+	"github.com/lancer-kit/service-scaffold/workers"
 	"github.com/urfave/cli"
-	"gitlab.inn4science.com/gophers/service-scaffold/config"
-	"gitlab.inn4science.com/gophers/service-scaffold/initialization"
-	"gitlab.inn4science.com/gophers/service-scaffold/workers"
 )
 
 var serveCommand = cli.Command{

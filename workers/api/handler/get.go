@@ -6,10 +6,10 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi"
-	"gitlab.inn4science.com/gophers/service-kit/api/render"
-	"gitlab.inn4science.com/gophers/service-kit/db"
-	"gitlab.inn4science.com/gophers/service-kit/log"
-	"gitlab.inn4science.com/gophers/service-scaffold/models"
+	"github.com/lancer-kit/armory/api/render"
+	"github.com/lancer-kit/armory/db"
+	"github.com/lancer-kit/armory/log"
+	"github.com/lancer-kit/service-scaffold/models"
 )
 
 func AllBuzz(w http.ResponseWriter, r *http.Request) {

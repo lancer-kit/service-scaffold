@@ -1,5 +1,6 @@
 package models
-//go:generate goplater model --type BuzzFeed --tmpl /Users/mike/go/src/gitlab.inn4science.com/gophers/service-kit/db/q.tmpl --suffix _q
+
+//go:generate forge model --type BuzzFeed --tmpl /Users/mike/go/src/github.com/lancer-kit/armory/db/q.tmpl --suffix _q
 type BuzzFeed struct {
 	ID          int64       `db:"id" json:"id"`
 	Name        string      `db:"name" json:"name"`

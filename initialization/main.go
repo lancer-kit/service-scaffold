@@ -5,12 +5,12 @@ import (
 	"sync"
 	"time"
 
+	"github.com/lancer-kit/armory/db"
+	"github.com/lancer-kit/armory/log"
+	"github.com/lancer-kit/armory/tools"
+	"github.com/lancer-kit/service-scaffold/config"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
-	"gitlab.inn4science.com/gophers/service-kit/db"
-	"gitlab.inn4science.com/gophers/service-kit/log"
-	"gitlab.inn4science.com/gophers/service-kit/tools"
-	"gitlab.inn4science.com/gophers/service-scaffold/config"
 )
 
 const flagConfig = "config"

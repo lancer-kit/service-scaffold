@@ -1,10 +1,10 @@
 package initialization
 
 import (
+	"github.com/lancer-kit/armory/db"
+	"github.com/lancer-kit/armory/natsx"
+	"github.com/lancer-kit/service-scaffold/config"
 	"github.com/sirupsen/logrus"
-	"gitlab.inn4science.com/gophers/service-kit/db"
-	"gitlab.inn4science.com/gophers/service-kit/natswrap"
-	"gitlab.inn4science.com/gophers/service-scaffold/config"
 )
 
 type initModule string
@@ -19,7 +19,7 @@ func initDatabase(cfg *config.Cfg, entry *logrus.Entry) error {
 }
 
 func initNATS(cfg *config.Cfg, entry *logrus.Entry) error {
-	natswrap.SetConfig(&cfg.NATS)
-	_, err := natswrap.GetConn()
+	natsx.SetConfig(&cfg.NATS)
+	_, err := natsx.GetConn()
 	return err
 }

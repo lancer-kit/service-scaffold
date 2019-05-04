@@ -1,13 +1,13 @@
 package dbschema
 
 import (
+	"github.com/lancer-kit/armory/db"
 	"github.com/rubenv/sql-migrate"
-	"gitlab.inn4science.com/gophers/service-kit/db"
 )
 
-//go get -u github.com/jteeuwen/go-bindata/...
+//go get -u github.com/lancer-kit/forge
 
-//go:generate go-bindata -ignore .+\.go$ -pkg dbschema -o bindata.go ./...
+//go:generate forge bindata --ignore .+\.go$ --pkg dbschema -o bindata.go -i ./...
 //go:generate gofmt -w bindata.go
 
 func Migrate(connStr string, dir db.MigrateDir) (int, error) {

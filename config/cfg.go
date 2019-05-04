@@ -2,10 +2,10 @@ package config
 
 import (
 	"github.com/go-ozzo/ozzo-validation"
-	"gitlab.inn4science.com/gophers/service-kit/api"
-	"gitlab.inn4science.com/gophers/service-kit/api/infoworker"
-	"gitlab.inn4science.com/gophers/service-kit/log"
-	"gitlab.inn4science.com/gophers/service-kit/natswrap"
+	"github.com/lancer-kit/armory/api"
+	"github.com/lancer-kit/armory/api/infoworker"
+	"github.com/lancer-kit/armory/log"
+	"github.com/lancer-kit/armory/natsx"
 )
 
 // Cfg main structure of the app configuration.
@@ -22,8 +22,8 @@ type Cfg struct {
 	DevMode     bool `json:"dev_mode" yaml:"dev_mode"`
 	WaitForDB   bool `json:"wait_for_db" yaml:"wait_for_db"`
 
-	NATS natswrap.Config `json:"nats" yaml:"nats"`
-	Log  log.Config      `json:"log" yaml:"log"`
+	NATS natsx.Config `json:"nats" yaml:"nats"`
+	Log  log.Config   `json:"log" yaml:"log"`
 
 	// Links are the addresses of other services
 	// with which the interaction takes place.

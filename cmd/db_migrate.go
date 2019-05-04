@@ -3,12 +3,11 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/lancer-kit/armory/db"
+	"github.com/lancer-kit/armory/log"
+	"github.com/lancer-kit/service-scaffold/config"
+	"github.com/lancer-kit/service-scaffold/dbschema"
 	"github.com/urfave/cli"
-	"gitlab.inn4science.com/gophers/service-kit/log"
-
-	"gitlab.inn4science.com/gophers/service-kit/db"
-	"gitlab.inn4science.com/gophers/service-scaffold/config"
-	"gitlab.inn4science.com/gophers/service-scaffold/dbschema"
 )
 
 var migrateCommand = cli.Command{

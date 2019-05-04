@@ -1,7 +1,7 @@
 package info
 
 import (
-	"gitlab.inn4science.com/gophers/service-kit/api/infoworker"
+	"github.com/lancer-kit/armory/api/infoworker"
 )
 
 var App = infoworker.Info{

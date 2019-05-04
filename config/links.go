@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/go-ozzo/ozzo-validation"
-	"gitlab.inn4science.com/gophers/service-kit/tools"
+	"github.com/lancer-kit/armory/tools"
 )
 
 // Links are the addresses of other micro services

@@ -1,6 +1,6 @@
 package models
 
-import "gitlab.inn4science.com/gophers/service-kit/db"
+import "github.com/lancer-kit/armory/db"
 
 // QI is a top level interface for interaction with database.
 type QI interface {
