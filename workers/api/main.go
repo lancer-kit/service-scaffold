@@ -38,15 +38,7 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 	r.Use(log.NewRequestLogger(logger.Logger))
 
 	if config.EnableCORS {
-		corsHandler := cors.New(cors.Options{
-			AllowedOrigins:   []string{"*"},
-			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "jwt", "X-UID"},
-			ExposedHeaders:   []string{"Link", "Content-Length"},
-			AllowCredentials: true,
-			MaxAge:           300, // Maximum value not ignored by any of major browsers
-		})
-		r.Use(corsHandler.Handler)
+		r.Use(getCORS().Handler)
 	}
 
 	// Set a timeout value on the request context (ctx), that will signal
@@ -97,4 +89,14 @@ func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
 	})
 
 	return r
+}
+func getCORS() *cors.Cors {
+	return cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "jwt", "X-UID"},
+		ExposedHeaders:   []string{"Link", "Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	})
 }

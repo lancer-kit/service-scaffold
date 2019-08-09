@@ -15,7 +15,7 @@ var (
 )
 
 func initDatabase(cfg *config.Cfg, entry *logrus.Entry) error {
-	return db.Init(cfg.DB, entry)
+	return db.Init(cfg.DB.ConnURL, entry)
 }
 
 func initNATS(cfg *config.Cfg, entry *logrus.Entry) error {

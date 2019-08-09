@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	Version = "0.3.0"
+	Version = "1.0.0-rc"
 	Build   string
 	Tag     string
 )

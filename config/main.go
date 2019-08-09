@@ -8,7 +8,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const ServiceName = "courier"
+// TODO: change me
+const ServiceName = "service-scaffold"
 
 // config is a `Cfg` singleton var,
 // for access use the `Config` method.

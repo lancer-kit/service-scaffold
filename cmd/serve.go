@@ -16,6 +16,9 @@ var serveCommand = cli.Command{
 func serveAction(c *cli.Context) error {
 	cfg := initialization.Init(c)
 
-	workers.GetChief().RunAll(cfg.Log.AppName, cfg.Workers...)
+	err := workers.GetChief().Run(cfg.Workers...)
+	if err != nil {
+		return cli.NewExitError(err, 1)
+	}
 	return nil
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/lancer-kit/service-scaffold/cmd"
@@ -15,5 +16,8 @@ func main() {
 	app.Version = info.App.Version
 	app.Flags = cmd.GetFlags()
 	app.Commands = cmd.GetCommands()
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
+
 }

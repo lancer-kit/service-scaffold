@@ -53,7 +53,10 @@ func (d *customDocumentQ) GetAllDocument(pQ db.PageQuery) ([]CustomDocument, err
 	resSlice := make([]CustomDocument, 0)
 	for _, v := range res {
 		obj := new(CustomDocument)
-		cdb.FromJSONCompatibleMap(obj, v)
+		err = cdb.FromJSONCompatibleMap(obj, v)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to constructs a document JSON-map")
+		}
 		resSlice = append(resSlice, *obj)
 	}
 
@@ -71,7 +74,10 @@ func (d *customDocumentQ) GetDocument(userID int) ([]CustomDocument, error) {
 	resSlice := make([]CustomDocument, 0)
 	for _, v := range res {
 		obj := new(CustomDocument)
-		cdb.FromJSONCompatibleMap(obj, v)
+		err = cdb.FromJSONCompatibleMap(obj, v)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to constructs a document JSON-map")
+		}
 		resSlice = append(resSlice, *obj)
 	}
 
@@ -88,12 +94,18 @@ func (d *customDocumentQ) UpdateDocument(userID int, doc *CustomDocument) error 
 	}
 
 	obj := new(CustomDocument)
-	cdb.FromJSONCompatibleMap(obj, res[0])
+	err = cdb.FromJSONCompatibleMap(obj, res[0])
+	if err != nil {
+		return errors.Wrap(err, "failed to constructs a document JSON-map")
+	}
 
 	doc.SetRev(obj.GetRev())
-	doc.SetID(obj.GetID())
-	doc.Id = int64(userID)
+	err = doc.SetID(obj.GetID())
+	if err != nil {
+		return errors.Wrap(err, "failed to set id")
+	}
 
+	doc.Id = int64(userID)
 	err = cdb.Store(d.dbInstance, doc)
 	if err != nil {
 		return errors.Wrap(err, "Unable to write into couchdb")
@@ -110,7 +122,11 @@ func (d *customDocumentQ) DeleteDocument(userID int) error {
 	}
 
 	obj := new(CustomDocument)
-	cdb.FromJSONCompatibleMap(obj, res[0])
+	err = cdb.FromJSONCompatibleMap(obj, res[0])
+	if err != nil {
+		return errors.Wrap(err, "failed to constructs a document JSON-map")
+	}
+
 	err = d.dbInstance.Delete(obj.GetID())
 	if err != nil {
 		return errors.Wrap(err, "Unable to delete from couchdb")

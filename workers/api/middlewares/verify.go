@@ -19,8 +19,6 @@ func VerifySomething() func(http.Handler) http.Handler {
 			}
 			r = r.WithContext(context.WithValue(r.Context(), "some_param", mId))
 			next.ServeHTTP(w, r)
-			return
-
 		})
 	}
 }

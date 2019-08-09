@@ -13,45 +13,49 @@ import (
 
 func DeleteBuzz(w http.ResponseWriter, r *http.Request) {
 	uid := chi.URLParam(r, "id")
+	logger := log.GetLogEntry(r).WithField("query_uid", uid)
+
 	idINT, err := strconv.Atoi(uid)
 	if err != nil {
-		log.Default.Error(err)
-		render.ResultNotFound.SetError("Not found").Render(w)
+		logger.WithError(err).Error("can not parse uid")
+		render.BadRequest(w, "invalid uid, should be a number")
 		return
 	}
 
 	dataQ := models.NewQ(nil).BuzzFeed()
 	err = dataQ.DeleteByID(int64(idINT))
 	if err != nil {
-		log.Default.Error(err)
-		render.ResultNotFound.SetError("Not found").Render(w)
+		logger.WithError(err).Error("can not delete BuzzFeed")
+		render.ServerError(w)
 		return
 	}
 
-	log.Default.Info("Data has been deleted successfully")
+	logger.Debug("Data has been deleted successfully")
 	render.Success(w, "success")
 }
 
 func DeleteDocument(w http.ResponseWriter, r *http.Request) {
 	uid := chi.URLParam(r, "id")
+	logger := log.GetLogEntry(r).WithField("query_uid", uid)
+
 	idINT, err := strconv.Atoi(uid)
 	if err != nil {
-		log.Default.Error(err)
-		render.ResultNotFound.SetError("Not found").Render(w)
+		logger.WithError(err).Error("can not parse id")
+		render.BadRequest(w, "invalid id, should be a number")
 		return
 	}
 
 	docQ, err := models.CreateCustomDocumentQ()
 	if err != nil {
-		log.Default.Error(err)
-		render.ResultNotFound.SetError("Not found").Render(w)
+		logger.WithError(err).Error("can not create custom document")
+		render.ServerError(w)
 		return
 	}
 
 	err = docQ.DeleteDocument(idINT)
 	if err != nil {
-		log.Default.Error(err)
-		render.ResultNotFound.SetError("Not found").Render(w)
+		logger.WithError(err).Error("can not delete document")
+		render.ServerError(w)
 		return
 	}
 
