@@ -46,7 +46,7 @@ func (cfg Cfg) FillDefaultWorkers() {
 
 type DBCfg struct {
 	ConnURL     string `json:"conn_url" yaml:"conn_url"` //The database connection string.
-	InitTimeout int    `json:"dbInitTimeout" yaml:"db_init_timeout"`
+	InitTimeout int    `json:"dbInitTimeout" yaml:"init_timeout"`
 	// AutoMigrate if `true` execute db migrate up on start.
 	AutoMigrate bool `json:"auto_migrate" yaml:"auto_migrate"`
 	WaitForDB   bool `json:"wait_for_db" yaml:"wait_for_db"`
