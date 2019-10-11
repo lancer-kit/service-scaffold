@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"reflect"
 
 	"github.com/lancer-kit/uwe"
 )
@@ -27,14 +28,17 @@ type WorkerExistRule struct {
 
 // Validate checks that service exist on the system
 func (r *WorkerExistRule) Validate(value interface{}) error {
-	arr, ok := value.([]string)
+	if value == nil || reflect.ValueOf(value).IsNil() {
+		return nil
+	}
+	arr, ok := value.([]uwe.WorkerName)
 	if !ok {
 		return errors.New("can't convert list of workers to []string")
 	}
 
 	for _, v := range arr {
 		if _, ok := r.AvailableWorkers[uwe.WorkerName(v)]; !ok {
-			return errors.New("invalid service name " + v)
+			return errors.New("invalid service name " + string(v))
 		}
 	}
 

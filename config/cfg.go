@@ -32,7 +32,7 @@ func (cfg Cfg) Validate() error {
 		//validation.Field(&cfg.CouchDB, validation.Required),
 		validation.Field(&cfg.Api, validation.Required),
 		validation.Field(&cfg.NATS, validation.Required),
-		validation.Field(&cfg.Workers, &uwe.WorkerExistRule{
+		validation.Field(&cfg.Workers, &WorkerExistRule{
 			AvailableWorkers: AvailableWorkers,
 		}),
 	)
