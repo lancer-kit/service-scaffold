@@ -25,7 +25,7 @@ func (d Worker) Init(ctx context.Context) uwe.Worker {
 
 	return &Worker{
 		name:   d.name,
-		logger: logger.WithField("worker", d.name),
+		logger: logger,
 	}
 }
 
