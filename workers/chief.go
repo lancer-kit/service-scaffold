@@ -4,9 +4,9 @@ import (
 	"github.com/lancer-kit/uwe/v2"
 	"github.com/sirupsen/logrus"
 
-	"github.com/lancer-kit/service-scaffold/config"
-	"github.com/lancer-kit/service-scaffold/workers/api"
-	"github.com/lancer-kit/service-scaffold/workers/foobar"
+	"lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/workers/api"
+	"lancer-kit/service-scaffold/workers/foobar"
 )
 
 func InitChief(logger *logrus.Entry, cfg *config.Cfg) uwe.Chief {

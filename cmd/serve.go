@@ -4,15 +4,18 @@ import (
 	"github.com/lancer-kit/armory/log"
 	"github.com/urfave/cli"
 
-	"github.com/lancer-kit/service-scaffold/config"
-	"github.com/lancer-kit/service-scaffold/initialization"
-	"github.com/lancer-kit/service-scaffold/workers"
+	"lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/initialization"
+	"lancer-kit/service-scaffold/workers"
 )
 
-var serveCommand = cli.Command{
-	Name:   "serve",
-	Usage:  "starts " + config.ServiceName + " workers",
-	Action: serveAction,
+func serveCmd() cli.Command {
+	var serveCommand = cli.Command{
+		Name:   "serve",
+		Usage:  "starts " + config.ServiceName + " workers",
+		Action: serveAction,
+	}
+	return serveCommand
 }
 
 func serveAction(c *cli.Context) error {

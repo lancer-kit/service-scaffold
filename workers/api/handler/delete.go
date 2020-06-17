@@ -9,7 +9,7 @@ import (
 	"github.com/lancer-kit/armory/api/render"
 	"github.com/lancer-kit/armory/log"
 
-	"github.com/lancer-kit/service-scaffold/models"
+	"lancer-kit/service-scaffold/models"
 )
 
 func DeleteBuzz(w http.ResponseWriter, r *http.Request) {

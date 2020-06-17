@@ -9,7 +9,7 @@ import (
 	"github.com/lancer-kit/armory/db"
 	"github.com/lancer-kit/armory/log"
 
-	"github.com/lancer-kit/service-scaffold/models"
+	"lancer-kit/service-scaffold/models"
 )
 
 func AllBuzz(w http.ResponseWriter, r *http.Request) {

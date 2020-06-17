@@ -10,19 +10,19 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 
-	"github.com/lancer-kit/service-scaffold/config"
-	"github.com/lancer-kit/service-scaffold/dbschema"
+	"lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/dbschema"
 )
 
 const flagConfig = "config"
 const defaultInitInterval = 5 * time.Second
 
-var initConfigs = map[initModule]func(*config.Cfg, *logrus.Entry) error{
-	DB:   initDatabase,
-	NATS: initNATS,
-}
-
 func Init(c *cli.Context) *config.Cfg {
+	var initConfigs = map[initModule]func(*config.Cfg, *logrus.Entry) error{
+		DB:   initDatabase,
+		NATS: initNATS,
+	}
+
 	config.Init(c.GlobalString(flagConfig))
 	cfg := config.Config()
 

@@ -13,10 +13,10 @@ import (
 	"github.com/lancer-kit/uwe/v2/presets/api"
 	"github.com/sirupsen/logrus"
 
-	"github.com/lancer-kit/service-scaffold/config"
-	"github.com/lancer-kit/service-scaffold/info"
-	"github.com/lancer-kit/service-scaffold/workers/api/handler"
-	"github.com/lancer-kit/service-scaffold/workers/api/middlewares"
+	"lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/info"
+	"lancer-kit/service-scaffold/workers/api/handler"
+	"lancer-kit/service-scaffold/workers/api/middlewares"
 )
 
 func GetServer(cfg *config.Cfg, logger *logrus.Entry) *api.Server {

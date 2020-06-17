@@ -6,9 +6,9 @@ import (
 
 	"github.com/urfave/cli"
 
-	"github.com/lancer-kit/service-scaffold/cmd"
-	"github.com/lancer-kit/service-scaffold/config"
-	"github.com/lancer-kit/service-scaffold/info"
+	"lancer-kit/service-scaffold/cmd"
+	"lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/info"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module github.com/lancer-kit/service-scaffold
+module lancer-kit/service-scaffold
 
 go 1.13
 

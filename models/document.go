@@ -7,7 +7,7 @@ import (
 	cdb "github.com/leesper/couchdb-golang"
 	"github.com/pkg/errors"
 
-	"github.com/lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/config"
 )
 
 type CustomDocument struct {

@@ -5,7 +5,7 @@ import (
 	"github.com/lancer-kit/armory/natsx"
 	"github.com/sirupsen/logrus"
 
-	"github.com/lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/config"
 )
 
 type initModule string
