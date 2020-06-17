@@ -4,7 +4,7 @@ import (
 	"errors"
 	"reflect"
 
-	"github.com/lancer-kit/uwe"
+	"github.com/lancer-kit/uwe/v2"
 )
 
 const (

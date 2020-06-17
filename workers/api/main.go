@@ -7,28 +7,23 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
-	"github.com/lancer-kit/armory/api"
 	"github.com/lancer-kit/armory/api/render"
 	"github.com/lancer-kit/armory/auth"
 	"github.com/lancer-kit/armory/log"
+	"github.com/lancer-kit/uwe/v2/presets/api"
+	"github.com/sirupsen/logrus"
+
 	"github.com/lancer-kit/service-scaffold/config"
 	"github.com/lancer-kit/service-scaffold/info"
 	"github.com/lancer-kit/service-scaffold/workers/api/handler"
 	"github.com/lancer-kit/service-scaffold/workers/api/middlewares"
-	"github.com/sirupsen/logrus"
 )
 
-func Server() *api.Server {
-	return &api.Server{
-		Name:      "api-server",
-		GetRouter: GetRouter,
-		GetConfig: func() api.Config {
-			return config.Config().Api
-		},
-	}
+func GetServer(cfg *config.Cfg, logger *logrus.Entry) *api.Server {
+	return api.NewServer(cfg.Api, getRouter(logger, cfg.Api))
 }
 
-func GetRouter(logger *logrus.Entry, config api.Config) http.Handler {
+func getRouter(logger *logrus.Entry, config api.Config) http.Handler {
 	r := chi.NewRouter()
 
 	// A good base middleware stack

@@ -2,10 +2,10 @@ package config
 
 import (
 	"github.com/go-ozzo/ozzo-validation"
-	"github.com/lancer-kit/armory/api"
 	"github.com/lancer-kit/armory/log"
 	"github.com/lancer-kit/armory/natsx"
-	"github.com/lancer-kit/uwe"
+	"github.com/lancer-kit/uwe/v2"
+	"github.com/lancer-kit/uwe/v2/presets/api"
 )
 
 // Cfg main structure of the app configuration.
