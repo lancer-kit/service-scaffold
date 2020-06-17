@@ -2,10 +2,11 @@ package cmd
 
 import (
 	"github.com/lancer-kit/armory/log"
+	"github.com/urfave/cli"
+
 	"github.com/lancer-kit/service-scaffold/config"
 	"github.com/lancer-kit/service-scaffold/initialization"
 	"github.com/lancer-kit/service-scaffold/workers"
-	"github.com/urfave/cli"
 )
 
 var serveCommand = cli.Command{

@@ -7,10 +7,11 @@ import (
 
 	"github.com/lancer-kit/armory/log"
 	"github.com/lancer-kit/armory/tools"
-	"github.com/lancer-kit/service-scaffold/config"
-	"github.com/lancer-kit/service-scaffold/dbschema"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
+
+	"github.com/lancer-kit/service-scaffold/config"
+	"github.com/lancer-kit/service-scaffold/dbschema"
 )
 
 const flagConfig = "config"

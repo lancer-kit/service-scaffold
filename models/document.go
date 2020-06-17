@@ -4,9 +4,10 @@ import (
 	"fmt"
 
 	"github.com/lancer-kit/armory/db"
-	"github.com/lancer-kit/service-scaffold/config"
 	cdb "github.com/leesper/couchdb-golang"
 	"github.com/pkg/errors"
+
+	"github.com/lancer-kit/service-scaffold/config"
 )
 
 type CustomDocument struct {

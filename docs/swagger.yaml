@@ -7,19 +7,19 @@ info:
 host: localhost:2490
 
 schemes:
-- http
+  - http
 
 basePath: /dev
 
 security:
-- User: []
-- Jwt: []
+  - User: []
+  - Jwt: []
 
 produces:
-- application/json
+  - application/json
 
 consumes:
-- application/json
+  - application/json
 
 paths:
   /status:
@@ -27,7 +27,7 @@ paths:
       summary: Get status
       description: 'Returns info about service'
       tags:
-      - Health-Check
+        - Health-Check
       responses:
         200:
           description: 'Service info'
@@ -36,13 +36,13 @@ paths:
   /{mId}/buzz:
     get:
       tags:
-      - Buzz
+        - Buzz
       summary: Returns all records from database
       parameters:
-      - $ref: "#/parameters/MID"
-      - $ref: "#/parameters/Order"
-      - $ref: "#/parameters/Page"
-      - $ref: "#/parameters/PageSize"
+        - $ref: "#/parameters/MID"
+        - $ref: "#/parameters/Order"
+        - $ref: "#/parameters/Page"
+        - $ref: "#/parameters/PageSize"
       responses:
         200:
           description: successful operation
@@ -54,16 +54,16 @@ paths:
           $ref: "#/responses/NotFoundError"
     post:
       tags:
-      - Buzz
+        - Buzz
       summary: Add new buzz record in db
       parameters:
-      - $ref: "#/parameters/MID"
-      - name: json
-        in: body
-        description: Buzz object that needs to be added to the database
-        required: false
-        schema:
-          $ref: "#/definitions/Buzz"
+        - $ref: "#/parameters/MID"
+        - name: json
+          in: body
+          description: Buzz object that needs to be added to the database
+          required: false
+          schema:
+            $ref: "#/definitions/Buzz"
       responses:
         201:
           description: 'Record was successfully added'
@@ -77,11 +77,11 @@ paths:
   /{mId}/buzz/{Id}:
     get:
       tags:
-      - Buzz
+        - Buzz
       summary: Returns buzz record with given id
       parameters:
-      - $ref: "#/parameters/MID"
-      - $ref: "#/parameters/ID"
+        - $ref: "#/parameters/MID"
+        - $ref: "#/parameters/ID"
       responses:
         200:
           description: successful operation
@@ -93,17 +93,17 @@ paths:
           $ref: "#/responses/NotFoundError"
     put:
       tags:
-      - Buzz
+        - Buzz
       summary: Update record in database with given id
       parameters:
-      - $ref: "#/parameters/MID"
-      - $ref: "#/parameters/ID"
-      - name: json
-        in: body
-        description: Buzz object for updating existing records in database
-        required: false
-        schema:
-          $ref: "#/definitions/Buzz"
+        - $ref: "#/parameters/MID"
+        - $ref: "#/parameters/ID"
+        - name: json
+          in: body
+          description: Buzz object for updating existing records in database
+          required: false
+          schema:
+            $ref: "#/definitions/Buzz"
       responses:
         200:
           description: successful operation
@@ -118,11 +118,11 @@ paths:
           $ref: "#/responses/NotFoundError"
     delete:
       tags:
-      - Buzz
+        - Buzz
       summary: Delete record from database with given id
       parameters:
-      - $ref: "#/parameters/MID"
-      - $ref: "#/parameters/ID"
+        - $ref: "#/parameters/MID"
+        - $ref: "#/parameters/ID"
       responses:
         200:
           description: successful operation
@@ -137,12 +137,12 @@ paths:
   /couch:
     get:
       tags:
-      - CouchDB
+        - CouchDB
       summary: Returns all records from couchDB database
       parameters:
-      - $ref: "#/parameters/Order"
-      - $ref: "#/parameters/Page"
-      - $ref: "#/parameters/PageSize"
+        - $ref: "#/parameters/Order"
+        - $ref: "#/parameters/Page"
+        - $ref: "#/parameters/PageSize"
       responses:
         200:
           description: successful operation
@@ -154,15 +154,15 @@ paths:
           $ref: "#/responses/NotFoundError"
     post:
       tags:
-      - CouchDB
+        - CouchDB
       summary: Add new document in couchDB
       parameters:
-      - name: json
-        in: body
-        description: Document that needs to be added to the couchDB
-        required: false
-        schema:
-          $ref: "#/definitions/Couch"
+        - name: json
+          in: body
+          description: Document that needs to be added to the couchDB
+          required: false
+          schema:
+            $ref: "#/definitions/Couch"
       responses:
         201:
           description: 'Document was successfully added'
@@ -176,10 +176,10 @@ paths:
   /couch/{Id}:
     get:
       tags:
-      - CouchDB
+        - CouchDB
       summary: Returns document with given id
       parameters:
-      - $ref: "#/parameters/ID"
+        - $ref: "#/parameters/ID"
       responses:
         200:
           description: successful operation
@@ -193,16 +193,16 @@ paths:
           $ref: "#/responses/NotFoundError"
     put:
       tags:
-      - CouchDB
+        - CouchDB
       summary: Update document in couchDB with given id
       parameters:
-      - $ref: "#/parameters/ID"
-      - name: json
-        in: body
-        description: Document for updating existing records in couchDB
-        required: false
-        schema:
-          $ref: "#/definitions/CouchPUT"
+        - $ref: "#/parameters/ID"
+        - name: json
+          in: body
+          description: Document for updating existing records in couchDB
+          required: false
+          schema:
+            $ref: "#/definitions/CouchPUT"
       responses:
         200:
           description: successful operation
@@ -215,10 +215,10 @@ paths:
           $ref: "#/responses/NotFoundError"
     delete:
       tags:
-      - CouchDB
+        - CouchDB
       summary: Delete document from couchDB with given id
       parameters:
-      - $ref: "#/parameters/ID"
+        - $ref: "#/parameters/ID"
       responses:
         200:
           description: successful operation
@@ -258,8 +258,8 @@ parameters:
     required: false
     type: string
     enum:
-    - asc
-    - desc
+      - asc
+      - desc
     description: 'Sorting order of records'
     default: asc
   PageSize:

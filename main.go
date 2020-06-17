@@ -4,10 +4,11 @@ import (
 	"log"
 	"os"
 
+	"github.com/urfave/cli"
+
 	"github.com/lancer-kit/service-scaffold/cmd"
 	"github.com/lancer-kit/service-scaffold/config"
 	"github.com/lancer-kit/service-scaffold/info"
-	"github.com/urfave/cli"
 )
 
 func main() {

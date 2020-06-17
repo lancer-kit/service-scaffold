@@ -5,9 +5,10 @@ import (
 
 	"github.com/lancer-kit/armory/db"
 	"github.com/lancer-kit/armory/log"
+	"github.com/urfave/cli"
+
 	"github.com/lancer-kit/service-scaffold/config"
 	"github.com/lancer-kit/service-scaffold/dbschema"
-	"github.com/urfave/cli"
 )
 
 var migrateCommand = cli.Command{
