@@ -20,10 +20,10 @@ import (
 )
 
 func GetServer(cfg *config.Cfg, logger *logrus.Entry) *api.Server {
-	return api.NewServer(cfg.Api, getRouter(logger, cfg.Api))
+	return api.NewServer(cfg.Api, getRouter(logger, cfg))
 }
 
-func getRouter(logger *logrus.Entry, config api.Config) http.Handler {
+func getRouter(logger *logrus.Entry, cfg *config.Cfg) http.Handler {
 	r := chi.NewRouter()
 
 	// A good base middleware stack
@@ -32,15 +32,15 @@ func getRouter(logger *logrus.Entry, config api.Config) http.Handler {
 	r.Use(middleware.Recoverer)
 	r.Use(log.NewRequestLogger(logger.Logger))
 
-	if config.EnableCORS {
+	if cfg.Api.EnableCORS {
 		r.Use(getCORS().Handler)
 	}
 
 	// Set a timeout value on the request context (ctx), that will signal
 	// through ctx.Done() that the request has timed out and further
 	// processing should be stopped.
-	if config.ApiRequestTimeout > 0 {
-		t := time.Duration(config.ApiRequestTimeout)
+	if cfg.Api.ApiRequestTimeout > 0 {
+		t := time.Duration(cfg.Api.ApiRequestTimeout)
 		r.Use(middleware.Timeout(t * time.Second))
 	}
 
@@ -48,32 +48,33 @@ func getRouter(logger *logrus.Entry, config api.Config) http.Handler {
 		r.Get("/status", func(w http.ResponseWriter, r *http.Request) {
 			render.Success(w, info.App)
 		})
+		h := handler.Handler{Cfg: cfg}
 		r.Route("/", func(r chi.Router) {
 			r.Use(auth.ExtractUserID())
 
 			r.Route("/{mId}/buzz", func(r chi.Router) {
 				//custom middleware example
 				r.Use(middlewares.VerifySomething())
-				r.Post("/", handler.AddBuzz)
-				r.Get("/", handler.AllBuzz)
+				r.Post("/", h.AddBuzz)
+				r.Get("/", h.AllBuzz)
 
 				r.Route("/{id}", func(r chi.Router) {
-					r.Get("/", handler.GetBuzz)
-					r.Put("/", handler.ChangeBuzz)
-					r.Delete("/", handler.DeleteBuzz)
+					r.Get("/", h.GetBuzz)
+					r.Put("/", h.ChangeBuzz)
+					r.Delete("/", h.DeleteBuzz)
 				})
 
 			})
 		})
 
 		r.Route("/couch", func(r chi.Router) {
-			r.Post("/", handler.AddDocument)
-			r.Get("/", handler.GetAllDocument)
+			r.Post("/", h.AddDocument)
+			r.Get("/", h.GetAllDocument)
 
 			r.Route("/{id}", func(r chi.Router) {
-				r.Get("/", handler.GetDocument)
-				r.Put("/", handler.ChangeDocument)
-				r.Delete("/", handler.DeleteDocument)
+				r.Get("/", h.GetDocument)
+				r.Put("/", h.ChangeDocument)
+				r.Delete("/", h.DeleteDocument)
 			})
 		})
 

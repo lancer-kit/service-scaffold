@@ -10,7 +10,7 @@ import (
 	"lancer-kit/service-scaffold/models"
 )
 
-func AddBuzz(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) AddBuzz(w http.ResponseWriter, r *http.Request) {
 	logger := log.GetLogEntry(r)
 
 	data := new(models.BuzzFeed)
@@ -34,7 +34,7 @@ func AddBuzz(w http.ResponseWriter, r *http.Request) {
 	render.WriteJSON(w, 201, data)
 }
 
-func AddDocument(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) AddDocument(w http.ResponseWriter, r *http.Request) {
 	logger := log.GetLogEntry(r)
 
 	data := new(models.CustomDocument)
@@ -46,7 +46,7 @@ func AddDocument(w http.ResponseWriter, r *http.Request) {
 	}
 
 	logger.Debug("Trying to write data into couchdb")
-	docQ, err := models.CreateCustomDocumentQ()
+	docQ, err := models.CreateCustomDocumentQ(h.Cfg)
 	if err != nil {
 		logger.WithError(err).Error("Can not establish connection with database")
 		render.ResultNotFound.SetError("Not found").Render(w)

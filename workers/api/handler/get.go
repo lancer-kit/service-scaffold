@@ -12,7 +12,7 @@ import (
 	"lancer-kit/service-scaffold/models"
 )
 
-func AllBuzz(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) AllBuzz(w http.ResponseWriter, r *http.Request) {
 	logger := log.GetLogEntry(r)
 
 	dbQuery := models.NewQ(nil).BuzzFeed()
@@ -38,7 +38,7 @@ func AllBuzz(w http.ResponseWriter, r *http.Request) {
 	render.RenderListWithPages(w, pageQuery, int64(len(ols)), ols)
 }
 
-func GetBuzz(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetBuzz(w http.ResponseWriter, r *http.Request) {
 	uid := chi.URLParam(r, "id")
 	logger := log.GetLogEntry(r).WithField("query_uid", uid)
 
@@ -59,7 +59,7 @@ func GetBuzz(w http.ResponseWriter, r *http.Request) {
 	render.Success(w, res)
 }
 
-func GetAllDocument(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetAllDocument(w http.ResponseWriter, r *http.Request) {
 	logger := log.GetLogEntry(r)
 
 	pageQuery, err := db.ParsePageQuery(r.URL.Query())
@@ -69,7 +69,7 @@ func GetAllDocument(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	docQ, err := models.CreateCustomDocumentQ()
+	docQ, err := models.CreateCustomDocumentQ(h.Cfg)
 	if err != nil {
 		logger.WithError(err).Error("unable to create custom doc")
 		render.ServerError(w)
@@ -86,7 +86,7 @@ func GetAllDocument(w http.ResponseWriter, r *http.Request) {
 	render.RenderListWithPages(w, pageQuery, int64(len(res)), res)
 }
 
-func GetDocument(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetDocument(w http.ResponseWriter, r *http.Request) {
 	uid := chi.URLParam(r, "id")
 	logger := log.GetLogEntry(r).WithField("query_uid", uid)
 
@@ -96,7 +96,7 @@ func GetDocument(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	docQ, err := models.CreateCustomDocumentQ()
+	docQ, err := models.CreateCustomDocumentQ(h.Cfg)
 	if err != nil {
 		logger.WithError(err).Error("unable to create custom doc")
 		render.ServerError(w)

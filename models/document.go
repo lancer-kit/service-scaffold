@@ -21,10 +21,10 @@ type customDocumentQ struct {
 	dbInstance *cdb.Database
 }
 
-func CreateCustomDocumentQ() (*customDocumentQ, error) {
+func CreateCustomDocumentQ(cfg *config.Cfg) (*customDocumentQ, error) {
 	newDocInstance := new(customDocumentQ)
 
-	dbInstance, err := cdb.NewDatabase(config.Config().CouchDB)
+	dbInstance, err := cdb.NewDatabase(cfg.CouchDB)
 	if err != nil {
 		return nil, errors.Wrap(err, "Unable to connect to couchdb")
 	}

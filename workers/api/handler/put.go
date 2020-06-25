@@ -12,7 +12,7 @@ import (
 	"lancer-kit/service-scaffold/models"
 )
 
-func ChangeBuzz(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) ChangeBuzz(w http.ResponseWriter, r *http.Request) {
 	type inputData struct {
 		Description string `json:"description"`
 	}
@@ -46,7 +46,7 @@ func ChangeBuzz(w http.ResponseWriter, r *http.Request) {
 	render.Success(w, data)
 }
 
-func ChangeDocument(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) ChangeDocument(w http.ResponseWriter, r *http.Request) {
 	uid := chi.URLParam(r, "id")
 	logger := log.GetLogEntry(r).WithField("query_id", uid)
 	idINT, err := strconv.Atoi(uid)
@@ -63,7 +63,7 @@ func ChangeDocument(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	docQ, err := models.CreateCustomDocumentQ()
+	docQ, err := models.CreateCustomDocumentQ(h.Cfg)
 	if err != nil {
 		logger.WithError(err).Error("can not parse the body")
 		render.ServerError(w)
