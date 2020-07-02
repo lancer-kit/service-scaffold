@@ -19,6 +19,7 @@ run:
 
 linters:
   enable:
+    - gochecknoglobals
     - goconst
     - gofmt
     - lll
@@ -33,7 +34,6 @@ linters:
     - unconvert
     - unparam
   disable:
-    - gochecknoglobals
     - maligned
     - dupl
     - nakedret

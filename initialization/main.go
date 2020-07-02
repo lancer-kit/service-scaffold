@@ -7,23 +7,23 @@ import (
 
 	"github.com/lancer-kit/armory/log"
 	"github.com/lancer-kit/armory/tools"
-	"github.com/lancer-kit/service-scaffold/config"
-	"github.com/lancer-kit/service-scaffold/dbschema"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
+
+	"lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/dbschema"
 )
 
 const flagConfig = "config"
 const defaultInitInterval = 5 * time.Second
 
-var initConfigs = map[initModule]func(*config.Cfg, *logrus.Entry) error{
-	DB:   initDatabase,
-	NATS: initNATS,
-}
-
 func Init(c *cli.Context) *config.Cfg {
-	config.Init(c.GlobalString(flagConfig))
-	cfg := config.Config()
+	var initConfigs = map[initModule]func(*config.Cfg, *logrus.Entry) error{
+		DB:   initDatabase,
+		NATS: initNATS,
+	}
+
+	cfg := config.ReadConfig(c.GlobalString(flagConfig))
 
 	wg := sync.WaitGroup{}
 	for module, initializer := range initConfigs {
@@ -43,7 +43,7 @@ func Init(c *cli.Context) *config.Cfg {
 				timeout,
 
 				func() bool {
-					err := initializer(cfg, log.Default)
+					err := initializer(&cfg, log.Default)
 					if err != nil {
 						log.Default.WithError(err).Error("Can't init " + module)
 					}
@@ -58,14 +58,14 @@ func Init(c *cli.Context) *config.Cfg {
 	wg.Wait()
 
 	if cfg.DB.AutoMigrate {
-		count, err := dbschema.Migrate(config.Config().DB.ConnURL, "up")
+		count, err := dbschema.Migrate(cfg.DB.ConnURL, "up")
 		if err != nil {
 			log.Default.WithError(err).Fatal("Migrations failed")
-			return cfg
+			return &cfg
 		}
 
 		log.Default.Info(fmt.Sprintf("Applied %d %s migration", count, "up"))
 	}
 
-	return cfg
+	return &cfg
 }

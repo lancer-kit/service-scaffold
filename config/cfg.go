@@ -1,12 +1,18 @@
 package config
 
 import (
+	"io/ioutil"
+
 	"github.com/go-ozzo/ozzo-validation"
-	"github.com/lancer-kit/armory/api"
 	"github.com/lancer-kit/armory/log"
 	"github.com/lancer-kit/armory/natsx"
-	"github.com/lancer-kit/uwe"
+	"github.com/lancer-kit/uwe/v2"
+	"github.com/lancer-kit/uwe/v2/presets/api"
+	"github.com/sirupsen/logrus"
+	"gopkg.in/yaml.v2"
 )
+
+const ServiceName = "service-scaffold"
 
 // Cfg main structure of the app configuration.
 type Cfg struct {
@@ -57,4 +63,41 @@ func (cfg DBCfg) Validate() error {
 		validation.Field(&cfg.ConnURL, validation.Required),
 		validation.Field(&cfg.InitTimeout, validation.Required),
 	)
+}
+
+func ReadConfig(path string) Cfg {
+	rawConfig, err := ioutil.ReadFile(path)
+	if err != nil {
+		logrus.New().WithError(err).
+			WithField("path", path).
+			Fatal("unable to read config file")
+	}
+
+	config := new(Cfg)
+	err = yaml.Unmarshal(rawConfig, config)
+	if err != nil {
+		logrus.New().WithError(err).
+			WithField("raw_config", rawConfig).
+			Fatal("unable to unmarshal config file")
+	}
+
+	err = config.Validate()
+	if err != nil {
+		logrus.New().WithError(err).
+			Fatal("Invalid configuration")
+	}
+
+	_, err = log.Init(log.Config{
+		AppName:  config.Log.AppName,
+		Level:    config.Log.Level,
+		Sentry:   config.Log.Sentry,
+		AddTrace: config.Log.AddTrace,
+		JSON:     config.Log.JSON,
+	})
+	if err != nil {
+		logrus.New().
+			WithError(err).
+			Fatal("Unable to init log")
+	}
+	return *config
 }

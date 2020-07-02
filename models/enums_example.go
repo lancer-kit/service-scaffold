@@ -8,4 +8,3 @@ const (
 	testC
 	testD
 )
-

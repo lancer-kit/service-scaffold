@@ -8,10 +8,11 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/lancer-kit/armory/api/render"
 	"github.com/lancer-kit/armory/log"
-	"github.com/lancer-kit/service-scaffold/models"
+
+	"lancer-kit/service-scaffold/models"
 )
 
-func DeleteBuzz(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) DeleteBuzz(w http.ResponseWriter, r *http.Request) {
 	uid := chi.URLParam(r, "id")
 	logger := log.GetLogEntry(r).WithField("query_uid", uid)
 
@@ -34,7 +35,7 @@ func DeleteBuzz(w http.ResponseWriter, r *http.Request) {
 	render.Success(w, "success")
 }
 
-func DeleteDocument(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) DeleteDocument(w http.ResponseWriter, r *http.Request) {
 	uid := chi.URLParam(r, "id")
 	logger := log.GetLogEntry(r).WithField("query_uid", uid)
 
@@ -45,7 +46,7 @@ func DeleteDocument(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	docQ, err := models.CreateCustomDocumentQ()
+	docQ, err := models.CreateCustomDocumentQ(h.Cfg)
 	if err != nil {
 		logger.WithError(err).Error("can not create custom document")
 		render.ServerError(w)
