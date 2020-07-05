@@ -111,44 +111,44 @@ func (q *buzzFeedQ) UpdateBuzzDescription(id int64, description string) error {
 }
 
 // WithID adds filter by `ID` column.
-func (q *buzzFeedQ) WithID(ID int64) BuzzFeedQI {
-	q.table.QBuilder = q.table.QBuilder.Where("id = ?", ID)
+func (q *buzzFeedQ) WithID(id int64) BuzzFeedQI {
+	q.table.QBuilder = q.table.QBuilder.Where("id = ?", id)
 	return q
 }
 
 // WithName adds filter by `Name` column.
-func (q *buzzFeedQ) WithName(Name string) BuzzFeedQI {
-	q.table.QBuilder = q.table.QBuilder.Where("name = ?", Name)
+func (q *buzzFeedQ) WithName(name string) BuzzFeedQI {
+	q.table.QBuilder = q.table.QBuilder.Where("name = ?", name)
 	return q
 }
 
 // WithBuzzType adds filter by `BuzzType` column.
-func (q *buzzFeedQ) WithBuzzType(BuzzType ExampleType) BuzzFeedQI {
-	q.table.QBuilder = q.table.QBuilder.Where("buzz_type = ?", BuzzType)
+func (q *buzzFeedQ) WithBuzzType(buzzType ExampleType) BuzzFeedQI {
+	q.table.QBuilder = q.table.QBuilder.Where("buzz_type = ?", buzzType)
 	return q
 }
 
 // WithDescription adds filter by `Description` column.
-func (q *buzzFeedQ) WithDescription(Description string) BuzzFeedQI {
-	q.table.QBuilder = q.table.QBuilder.Where("description = ?", Description)
+func (q *buzzFeedQ) WithDescription(description string) BuzzFeedQI {
+	q.table.QBuilder = q.table.QBuilder.Where("description = ?", description)
 	return q
 }
 
 // WithDetails adds filter by `Details` column.
-func (q *buzzFeedQ) WithDetails(Details Feed) BuzzFeedQI {
-	q.table.QBuilder = q.table.QBuilder.Where("details = ?", Details)
+func (q *buzzFeedQ) WithDetails(details Feed) BuzzFeedQI {
+	q.table.QBuilder = q.table.QBuilder.Where("details = ?", details)
 	return q
 }
 
 // WithCreatedAt adds filter by `CreatedAt` column.
-func (q *buzzFeedQ) WithCreatedAt(CreatedAt int64) BuzzFeedQI {
-	q.table.QBuilder = q.table.QBuilder.Where("created_at = ?", CreatedAt)
+func (q *buzzFeedQ) WithCreatedAt(createdAt int64) BuzzFeedQI {
+	q.table.QBuilder = q.table.QBuilder.Where("created_at = ?", createdAt)
 	return q
 }
 
 // WithUpdatedAt adds filter by `UpdatedAt` column.
-func (q *buzzFeedQ) WithUpdatedAt(UpdatedAt int64) BuzzFeedQI {
-	q.table.QBuilder = q.table.QBuilder.Where("updated_at = ?", UpdatedAt)
+func (q *buzzFeedQ) WithUpdatedAt(updatedAt int64) BuzzFeedQI {
+	q.table.QBuilder = q.table.QBuilder.Where("updated_at = ?", updatedAt)
 	return q
 }
 

@@ -11,18 +11,18 @@ import (
 )
 
 type CustomDocument struct {
-	Id         int64  `json:"id"`
+	ID         int64  `json:"id"`
 	FirstName  string `json:"firstName"`
 	SecondName string `json:"secondName"`
 	cdb.Document
 }
 
-type customDocumentQ struct {
+type CustomDocumentQ struct {
 	dbInstance *cdb.Database
 }
 
-func CreateCustomDocumentQ(cfg *config.Cfg) (*customDocumentQ, error) {
-	newDocInstance := new(customDocumentQ)
+func CreateCustomDocumentQ(cfg *config.Cfg) (*CustomDocumentQ, error) {
+	newDocInstance := new(CustomDocumentQ)
 
 	dbInstance, err := cdb.NewDatabase(cfg.CouchDB)
 	if err != nil {
@@ -33,7 +33,7 @@ func CreateCustomDocumentQ(cfg *config.Cfg) (*customDocumentQ, error) {
 	return newDocInstance, nil
 }
 
-func (d *customDocumentQ) AddDocument(doc *CustomDocument) error {
+func (d *CustomDocumentQ) AddDocument(doc *CustomDocument) error {
 	err := cdb.Store(d.dbInstance, doc)
 	if err != nil {
 		return errors.Wrap(err, "Unable to write into couchdb")
@@ -42,7 +42,7 @@ func (d *customDocumentQ) AddDocument(doc *CustomDocument) error {
 	return nil
 }
 
-func (d *customDocumentQ) GetAllDocument(pQ db.PageQuery) ([]CustomDocument, error) {
+func (d *CustomDocumentQ) GetAllDocument(pQ db.PageQuery) ([]CustomDocument, error) {
 	fields := []string{"id", "firstName", "secondName"}
 
 	res, err := d.dbInstance.Query(fields, `exists(id,true)`, nil, int(pQ.PageSize), int(pQ.PageSize*(pQ.Page-1)), nil)
@@ -64,7 +64,7 @@ func (d *customDocumentQ) GetAllDocument(pQ db.PageQuery) ([]CustomDocument, err
 	return resSlice, nil
 }
 
-func (d *customDocumentQ) GetDocument(userID int) ([]CustomDocument, error) {
+func (d *CustomDocumentQ) GetDocument(userID int) ([]CustomDocument, error) {
 	fields := []string{"id", "firstName", "secondName"}
 
 	res, err := d.dbInstance.Query(fields, fmt.Sprintf("id == %d", userID), nil, nil, nil, nil)
@@ -86,7 +86,7 @@ func (d *customDocumentQ) GetDocument(userID int) ([]CustomDocument, error) {
 
 }
 
-func (d *customDocumentQ) UpdateDocument(userID int, doc *CustomDocument) error {
+func (d *CustomDocumentQ) UpdateDocument(userID int, doc *CustomDocument) error {
 	fields := []string{"_rev", "_id"}
 	selector := fmt.Sprintf("id == %d", userID)
 	res, err := d.dbInstance.Query(fields, selector, nil, nil, nil, nil)
@@ -106,7 +106,7 @@ func (d *customDocumentQ) UpdateDocument(userID int, doc *CustomDocument) error 
 		return errors.Wrap(err, "failed to set id")
 	}
 
-	doc.Id = int64(userID)
+	doc.ID = int64(userID)
 	err = cdb.Store(d.dbInstance, doc)
 	if err != nil {
 		return errors.Wrap(err, "Unable to write into couchdb")
@@ -114,7 +114,7 @@ func (d *customDocumentQ) UpdateDocument(userID int, doc *CustomDocument) error 
 	return nil
 }
 
-func (d *customDocumentQ) DeleteDocument(userID int) error {
+func (d *CustomDocumentQ) DeleteDocument(userID int) error {
 	fields := []string{"_id"}
 	selector := fmt.Sprintf("id == %d", userID)
 	res, err := d.dbInstance.Query(fields, selector, nil, nil, nil, nil)

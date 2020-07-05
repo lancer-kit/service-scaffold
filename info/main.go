@@ -7,7 +7,7 @@ type Info struct {
 	Build   string `json:"build"`
 }
 
+// nolint
 var App = Info{
-	App: "" +
-		"service-scaffold",
+	App: "service-scaffold",
 }

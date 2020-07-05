@@ -14,11 +14,13 @@ const (
 	WorkerFooBar     uwe.WorkerName = "foobar"
 )
 
-var AvailableWorkers = map[uwe.WorkerName]struct{}{
-	WorkerInfoServer: {},
-	WorkerDBKeeper:   {},
-	WorkerAPIServer:  {},
-	WorkerFooBar:     {},
+func GetAvailableWorkers() map[uwe.WorkerName]struct{} {
+	return map[uwe.WorkerName]struct{}{
+		WorkerInfoServer: {},
+		WorkerDBKeeper:   {},
+		WorkerAPIServer:  {},
+		WorkerFooBar:     {},
+	}
 }
 
 type WorkerExistRule struct {
@@ -37,7 +39,7 @@ func (r *WorkerExistRule) Validate(value interface{}) error {
 	}
 
 	for _, v := range arr {
-		if _, ok := r.AvailableWorkers[uwe.WorkerName(v)]; !ok {
+		if _, ok := r.AvailableWorkers[v]; !ok {
 			return errors.New("invalid service name " + string(v))
 		}
 	}

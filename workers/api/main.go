@@ -20,7 +20,7 @@ import (
 )
 
 func GetServer(cfg *config.Cfg, logger *logrus.Entry) *api.Server {
-	return api.NewServer(cfg.Api, getRouter(logger, cfg))
+	return api.NewServer(cfg.API, getRouter(logger, cfg))
 }
 
 func getRouter(logger *logrus.Entry, cfg *config.Cfg) http.Handler {
@@ -32,15 +32,15 @@ func getRouter(logger *logrus.Entry, cfg *config.Cfg) http.Handler {
 	r.Use(middleware.Recoverer)
 	r.Use(log.NewRequestLogger(logger.Logger))
 
-	if cfg.Api.EnableCORS {
+	if cfg.API.EnableCORS {
 		r.Use(getCORS().Handler)
 	}
 
 	// Set a timeout value on the request context (ctx), that will signal
 	// through ctx.Done() that the request has timed out and further
 	// processing should be stopped.
-	if cfg.Api.ApiRequestTimeout > 0 {
-		t := time.Duration(cfg.Api.ApiRequestTimeout)
+	if cfg.API.ApiRequestTimeout > 0 {
+		t := time.Duration(cfg.API.ApiRequestTimeout)
 		r.Use(middleware.Timeout(t * time.Second))
 	}
 

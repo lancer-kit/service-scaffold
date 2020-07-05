@@ -3,7 +3,7 @@ package config
 import (
 	"io/ioutil"
 
-	"github.com/go-ozzo/ozzo-validation"
+	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/lancer-kit/armory/log"
 	"github.com/lancer-kit/armory/natsx"
 	"github.com/lancer-kit/uwe/v2"
@@ -16,7 +16,7 @@ const ServiceName = "service-scaffold"
 
 // Cfg main structure of the app configuration.
 type Cfg struct {
-	Api     api.Config   `json:"api" yaml:"api"`
+	API     api.Config   `json:"api" yaml:"api"`
 	DB      DBCfg        `json:"db" yaml:"db"`           // DB is a database connection string.
 	CouchDB string       `json:"couchdb" yaml:"couchdb"` // CouchDB is a couchdb url connection string.
 	NATS    natsx.Config `json:"nats" yaml:"nats"`
@@ -36,16 +36,16 @@ func (cfg Cfg) Validate() error {
 		validation.Field(&cfg.ServicesInitTimeout, validation.Required),
 		//uncomment this if you want to use CouchDB
 		//validation.Field(&cfg.CouchDB, validation.Required),
-		validation.Field(&cfg.Api, validation.Required),
+		validation.Field(&cfg.API, validation.Required),
 		validation.Field(&cfg.NATS, validation.Required),
 		validation.Field(&cfg.Workers, &WorkerExistRule{
-			AvailableWorkers: AvailableWorkers,
+			AvailableWorkers: GetAvailableWorkers(),
 		}),
 	)
 }
 
 func (cfg Cfg) FillDefaultWorkers() {
-	for k := range AvailableWorkers {
+	for k := range GetAvailableWorkers() {
 		cfg.Workers = append(cfg.Workers, k)
 	}
 }
