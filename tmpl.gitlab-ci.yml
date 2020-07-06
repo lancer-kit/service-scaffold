@@ -26,12 +26,7 @@ build:
 
   script:
     - orig=$(pwd)
-    - mkdir -p ${GOPATH}/src/${PROJECT_PATH}
-    - cp -rf ./* ${GOPATH}/src/${PROJECT_PATH}/
-    - cd ${GOPATH}/src/${PROJECT_PATH}/
-    - COMMIT=${CI_COMMIT_SHA:0:8}
-    - TAG=$CI_COMMIT_REF_NAME
-    - go build -ldflags "-X main.Build=$COMMIT -X main.Tag=$TAG" -o app
+    - ./build.sh
     - cp app ${orig}/
   only:
     - dev
@@ -47,10 +42,6 @@ tests:
   before_script:
     - echo just replace default
   script:
-    - orig=$(pwd)
-    - mkdir -p ${GOPATH}/src/${PROJECT_PATH}
-    - cp -rf ./* ${GOPATH}/src/${PROJECT_PATH}/
-    - cd ${GOPATH}/src/${PROJECT_PATH}/
     - go test ./...
   only:
     - dev

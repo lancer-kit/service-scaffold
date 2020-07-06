@@ -14,7 +14,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"lancer-kit/service-scaffold/config"
-	"lancer-kit/service-scaffold/info"
 	"lancer-kit/service-scaffold/workers/api/handler"
 	"lancer-kit/service-scaffold/workers/api/middlewares"
 )
@@ -46,14 +45,14 @@ func getRouter(logger *logrus.Entry, cfg *config.Cfg) http.Handler {
 
 	r.Route("/dev", func(r chi.Router) {
 		r.Get("/status", func(w http.ResponseWriter, r *http.Request) {
-			render.Success(w, info.App)
+			render.Success(w, config.AppInfo())
 		})
 		h := handler.Handler{Cfg: cfg}
 		r.Route("/", func(r chi.Router) {
 			r.Use(auth.ExtractUserID())
 
 			r.Route("/{mId}/buzz", func(r chi.Router) {
-				//custom middleware example
+				// custom middleware example
 				r.Use(middlewares.VerifySomething())
 				r.Post("/", h.AddBuzz)
 				r.Get("/", h.AllBuzz)
