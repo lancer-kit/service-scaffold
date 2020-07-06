@@ -14,13 +14,12 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"lancer-kit/service-scaffold/config"
-	"lancer-kit/service-scaffold/info"
 	"lancer-kit/service-scaffold/workers/api/handler"
 	"lancer-kit/service-scaffold/workers/api/middlewares"
 )
 
 func GetServer(cfg *config.Cfg, logger *logrus.Entry) *api.Server {
-	return api.NewServer(cfg.Api, getRouter(logger, cfg))
+	return api.NewServer(cfg.API, getRouter(logger, cfg))
 }
 
 func getRouter(logger *logrus.Entry, cfg *config.Cfg) http.Handler {
@@ -32,28 +31,28 @@ func getRouter(logger *logrus.Entry, cfg *config.Cfg) http.Handler {
 	r.Use(middleware.Recoverer)
 	r.Use(log.NewRequestLogger(logger.Logger))
 
-	if cfg.Api.EnableCORS {
+	if cfg.API.EnableCORS {
 		r.Use(getCORS().Handler)
 	}
 
 	// Set a timeout value on the request context (ctx), that will signal
 	// through ctx.Done() that the request has timed out and further
 	// processing should be stopped.
-	if cfg.Api.ApiRequestTimeout > 0 {
-		t := time.Duration(cfg.Api.ApiRequestTimeout)
+	if cfg.API.ApiRequestTimeout > 0 {
+		t := time.Duration(cfg.API.ApiRequestTimeout)
 		r.Use(middleware.Timeout(t * time.Second))
 	}
 
 	r.Route("/dev", func(r chi.Router) {
 		r.Get("/status", func(w http.ResponseWriter, r *http.Request) {
-			render.Success(w, info.App)
+			render.Success(w, config.AppInfo())
 		})
 		h := handler.Handler{Cfg: cfg}
 		r.Route("/", func(r chi.Router) {
 			r.Use(auth.ExtractUserID())
 
 			r.Route("/{mId}/buzz", func(r chi.Router) {
-				//custom middleware example
+				// custom middleware example
 				r.Use(middlewares.VerifySomething())
 				r.Post("/", h.AddBuzz)
 				r.Get("/", h.AllBuzz)

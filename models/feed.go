@@ -26,13 +26,13 @@ func (f Feed) Value() (driver.Value, error) {
 func (f *Feed) Scan(src interface{}) error {
 	source, ok := src.([]byte)
 	if !ok {
-		return errors.New("Type assertion .([]byte) failed.")
+		return errors.New("type assertion .([]byte) failed")
 	}
 
 	var i Feed
 	err := json.Unmarshal(source, &i)
 	if err != nil {
-		return errors.Wrap(err, "Feed: can't unmarshal column data")
+		return errors.Wrap(err, "feed: can't unmarshal column data")
 	}
 
 	*f = i

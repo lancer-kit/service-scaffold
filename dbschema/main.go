@@ -2,7 +2,7 @@ package dbschema
 
 import (
 	"github.com/lancer-kit/armory/db"
-	"github.com/rubenv/sql-migrate"
+	migrate "github.com/rubenv/sql-migrate"
 )
 
 //go get -u github.com/lancer-kit/forge

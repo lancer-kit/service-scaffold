@@ -29,8 +29,10 @@ func InitChief(logger *logrus.Entry, cfg *config.Cfg) uwe.Chief {
 
 	logger = logger.WithField("app_layer", "workers")
 
-	chief.AddWorker(config.WorkerAPIServer, api.GetServer(cfg, logger.WithField("worker", config.WorkerFooBar)))
-	chief.AddWorker(config.WorkerFooBar, foobar.NewWorker(config.WorkerFooBar, logger.WithField("worker", config.WorkerFooBar)))
+	chief.AddWorker(config.WorkerAPIServer,
+		api.GetServer(cfg, logger.WithField("worker", config.WorkerFooBar)))
+	chief.AddWorker(config.WorkerFooBar,
+		foobar.NewWorker(config.WorkerFooBar, logger.WithField("worker", config.WorkerFooBar)))
 
 	return chief
 }
