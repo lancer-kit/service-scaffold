@@ -43,14 +43,14 @@ func Init(c *cli.Context) *config.Cfg {
 				timeout,
 
 				func() bool {
-					err := initializer(&cfg, log.Default)
+					err := initializer(&cfg, log.Get())
 					if err != nil {
-						log.Default.WithError(err).Error("Can't init " + module)
+						log.Get().WithError(err).Error("Can't init " + module)
 					}
 					return err == nil
 				})
 			if !ok {
-				log.Default.Fatal("Can't init " + module)
+				log.Get().Fatal("Can't init " + module)
 			}
 		}(module, initializer, timeout)
 	}
@@ -60,11 +60,11 @@ func Init(c *cli.Context) *config.Cfg {
 	if cfg.DB.AutoMigrate {
 		count, err := dbschema.Migrate(cfg.DB.ConnURL, "up")
 		if err != nil {
-			log.Default.WithError(err).Fatal("Migrations failed")
+			log.Get().WithError(err).Fatal("Migrations failed")
 			return &cfg
 		}
 
-		log.Default.Info(fmt.Sprintf("Applied %d %s migration", count, "up"))
+		log.Get().Info(fmt.Sprintf("Applied %d %s migration", count, "up"))
 	}
 
 	return &cfg

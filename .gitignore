@@ -2,3 +2,7 @@
 config.yaml
 *.bin
 vendor
+./service-scaffold
+./app
+
+env/local.*

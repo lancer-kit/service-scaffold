@@ -3,7 +3,7 @@ package config
 import (
 	"io/ioutil"
 
-	validation "github.com/go-ozzo/ozzo-validation"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/lancer-kit/armory/log"
 	"github.com/lancer-kit/armory/natsx"
 	"github.com/lancer-kit/uwe/v2"
@@ -30,12 +30,12 @@ type Cfg struct {
 	Workers []uwe.WorkerName `yaml:"workers"`
 }
 
+// Validate is an implementation of Validatable interface from ozzo-validation.
 func (cfg Cfg) Validate() error {
 	return validation.ValidateStruct(&cfg,
 		validation.Field(&cfg.DB, validation.Required),
 		validation.Field(&cfg.ServicesInitTimeout, validation.Required),
-		//uncomment this if you want to use CouchDB
-		//validation.Field(&cfg.CouchDB, validation.Required),
+		validation.Field(&cfg.CouchDB, validation.Required),
 		validation.Field(&cfg.API, validation.Required),
 		validation.Field(&cfg.NATS, validation.Required),
 		validation.Field(&cfg.Workers, &WorkerExistRule{
@@ -51,13 +51,14 @@ func (cfg Cfg) FillDefaultWorkers() {
 }
 
 type DBCfg struct {
-	ConnURL     string `json:"conn_url" yaml:"conn_url"` //The database connection string.
+	ConnURL     string `json:"conn_url" yaml:"conn_url"` // The database connection string.
 	InitTimeout int    `json:"dbInitTimeout" yaml:"init_timeout"`
 	// AutoMigrate if `true` execute db migrate up on start.
 	AutoMigrate bool `json:"auto_migrate" yaml:"auto_migrate"`
 	WaitForDB   bool `json:"wait_for_db" yaml:"wait_for_db"`
 }
 
+// Validate is an implementation of Validatable interface from ozzo-validation.
 func (cfg DBCfg) Validate() error {
 	return validation.ValidateStruct(&cfg,
 		validation.Field(&cfg.ConnURL, validation.Required),

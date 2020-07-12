@@ -70,10 +70,10 @@ func migrateCmd() cli.Command {
 func migrateDB(direction db.MigrateDir, cfg config.Cfg) *cli.ExitError {
 	count, err := dbschema.Migrate(cfg.DB.ConnURL, direction)
 	if err != nil {
-		log.Default.WithError(err).Error("Migrations failed")
+		log.Get().WithError(err).Error("Migrations failed")
 		return cli.NewExitError(fmt.Sprintf("migration %s failed", direction), 1)
 	}
 
-	log.Default.Info(fmt.Sprintf("Applied %d %s migration", count, direction))
+	log.Get().Info(fmt.Sprintf("Applied %d %s migration", count, direction))
 	return nil
 }
