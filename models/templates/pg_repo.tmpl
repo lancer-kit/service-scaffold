@@ -1,0 +1,148 @@
+package {{.Package}}
+
+import (
+	"database/sql"
+
+	sq "github.com/Masterminds/squirrel"
+	"github.com/lancer-kit/armory/db"
+)
+
+type {{.TypeName}}RepoI interface {
+	// Insert adds new `{{.TypeName}}` record to `{{.TypeString}}s` table.
+	Insert({{.TypeString}} *{{.TypeName}}) error
+	// Update updates row with passed `uid`.
+	Update(id int64, {{.TypeString}} *{{.TypeName}}) error
+	// DeleteByID deletes row with passed `id`.
+	DeleteByID(id int64) error
+	{{ $self := . }}
+	{{range .Fields}}// With{{.Name}} adds filter by `{{.Name}}` column.
+	With{{.Name}}({{.Name}} {{.FType}}) {{$self.TypeName}}QI
+	{{end}}
+	// Until sets lower time bound.
+	Since(timestamp int64) {{$self.TypeName}}QI
+	// Until sets upper time bound.
+	Until(timestamp int64) {{$self.TypeName}}QI
+
+	// Get returns first row of the result of query execution.
+	Get() (*{{.TypeName}}, error)
+	// GetByID returns one row with passed `id`.
+	GetByID(id int64) (*{{.TypeName}}, error)
+
+	// Select returns all records of the result of query execution.
+	Select() ([]{{.TypeName}}, error)
+	// SelectPage returns records according to given PageQuery params and the total count for the whole query.
+	SelectPage(pq *db.PageQuery) ([]{{.TypeName}}, int64, error) {
+}
+
+const table{{.TypeName}}s = "{{.TypeString}}s"
+
+type {{.TypeString}}Repo struct {
+	parent *Q
+	table  db.Table
+	Err    error
+}
+
+func (q *Repo) {{.TypeName}}() {{.TypeName}}RepoI {
+	return &{{.TypeString}}Q{
+		parent: q,
+		table:  db.NewTable(table{{.TypeName}}s, "rws", "*"), //fixme: change table alias
+	}
+}
+
+// Insert adds new `{{.TypeName}}` record to `{{.TypeString}}s` table.
+func (q *{{.TypeString}}Repo) Insert({{.TypeString}} *{{.TypeName}}) error {
+	query := sq.Insert(q.table.Name).SetMap(map[string]interface{}{
+		{{ $self := . }}
+		{{range .Fields}}"{{.Tags.db}}":  {{$self.TypeString}}.{{.Name}},
+		{{end}}
+	})
+
+	var err error
+	_, err = q.parent.Insert(query)
+	return err
+}
+
+// Update updates row with passed `uid`.
+//fixme: check that this is the correct update
+func (q *{{.TypeString}}Repo) Update(id int64, {{.TypeString}} *{{.TypeName}}) error {
+	query := sq.Update(q.table.Name).SetMap(map[string]interface{}{
+	  {{ $self := . }}
+		{{range .Fields}}"{{.Tags.db}}": {{$self.TypeString}}.{{.Name}},
+		{{end}}
+	}).Where("id = ?", id)
+	return q.parent.Exec(query)
+}
+
+// DeleteByID deletes row with passed `id`.
+// fixme: check that this is the correct getter
+func (q *{{.TypeString}}Repo) DeleteByID(id int64) error{
+	return q.parent.Exec(sq.Delete(q.table.Name).Where("id = ?", id))
+}
+
+{{ $self := . }}
+{{range .Fields}}
+// With{{.Name}} adds filter by `{{.Name}}` column.
+func (q *{{$self.TypeString}}Repo) With{{.Name}}({{.Name}} {{.FType}}) {{$self.TypeName}}QI {
+	q.table.QBuilder = q.table.QBuilder.Where("{{.Tags.db}} = ?", {{.Name}})
+	return q
+}
+{{end}}
+
+// Until sets lower time bound.
+func (q *{{.TypeString}}Repo) Since(timestamp int64) {{$self.TypeName}}QI {
+	q.table.QBuilder = q.table.QBuilder.Where("created_at >= ?", timestamp)
+	return q
+}
+
+// Until sets upper time bound.
+func (q *{{.TypeString}}Repo) Until(timestamp int64) {{$self.TypeName}}QI {
+	q.table.QBuilder = q.table.QBuilder.Where("created_at <= ?", timestamp)
+	return q
+}
+
+// Get returns first row of the result of query execution.
+func (q *{{.TypeString}}Repo) Get() (*{{.TypeName}}, error) {
+	res := new({{.TypeName}})
+
+	err := q.parent.Get(q.table.QBuilder, res)
+	if err == sql.ErrNoRows {
+		return res, nil
+	}
+
+	return res, err
+}
+
+// GetByID returns one row with passed `id`.
+// fixme: check that this is the correct getter
+func (q *{{.TypeString}}Repo) GetByID(id int64) (*{{.TypeName}}, error) {
+	res := new({{.TypeName}})
+	err := q.parent.Get(q.table.QBuilder.Where("id = ?", id), res)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	return res, err
+}
+
+// Select returns all records of the result of query execution.
+func (q *{{.TypeString}}Repo) Select() ([]{{.TypeName}}, error) {
+	res := make([]{{.TypeName}}, 0, 1)
+
+	err := q.parent.Select(q.table.QBuilder.OrderBy("id"), &res)
+	if err == sql.ErrNoRows {
+		return res, nil
+	}
+
+	return res, err
+}
+
+// SelectPage returns records according to given PageQuery params and the total count for the whole query.
+func (q *{{.TypeString}}Repo) SelectPage(pq *db.PageQuery) ([]{{.TypeName}}, int64, error) {
+	res := make([]{{.TypeName}}, 0, 1)
+
+	totalCount, err := q.table.SelectWithCount(q.parent.SQLConn, &res, pq.OrderBy, pq)
+	if err == sql.ErrNoRows {
+		return res, 0, nil
+	}
+
+	return res, totalCount, err
+}

@@ -1,6 +1,6 @@
 package models
 
-//go:generate forge model --type BuzzFeed --tmpl /Users/mike/go/src/github.com/lancer-kit/armory/db/q.tmpl --suffix _q
+// //go:generate forge model --type BuzzFeed --tmpl ./templates/pg_repo.tmpl --suffix _repo
 type BuzzFeed struct {
 	ID          int64       `db:"id" json:"id"`
 	Name        string      `db:"name" json:"name"`

@@ -28,7 +28,7 @@ type Cfg struct {
 
 	// Workers is a list of workers
 	// that must be started, start all if empty.
-	Workers []uwe.WorkerName `yaml:"workers"`
+	Workers []string `yaml:"workers"`
 }
 
 // Validate is an implementation of Validatable interface from ozzo-validation.
@@ -45,7 +45,7 @@ func (cfg Cfg) Validate() error {
 
 func (cfg Cfg) FillDefaultWorkers() {
 	for k := range availableWorkers() {
-		cfg.Workers = append(cfg.Workers, k)
+		cfg.Workers = append(cfg.Workers, string(k))
 	}
 }
 

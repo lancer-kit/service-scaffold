@@ -14,7 +14,11 @@ func GetCommands() []cli.Command {
 		uwe.CliCheckCommand(config.AppInfo(), func(c *cli.Context) []uwe.WorkerName {
 			cfg, _ := config.ReadConfig(c.GlobalString(config.FlagConfig))
 			cfg.FillDefaultWorkers()
-			return cfg.Workers
+			res := make([]uwe.WorkerName, len(cfg.Workers))
+			for i, worker := range cfg.Workers {
+				res[i] = uwe.WorkerName(worker)
+			}
+			return res
 		}),
 	}
 }

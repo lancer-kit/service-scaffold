@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"lancer-kit/service-scaffold/config"
-	"lancer-kit/service-scaffold/dbschema"
+	"lancer-kit/service-scaffold/repo/schema"
 
 	"github.com/lancer-kit/armory/db"
 	"github.com/lancer-kit/armory/log"
@@ -57,7 +57,7 @@ func migrateCmd() cli.Command {
 					}
 
 					if c.Bool("force") {
-						err = dbschema.DropSchema(cfg.DB.ConnectionString())
+						err = schema.DropSchema(cfg.DB.ConnectionString())
 					} else {
 						err = migrateDB(db.MigrateDown, cfg)
 					}
@@ -74,7 +74,7 @@ func migrateCmd() cli.Command {
 }
 
 func migrateDB(direction db.MigrateDir, cfg config.Cfg) *cli.ExitError {
-	count, err := dbschema.Migrate(cfg.DB.ConnectionString(), direction)
+	count, err := schema.Migrate(cfg.DB.ConnectionString(), direction)
 	if err != nil {
 		log.Get().WithError(err).Error("Migrations failed")
 		return cli.NewExitError(fmt.Sprintf("migration %s failed", direction), 1)

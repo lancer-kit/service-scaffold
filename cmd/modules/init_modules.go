@@ -5,11 +5,12 @@ import (
 	"time"
 
 	"lancer-kit/service-scaffold/config"
-	"lancer-kit/service-scaffold/dbschema"
+	"lancer-kit/service-scaffold/repo/schema"
 
 	"github.com/lancer-kit/armory/db"
 	"github.com/lancer-kit/armory/initialization"
 	"github.com/lancer-kit/armory/natsx"
+	cdb "github.com/leesper/couchdb-golang"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
@@ -32,7 +33,7 @@ func Init(c *cli.Context) (*config.Cfg, error) {
 func getModules(cfg config.Cfg) initialization.Modules {
 	return initialization.Modules{
 		initialization.Module{
-			Name:         "database_conn",
+			Name:         "postgres",
 			DependsOn:    "",
 			Timeout:      time.Duration(cfg.DB.InitTimeout) * time.Second,
 			InitInterval: 500 * time.Millisecond,
@@ -43,7 +44,7 @@ func getModules(cfg config.Cfg) initialization.Modules {
 				}
 
 				if cfg.DB.AutoMigrate {
-					count, err := dbschema.Migrate(cfg.DB.ConnectionString(), "up")
+					count, err := schema.Migrate(cfg.DB.ConnectionString(), "up")
 					if err != nil {
 						return errors.Wrap(err, "auto-migration failed")
 					}
@@ -67,6 +68,20 @@ func getModules(cfg config.Cfg) initialization.Modules {
 					return errors.Wrap(err, "nats init failed")
 				}
 
+				return nil
+			},
+		},
+
+		initialization.Module{
+			Name:         "couchdb",
+			DependsOn:    "",
+			Timeout:      time.Duration(cfg.ServicesInitTimeout) * time.Second,
+			InitInterval: 500 * time.Millisecond,
+			Init: func(entry *logrus.Entry) error {
+				_, err := cdb.NewDatabase(cfg.CouchDB)
+				if err != nil {
+					return errors.Wrap(err, "unable to connect to couchdb")
+				}
 				return nil
 			},
 		},

@@ -1,12 +1,13 @@
 package workers
 
 import (
+	"lancer-kit/service-scaffold/models"
+
 	"github.com/lancer-kit/uwe/v2"
 	"github.com/sirupsen/logrus"
 
 	"lancer-kit/service-scaffold/config"
 	"lancer-kit/service-scaffold/workers/api"
-	"lancer-kit/service-scaffold/workers/foobar"
 )
 
 func InitChief(logger *logrus.Entry, cfg *config.Cfg) uwe.Chief {
@@ -17,11 +18,12 @@ func InitChief(logger *logrus.Entry, cfg *config.Cfg) uwe.Chief {
 	chief.EnableServiceSocket(config.AppInfo())
 	chief.SetEventHandler(uwe.LogrusEventHandler(logger))
 
+	eventBus := make(chan models.Event, 16)
 	chief.AddWorker(config.WorkerAPIServer,
-		api.GetServer(cfg, logger.WithField("worker", config.WorkerFooBar)))
+		api.GetServer(cfg, logger.WithField("worker", config.WorkerAPIServer), eventBus))
 
-	chief.AddWorker(config.WorkerFooBar,
-		foobar.NewWorker(config.WorkerFooBar, logger.WithField("worker", config.WorkerFooBar)))
+	chief.AddWorker(config.WorkerNATSPublisher,
+		NewWorker(logger.WithField("worker", config.WorkerNATSPublisher), eventBus))
 
 	return chief
 }
