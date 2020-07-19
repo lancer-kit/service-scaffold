@@ -1,8 +1,10 @@
-package models
+package repo
 
 import (
 	"database/sql"
 	"time"
+
+	"lancer-kit/service-scaffold/models"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/lancer-kit/armory/db"
@@ -10,9 +12,9 @@ import (
 
 type BuzzFeedQI interface {
 	// Insert adds new `BuzzFeed` record to `buzzFeeds` table.
-	Insert(buzzFeed *BuzzFeed) error
+	Insert(buzzFeed *models.BuzzFeed) error
 	// Update updates row with passed `uid`.
-	Update(id int64, buzzFeed *BuzzFeed) error
+	Update(id int64, buzzFeed *models.BuzzFeed) error
 	// UpdateBuzzDescription sets new value of
 	// `description` column for row with passed `uid`.
 	UpdateBuzzDescription(id int64, description string) error
@@ -24,54 +26,52 @@ type BuzzFeedQI interface {
 	// WithName adds filter by `Name` column.
 	WithName(Name string) BuzzFeedQI
 	// WithBuzzType adds filter by `BuzzType` column.
-	WithBuzzType(BuzzType ExampleType) BuzzFeedQI
+	WithBuzzType(BuzzType models.ExampleType) BuzzFeedQI
 	// WithDescription adds filter by `Description` column.
 	WithDescription(Description string) BuzzFeedQI
 	// WithDetails adds filter by `Details` column.
-	WithDetails(Details Feed) BuzzFeedQI
+	WithDetails(Details models.Feed) BuzzFeedQI
 	// WithCreatedAt adds filter by `CreatedAt` column.
 	WithCreatedAt(CreatedAt int64) BuzzFeedQI
 	// WithUpdatedAt adds filter by `UpdatedAt` column.
 	WithUpdatedAt(UpdatedAt int64) BuzzFeedQI
-
-	// Get returns first row of the result of query execution.
-	Get() (*BuzzFeed, error)
-	// Select returns all records of the result of query execution.
-	Select() ([]BuzzFeed, error)
-	// GetByID returns one row with passed `id`.
-	GetByID(id int64) (*BuzzFeed, error)
-
-	// Until sets lower time bound.
+	// Since sets lower time bound.
 	Since(timestamp int64) BuzzFeedQI
 	// Until sets upper time bound.
 	Until(timestamp int64) BuzzFeedQI
-	// SetPage applies pagination parameters.
-	SetPage(pq *db.PageQuery) BuzzFeedQI
+
+	// Get returns first row of the result of query execution.
+	Get() (*models.BuzzFeed, error)
+	// GetByID returns one row with passed `id`.
+	GetByID(id int64) (*models.BuzzFeed, error)
+	// Select returns all records of the result of query execution.
+	Select() ([]models.BuzzFeed, error)
+	// SelectPage returns records according to given PageQuery params and the total count for the whole query.
+	SelectPage(pq *db.PageQuery) ([]models.BuzzFeed, int64, error)
 }
 
-const tableBuzzFeeds = "buzzFeeds"
+const (
+	tableBuzzFeeds = "buzzFeeds"
+	columnID       = "id"
+)
 
 type buzzFeedQ struct {
-	parent *Q
+	parent *PGRepo
 	table  db.Table
 
 	Err error
 }
 
-func (q *Q) BuzzFeed() BuzzFeedQI {
+func (repo *PGRepo) BuzzFeed() BuzzFeedQI {
 	return &buzzFeedQ{
-		parent: q,
-		table: db.Table{
-			Name:     tableBuzzFeeds,
-			QBuilder: sq.Select("*").From(tableBuzzFeeds),
-		},
+		parent: repo,
+		table:  db.NewTable(tableBuzzFeeds, "bz", "*"),
 	}
 }
 
 // Insert adds new `BuzzFeed` record to `buzzFeeds` table.
-func (q *buzzFeedQ) Insert(buzzFeed *BuzzFeed) error {
+func (q *buzzFeedQ) Insert(buzzFeed *models.BuzzFeed) error {
 	query := sq.Insert(q.table.Name).SetMap(map[string]interface{}{
-
 		"id":          buzzFeed.ID,
 		"name":        buzzFeed.Name,
 		"buzz_type":   buzzFeed.BuzzType,
@@ -87,10 +87,8 @@ func (q *buzzFeedQ) Insert(buzzFeed *BuzzFeed) error {
 }
 
 // Update updates row with passed `uid`.
-//fixme: check that this is the correct update
-func (q *buzzFeedQ) Update(id int64, buzzFeed *BuzzFeed) error {
+func (q *buzzFeedQ) Update(id int64, buzzFeed *models.BuzzFeed) error {
 	query := sq.Update(q.table.Name).SetMap(map[string]interface{}{
-
 		"id":          buzzFeed.ID,
 		"name":        buzzFeed.Name,
 		"buzz_type":   buzzFeed.BuzzType,
@@ -99,6 +97,7 @@ func (q *buzzFeedQ) Update(id int64, buzzFeed *BuzzFeed) error {
 		"created_at":  buzzFeed.CreatedAt,
 		"updated_at":  buzzFeed.UpdatedAt,
 	}).Where("id = ?", id)
+
 	return q.parent.Exec(query)
 }
 
@@ -108,6 +107,11 @@ func (q *buzzFeedQ) UpdateBuzzDescription(id int64, description string) error {
 		"updated_at":  time.Now().Unix(),
 	}).Where("id = ?", id)
 	return q.parent.Exec(query)
+}
+
+// DeleteByID deletes row with passed `id`.
+func (q *buzzFeedQ) DeleteByID(id int64) error {
+	return q.parent.Exec(sq.Delete(q.table.Name).Where("id = ?", id))
 }
 
 // WithID adds filter by `ID` column.
@@ -123,7 +127,7 @@ func (q *buzzFeedQ) WithName(name string) BuzzFeedQI {
 }
 
 // WithBuzzType adds filter by `BuzzType` column.
-func (q *buzzFeedQ) WithBuzzType(buzzType ExampleType) BuzzFeedQI {
+func (q *buzzFeedQ) WithBuzzType(buzzType models.ExampleType) BuzzFeedQI {
 	q.table.QBuilder = q.table.QBuilder.Where("buzz_type = ?", buzzType)
 	return q
 }
@@ -135,7 +139,7 @@ func (q *buzzFeedQ) WithDescription(description string) BuzzFeedQI {
 }
 
 // WithDetails adds filter by `Details` column.
-func (q *buzzFeedQ) WithDetails(details Feed) BuzzFeedQI {
+func (q *buzzFeedQ) WithDetails(details models.Feed) BuzzFeedQI {
 	q.table.QBuilder = q.table.QBuilder.Where("details = ?", details)
 	return q
 }
@@ -164,29 +168,9 @@ func (q *buzzFeedQ) Until(timestamp int64) BuzzFeedQI {
 	return q
 }
 
-// SetPage applies pagination parameters.
-func (q *buzzFeedQ) SetPage(pq *db.PageQuery) BuzzFeedQI {
-	q.table.SetPage(pq)
-	return q
-}
-
-// Select returns all records of the result of query execution.
-func (q *buzzFeedQ) Select() ([]BuzzFeed, error) {
-	res := make([]BuzzFeed, 0, 1)
-	q.table.ApplyPage("id")
-
-	err := q.parent.Select(q.table.QBuilder, &res)
-	if err == sql.ErrNoRows {
-		return res, nil
-	}
-
-	return res, err
-}
-
 // Get returns first row of the result of query execution.
-func (q *buzzFeedQ) Get() (*BuzzFeed, error) {
-	res := new(BuzzFeed)
-	q.table.ApplyPage("id")
+func (q *buzzFeedQ) Get() (*models.BuzzFeed, error) {
+	res := new(models.BuzzFeed)
 
 	err := q.parent.Get(q.table.QBuilder, res)
 	if err == sql.ErrNoRows {
@@ -197,9 +181,8 @@ func (q *buzzFeedQ) Get() (*BuzzFeed, error) {
 }
 
 // GetByID returns one row with passed `id`.
-// fixme: check that this is the correct getter
-func (q *buzzFeedQ) GetByID(id int64) (*BuzzFeed, error) {
-	res := new(BuzzFeed)
+func (q *buzzFeedQ) GetByID(id int64) (*models.BuzzFeed, error) {
+	res := new(models.BuzzFeed)
 	err := q.parent.Get(q.table.QBuilder.Where("id = ?", id), res)
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -207,8 +190,26 @@ func (q *buzzFeedQ) GetByID(id int64) (*BuzzFeed, error) {
 	return res, err
 }
 
-// DeleteByID deletes row with passed `id`.
-// fixme: check that this is the correct getter
-func (q *buzzFeedQ) DeleteByID(id int64) error {
-	return q.parent.Exec(sq.Delete(q.table.Name).Where("id = ?", id))
+// Select returns all records of the result of query execution.
+func (q *buzzFeedQ) Select() ([]models.BuzzFeed, error) {
+	res := make([]models.BuzzFeed, 0, 1)
+
+	err := q.parent.Select(q.table.QBuilder.OrderBy(columnID), &res)
+	if err == sql.ErrNoRows {
+		return res, nil
+	}
+
+	return res, err
+}
+
+// SelectPage returns records according to given PageQuery params and the total count for the whole query.
+func (q *buzzFeedQ) SelectPage(pq *db.PageQuery) ([]models.BuzzFeed, int64, error) {
+	res := make([]models.BuzzFeed, 0, 1)
+
+	total, err := q.table.SelectWithCount(q.parent.SQLConn, &res, pq.OrderBy, pq)
+	if err == sql.ErrNoRows {
+		return res, 0, nil
+	}
+
+	return res, total, err
 }

@@ -4,32 +4,34 @@ import (
 	"net/http"
 	"time"
 
+	"lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/models"
+	"lancer-kit/service-scaffold/workers/api/handler"
+	"lancer-kit/service-scaffold/workers/api/middlewares"
+
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 	"github.com/lancer-kit/armory/api/render"
-	"github.com/lancer-kit/armory/auth"
 	"github.com/lancer-kit/armory/log"
 	"github.com/lancer-kit/uwe/v2/presets/api"
 	"github.com/sirupsen/logrus"
-
-	"lancer-kit/service-scaffold/config"
-	"lancer-kit/service-scaffold/workers/api/handler"
-	"lancer-kit/service-scaffold/workers/api/middlewares"
 )
 
-func GetServer(cfg *config.Cfg, logger *logrus.Entry) *api.Server {
-	return api.NewServer(cfg.API, getRouter(logger, cfg))
+func GetServer(cfg *config.Cfg, logger *logrus.Entry, bus chan<- models.Event) *api.Server {
+	return api.NewServer(cfg.API, getRouter(cfg, logger, bus))
 }
 
-func getRouter(logger *logrus.Entry, cfg *config.Cfg) http.Handler {
+func getRouter(cfg *config.Cfg, logger *logrus.Entry, bus chan<- models.Event) http.Handler {
 	r := chi.NewRouter()
 
 	// A good base middleware stack
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Recoverer)
-	r.Use(log.NewRequestLogger(logger.Logger))
+	r.Use(
+		middleware.Recoverer,
+		middleware.RequestID,
+		middleware.RealIP,
+		log.NewRequestLogger(logger.Logger),
+	)
 
 	if cfg.API.EnableCORS {
 		r.Use(getCORS().Handler)
@@ -43,13 +45,15 @@ func getRouter(logger *logrus.Entry, cfg *config.Cfg) http.Handler {
 		r.Use(middleware.Timeout(t * time.Second))
 	}
 
-	r.Route("/dev", func(r chi.Router) {
+	h := handler.NewHandler(cfg, logger, bus)
+
+	r.Route("/", func(r chi.Router) {
 		r.Get("/status", func(w http.ResponseWriter, r *http.Request) {
 			render.Success(w, config.AppInfo())
 		})
-		h := handler.Handler{Cfg: cfg}
+
 		r.Route("/", func(r chi.Router) {
-			r.Use(auth.ExtractUserID())
+			// r.Use(auth.ExtractUserID())
 
 			r.Route("/{mId}/buzz", func(r chi.Router) {
 				// custom middleware example
@@ -66,14 +70,14 @@ func getRouter(logger *logrus.Entry, cfg *config.Cfg) http.Handler {
 			})
 		})
 
-		r.Route("/couch", func(r chi.Router) {
-			r.Post("/", h.AddDocument)
-			r.Get("/", h.GetAllDocument)
+		r.Route("/users", func(r chi.Router) {
+			r.Post("/", h.AddUserInfo)
+			r.Get("/", h.GetAllUserInfo)
 
 			r.Route("/{id}", func(r chi.Router) {
-				r.Get("/", h.GetDocument)
-				r.Put("/", h.ChangeDocument)
-				r.Delete("/", h.DeleteDocument)
+				r.Get("/", h.GetUserInfo)
+				r.Put("/", h.ChangeUserInfo)
+				r.Delete("/", h.DeleteUserInfo)
 			})
 		})
 
@@ -85,6 +89,7 @@ func getRouter(logger *logrus.Entry, cfg *config.Cfg) http.Handler {
 
 	return r
 }
+
 func getCORS() *cors.Cors {
 	return cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},

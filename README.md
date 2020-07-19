@@ -1,37 +1,45 @@
 # Go Web-Service Scaffold
 
-To bootstrap new project:
+This is a project example build with Lancer-Kit tool set.
 
-1. Clone or `go get` this repo
+#### Quick start
+
+1. Clone this repo:
 
 ```shell script
-mkdir -p $GOPATH/src/github.com/lancer-kit/
-cd $GOPATH/src/github.com/lancer-kit/
 git clone https://github.com/lancer-kit/service-scaffold
-### OR
-go get github.com/lancer-kit/service-scaffold
+cd service-scaffold
 ```
 
-2. Go to scaffold directory and run `./init.sh`
+2. Prepare a local configuration:
 
 ```shell script
-cd $GOPATH/src/github.com/lancer-kit/service-scaffold
-sh ./init.sh
+## here is secrets and other env vars
+cp ./env/tmpl.env ./env/local.env
+
+## here is configuration details
+cp ./env/tmpl.config.yaml ./env/local.config.yaml
 ```
 
-3. Get `forge` — a tool for code generation:
+3. Build docker image:
+
+```shell script
+make build_docker image=lancer-kit/service_scaffold config=local
+```
+
+4. Start all:
+
+```shell script
+docker-compose up -d
+```
+
+## Development 
+
+- Get `forge` — a tool for code generation:
 
 ```shell script
 go get -u github.com/lancer-kit/forge
 ```
 
-#### Example
 
-```shell script
-cd $GOPATH/src/github.com/lancer-kit/service-scaffold
-sh ./init.sh 
-Enter VCS domain (default: github.com): gitlab.com
-Enter VCS username or group: inn4sci-go
-Enter project name: api
-```
 

@@ -2,6 +2,8 @@ package config
 
 import "github.com/lancer-kit/uwe/v2"
 
+const ServiceName = "service-scaffold"
+
 // The variables are set when compiling the binary and used to make sure which version of the backend is running.
 // Example: go build -ldflags "-X lancer-kit/service-scaffold/config.version=$VERSION\
 // -X lancer-kit/service-scaffold/config.build=$COMMIT \

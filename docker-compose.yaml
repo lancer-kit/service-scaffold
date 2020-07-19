@@ -1,0 +1,64 @@
+version: '3.7'
+
+services:
+  service_scaffold:
+    image: lancer-kit/service_scaffold
+#    build:
+#      dockerfile: Dockerfile
+#      context: ./
+    env_file:
+      - ./env/local.env
+#    volumes:
+#      - './env/local.config.yaml:/config.yaml'
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+      - couchdb
+      - nats
+    healthcheck:
+      test: ["CMD", "./app", "check"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      scaffold:
+
+  postgres:
+    image: postgres:12-alpine
+    env_file:
+      - ./env/local.env
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      scaffold:
+
+  couchdb:
+    image: couchdb:3
+    env_file:
+      - ./env/local.env
+    volumes:
+      - couchdb_data:/opt/couchdb/data
+    ports:
+      # for web ui go to http://127.0.0.1:5984/_utils
+      - '5984:5984'
+    networks:
+      scaffold:
+
+  nats:
+    image: nats:alpine
+    ports:
+      - '4222:4222'
+      - '8222:8222'
+    networks:
+      scaffold:
+
+volumes:
+  postgres_data: {}
+  couchdb_data: {}
+
+networks:
+  scaffold: {}

@@ -7,8 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Feed struct {
-}
+type Feed struct{}
 
 func (f *Feed) UnmarshalJSON(data []byte) error {
 	return nil
