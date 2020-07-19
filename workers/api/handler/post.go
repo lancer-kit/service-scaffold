@@ -3,11 +3,11 @@ package handler
 import (
 	"net/http"
 
+	"lancer-kit/service-scaffold/models"
+
 	"github.com/lancer-kit/armory/api/httpx"
 	"github.com/lancer-kit/armory/api/render"
 	"github.com/lancer-kit/armory/log"
-
-	"lancer-kit/service-scaffold/models"
 )
 
 func (h *Handler) AddBuzz(w http.ResponseWriter, r *http.Request) {

@@ -1,20 +1,28 @@
 package cmd
 
-import "github.com/urfave/cli"
+import (
+	"lancer-kit/service-scaffold/config"
+
+	"github.com/lancer-kit/uwe/v2"
+	"github.com/urfave/cli"
+)
 
 func GetCommands() []cli.Command {
 	return []cli.Command{
 		migrateCmd(),
 		serveCmd(),
+		uwe.CliCheckCommand(config.AppInfo(), func(c *cli.Context) []uwe.WorkerName {
+			cfg, _ := config.ReadConfig(c.GlobalString(config.FlagConfig))
+			cfg.FillDefaultWorkers()
+			return cfg.Workers
+		}),
 	}
 }
-
-const FlagConfig = "config"
 
 func GetFlags() []cli.Flag {
 	return []cli.Flag{
 		cli.StringFlag{
-			Name:  FlagConfig + ", c",
+			Name:  config.FlagConfig + ", c",
 			Value: "./config.yaml",
 		},
 	}

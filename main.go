@@ -1,26 +1,24 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
-	"github.com/urfave/cli"
-
 	"lancer-kit/service-scaffold/cmd"
 	"lancer-kit/service-scaffold/config"
+
+	"github.com/urfave/cli"
 )
 
 func main() {
-	fmt.Printf("%+v \n", config.AppInfo())
+	appInfo := config.AppInfo()
 
 	app := cli.NewApp()
-	app.Usage = "A " + config.ServiceName + " service"
-	app.Version = config.AppInfo().Version
+	app.Usage = "A " + appInfo.Name + " service"
+	app.Version = appInfo.Version + ", build " + appInfo.Build
 	app.Flags = cmd.GetFlags()
 	app.Commands = cmd.GetCommands()
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
-
 }

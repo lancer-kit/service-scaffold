@@ -3,11 +3,11 @@ package models
 import (
 	"fmt"
 
+	"lancer-kit/service-scaffold/config"
+
 	"github.com/lancer-kit/armory/db"
 	cdb "github.com/leesper/couchdb-golang"
 	"github.com/pkg/errors"
-
-	"lancer-kit/service-scaffold/config"
 )
 
 type CustomDocument struct {

@@ -52,13 +52,13 @@ type BuzzFeedQI interface {
 const tableBuzzFeeds = "buzzFeeds"
 
 type buzzFeedQ struct {
-	parent *Q
+	parent *Repo
 	table  db.Table
 
 	Err error
 }
 
-func (q *Q) BuzzFeed() BuzzFeedQI {
+func (q *Repo) BuzzFeed() BuzzFeedQI {
 	return &buzzFeedQ{
 		parent: q,
 		table: db.Table{
@@ -87,7 +87,7 @@ func (q *buzzFeedQ) Insert(buzzFeed *BuzzFeed) error {
 }
 
 // Update updates row with passed `uid`.
-//fixme: check that this is the correct update
+// fixme: check that this is the correct update
 func (q *buzzFeedQ) Update(id int64, buzzFeed *BuzzFeed) error {
 	query := sq.Update(q.table.Name).SetMap(map[string]interface{}{
 

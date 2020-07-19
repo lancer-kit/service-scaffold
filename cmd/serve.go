@@ -1,12 +1,12 @@
 package cmd
 
 import (
+	"lancer-kit/service-scaffold/cmd/modules"
+	"lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/workers"
+
 	"github.com/lancer-kit/armory/log"
 	"github.com/urfave/cli"
-
-	"lancer-kit/service-scaffold/config"
-	"lancer-kit/service-scaffold/initialization"
-	"lancer-kit/service-scaffold/workers"
 )
 
 func serveCmd() cli.Command {
@@ -19,11 +19,13 @@ func serveCmd() cli.Command {
 }
 
 func serveAction(c *cli.Context) error {
-	cfg := initialization.Init(c)
+	cfg, err := modules.Init(c)
+	if err != nil {
+		return cli.NewExitError(err, 1)
+	}
 
 	logger := log.Get().WithField("app", config.ServiceName)
+	workers.InitChief(logger, cfg).Run()
 
-	chief := workers.InitChief(logger, cfg)
-	chief.Run()
 	return nil
 }

@@ -3,12 +3,12 @@ package cmd
 import (
 	"fmt"
 
+	"lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/dbschema"
+
 	"github.com/lancer-kit/armory/db"
 	"github.com/lancer-kit/armory/log"
 	"github.com/urfave/cli"
-
-	"lancer-kit/service-scaffold/config"
-	"lancer-kit/service-scaffold/dbschema"
 )
 
 func migrateCmd() cli.Command {
@@ -21,45 +21,51 @@ func migrateCmd() cli.Command {
 				Name:  "up",
 				Usage: "apply up migration direction",
 				Action: func(c *cli.Context) error {
-					cfg := config.ReadConfig(c.GlobalString(FlagConfig))
-
-					err := migrateDB(db.MigrateUp, cfg)
+					cfg, err := config.ReadConfig(c.GlobalString(config.FlagConfig))
 					if err != nil {
-						return err
+						return cli.NewExitError(err, 1)
 					}
-					return nil
+
+					return migrateDB(db.MigrateUp, cfg)
 				},
 			},
 			{
 				Name:  "down",
 				Usage: "drop and clean database schema",
 				Action: func(c *cli.Context) error {
-					cfg := config.ReadConfig(c.GlobalString(FlagConfig))
-
-					err := migrateDB(db.MigrateDown, cfg)
+					cfg, err := config.ReadConfig(c.GlobalString(config.FlagConfig))
 					if err != nil {
-						return err
+						return cli.NewExitError(err, 1)
 					}
-					return nil
+
+					return migrateDB(db.MigrateDown, cfg)
 				},
 			},
 			{
 				Name:  "redo",
 				Usage: "reset database schema",
+				Flags: []cli.Flag{
+					cli.BoolFlag{
+						Name:  "force, f",
+						Usage: "if the flag set, the database schema will be dropped instead of migration Down",
+					},
+				},
 				Action: func(c *cli.Context) error {
-					cfg := config.ReadConfig(c.GlobalString(FlagConfig))
-
-					err := migrateDB(db.MigrateDown, cfg)
+					cfg, err := config.ReadConfig(c.GlobalString(config.FlagConfig))
 					if err != nil {
-						return err
+						return cli.NewExitError(err, 1)
 					}
 
-					err = migrateDB(db.MigrateUp, cfg)
+					if c.Bool("force") {
+						err = dbschema.DropSchema(cfg.DB.ConnectionString())
+					} else {
+						err = migrateDB(db.MigrateDown, cfg)
+					}
 					if err != nil {
-						return err
+						return cli.NewExitError(err, 1)
 					}
 
-					return nil
+					return migrateDB(db.MigrateUp, cfg)
 				},
 			},
 		},
@@ -68,7 +74,7 @@ func migrateCmd() cli.Command {
 }
 
 func migrateDB(direction db.MigrateDir, cfg config.Cfg) *cli.ExitError {
-	count, err := dbschema.Migrate(cfg.DB.ConnURL, direction)
+	count, err := dbschema.Migrate(cfg.DB.ConnectionString(), direction)
 	if err != nil {
 		log.Get().WithError(err).Error("Migrations failed")
 		return cli.NewExitError(fmt.Sprintf("migration %s failed", direction), 1)

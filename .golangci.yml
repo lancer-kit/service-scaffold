@@ -33,7 +33,6 @@ linters:
     - gosec
     - unconvert
     - unparam
-  disable:
     - maligned
     - dupl
     - nakedret

@@ -4,18 +4,17 @@ import (
 	"net/http"
 	"time"
 
+	"lancer-kit/service-scaffold/config"
+	"lancer-kit/service-scaffold/workers/api/handler"
+	"lancer-kit/service-scaffold/workers/api/middlewares"
+
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 	"github.com/lancer-kit/armory/api/render"
-	"github.com/lancer-kit/armory/auth"
 	"github.com/lancer-kit/armory/log"
 	"github.com/lancer-kit/uwe/v2/presets/api"
 	"github.com/sirupsen/logrus"
-
-	"lancer-kit/service-scaffold/config"
-	"lancer-kit/service-scaffold/workers/api/handler"
-	"lancer-kit/service-scaffold/workers/api/middlewares"
 )
 
 func GetServer(cfg *config.Cfg, logger *logrus.Entry) *api.Server {
@@ -49,7 +48,7 @@ func getRouter(logger *logrus.Entry, cfg *config.Cfg) http.Handler {
 		})
 		h := handler.Handler{Cfg: cfg}
 		r.Route("/", func(r chi.Router) {
-			r.Use(auth.ExtractUserID())
+			// r.Use(auth.ExtractUserID())
 
 			r.Route("/{mId}/buzz", func(r chi.Router) {
 				// custom middleware example

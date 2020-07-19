@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 function git_commit() {
     if [ -d "./.git" ]; then
